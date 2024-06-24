@@ -12,7 +12,6 @@ public class SignUp extends Menu {
     static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
     static private User tmpUser;
     static private Integer initialMoney = 100;
-    static public LinkedHashMap<String, User> signedUpdUsers;
 
     public static void handleInput(String input, Scanner scanner) throws SQLException {
         String createUserCommand = "^user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
@@ -20,7 +19,7 @@ public class SignUp extends Menu {
         String createUserRandomCommand = "^user create -u (?<Username>\\S+) -p random" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
 
-        signedUpdUsers = Connect.getUsers();
+        User.signedUpdUsers = Connect.getUsers();
 
         if (input.matches(createUserCommand)) {
             Matcher matcher = getCommandMatcher(input, createUserCommand);
@@ -172,7 +171,7 @@ public class SignUp extends Menu {
             return false;
         }
 
-        if(signedUpdUsers.containsKey(username)){
+        if(User.signedUpdUsers.containsKey(username)){
             System.out.println("A user with the same username exists");
             return false;
         }
@@ -238,7 +237,7 @@ public class SignUp extends Menu {
                 tmpUser = new User(username, pass, nickname, email, recoveryAns,
                         recoveryQ, "", initialMoney, 1);
                 tmpUser.addToTable();
-                signedUpdUsers.put(username, tmpUser);
+                User.signedUpdUsers.put(username, tmpUser);
             }
         }
     }

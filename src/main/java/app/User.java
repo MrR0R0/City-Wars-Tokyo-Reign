@@ -4,10 +4,13 @@ import database.Connect;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class User {
     private String username, password, nickname, email, recoveryAns, recoveryQ, cards;
     private Integer wallet, level;
+    static public LinkedHashMap<String, User> signedUpdUsers;
+
     public User() {}
     public User(String username, String password, String nickname, String email, String recoveryAns,
                 String recoveryQ, String cards, Integer wallet, Integer level){
@@ -56,7 +59,7 @@ public class User {
                         email, recoveryQ, recoveryAns, wallet);
     }
 
-    public static boolean usernameInArray(String username, ArrayList<User> usersList){
+    public static boolean isInUsersList(String username, ArrayList<User> usersList){
         for(User tmpUser : usersList){
             if(username.equals(tmpUser.getUsername())){
                 return true;
