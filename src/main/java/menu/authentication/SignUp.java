@@ -1,7 +1,7 @@
-package authentication;
+package menu.authentication;
 
 import app.User;
-
+import menu.Menu;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,11 +9,10 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-import static app.ProgramController.getCommandMatcher;
-
-public class SignUp {
+public class SignUp extends Menu {
     static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
     static private User tmpUser;
+    static public ArrayList<User> signUppedUsers = new ArrayList<>();
 
     public static void handleInput(String input, Scanner scanner) {
         String createUserCommand = "^user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
@@ -51,10 +50,10 @@ public class SignUp {
         }
 
         //checking whether fields are empty
-        if (app.Error.emptyField(pass, "Password")) {
+        if (emptyField(pass, "Password")) {
             return false;
         }
-        if (app.Error.emptyField(passConf, "Password Confirmation")) {
+        if (emptyField(passConf, "Password Confirmation")) {
             return false;
         }
 
@@ -148,13 +147,13 @@ public class SignUp {
     private static boolean checkCommonFields(String username, String email, String nickname) {
         final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
 
-        if (app.Error.emptyField(username, "Username")) {
+        if (emptyField(username, "Username")) {
             return false;
         }
-        if (app.Error.emptyField(email, "Email")) {
+        if (emptyField(email, "Email")) {
             return false;
         }
-        if (app.Error.emptyField(nickname, "Nickname")) {
+        if (emptyField(nickname, "Nickname")) {
             return false;
         }
 

@@ -1,4 +1,7 @@
+import app.User;
 import java.sql.*;
+import java.util.ArrayList;
+
 
 public class Connect {
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
@@ -31,6 +34,36 @@ public class Connect {
             System.out.println("user has been added to the database.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    public static ArrayList<User> getUsers() {
+        String sql = "SELECT * FROM user";
+        ArrayList<User> users = new ArrayList<>();
+        try {
+            Connection connection = DriverManager.getConnection(DB_URL);
+            PreparedStatement pstmt = connection.prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                User user = new User();
+                user.setLevel(rs.getInt("user_level"));
+                user.setCards(rs.getString("user_cards"));
+                user.setUsername(rs.getString("user_username"));
+                user.setPassword(rs.getString("user_password"));
+                user.setNickname(rs.getString("user_nickname"));
+                user.setEmail(rs.getString("user_email"));
+                user.setRecoveryQ(rs.getString("user_recoveryAnswer"));
+                user.setRecoveryAns(rs.getString("user_recoveryQuestion"));
+                user.setWallet(rs.getInt("user_wallet"));
+
+                users.add(user);
+            }
+            System.out.println("User has been retrieved and added to the ArrayList.");
+            return users;
+        }
+        catch (SQLException e) {
+            System.out.println(e.getMessage());
+            return null;
         }
     }
 }
