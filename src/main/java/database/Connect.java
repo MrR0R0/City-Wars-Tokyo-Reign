@@ -3,6 +3,7 @@ package database;
 import app.User;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 
 public class Connect {
@@ -42,9 +43,9 @@ public class Connect {
             connection.close();
         }
     }
-    public static ArrayList<User> getUsers() throws SQLException {
+    public static LinkedHashMap<String, User> getUsers() throws SQLException {
         String sql = "SELECT * FROM user";
-        ArrayList<User> users = new ArrayList<>();
+        LinkedHashMap<String, User> userMap = new LinkedHashMap<>();
         try {
             connection = DriverManager.getConnection(DB_URL);
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -61,10 +62,10 @@ public class Connect {
                 user.setRecoveryAns(rs.getString("user_recoveryQuestion"));
                 user.setWallet(rs.getInt("user_wallet"));
 
-                users.add(user);
+                userMap.put(rs.getString("user_username"), user);
             }
             //System.out.println("User has been retrieved and added to the ArrayList.");
-            return users;
+            return userMap;
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());

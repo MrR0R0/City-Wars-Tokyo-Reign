@@ -5,17 +5,14 @@ import database.Connect;
 import menu.Menu;
 import java.security.SecureRandom;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 
 public class SignUp extends Menu {
     static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
     static private User tmpUser;
     static private Integer initialMoney = 100;
-    static public ArrayList<User> signedUpdUsers;
+    static public LinkedHashMap<String, User> signedUpdUsers;
 
     public static void handleInput(String input, Scanner scanner) throws SQLException {
         String createUserCommand = "^user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
@@ -175,7 +172,7 @@ public class SignUp extends Menu {
             return false;
         }
 
-        if(User.usernameInArray(username, signedUpdUsers)){
+        if(signedUpdUsers.containsKey(username)){
             System.out.println("A user with the same username exists");
             return false;
         }
@@ -241,6 +238,7 @@ public class SignUp extends Menu {
                 tmpUser = new User(username, pass, nickname, email, recoveryAns,
                         recoveryQ, "", initialMoney, 1);
                 tmpUser.addToTable();
+                signedUpdUsers.put(username, tmpUser);
             }
         }
     }
