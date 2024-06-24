@@ -15,14 +15,6 @@ public class User {
         this.wallet = wallet;
         this.level = level;
     }
-    public User(String username, String password, String nickname, String email, String recoveryAns, String recoveryQ){
-        this.username = username;
-        this.password = password;
-        this.nickname = nickname;
-        this.email = email;
-        this.recoveryAns = recoveryAns;
-        this.recoveryQ = recoveryQ;
-    }
     public void showProperties(){
         System.out.println("Username: " + username);
         System.out.println("password: " + password);

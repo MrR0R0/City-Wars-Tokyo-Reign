@@ -228,8 +228,8 @@ public class SignUp extends Menu {
     static private void twoStepVerification(Scanner scanner) {
         if (securityQuestion(scanner)) {
             if (checkCaptcha(3, scanner)) {
-                tmpUser = new User(username, pass, nickname, email, recoveryAns, recoveryQ);
-                tmpUser.showProperties();
+//                tmpUser = new User(username, pass, nickname, email, recoveryAns, recoveryQ, );
+//                tmpUser.showProperties();
             }
         }
     }
