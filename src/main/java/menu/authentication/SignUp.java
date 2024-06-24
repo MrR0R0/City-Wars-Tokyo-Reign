@@ -1,8 +1,10 @@
 package menu.authentication;
 
 import app.User;
+import database.Connect;
 import menu.Menu;
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,13 +14,16 @@ import java.util.regex.Matcher;
 public class SignUp extends Menu {
     static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
     static private User tmpUser;
-    static public ArrayList<User> signUppedUsers = new ArrayList<>();
+    static private Integer initialMoney = 100;
+    static public ArrayList<User> signedUpdUsers;
 
-    public static void handleInput(String input, Scanner scanner) {
+    public static void handleInput(String input, Scanner scanner) throws SQLException {
         String createUserCommand = "^user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
         String createUserRandomCommand = "^user create -u (?<Username>\\S+) -p random" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
+
+        signedUpdUsers = Connect.getUsers();
 
         if (input.matches(createUserCommand)) {
             Matcher matcher = getCommandMatcher(input, createUserCommand);
@@ -38,6 +43,7 @@ public class SignUp extends Menu {
     }
 
     private static boolean createUser(Matcher matcher) {
+
         matcher.find();
         username = matcher.group("Username");
         pass = matcher.group("Pass");
@@ -169,6 +175,10 @@ public class SignUp extends Menu {
             return false;
         }
 
+        if(User.usernameInArray(username, signedUpdUsers)){
+            System.out.println("A user with the same username exists");
+            return false;
+        }
         return true;
     }
 
@@ -225,11 +235,12 @@ public class SignUp extends Menu {
         return false;
     }
 
-    static private void twoStepVerification(Scanner scanner) {
+    static private void twoStepVerification(Scanner scanner) throws SQLException {
         if (securityQuestion(scanner)) {
             if (checkCaptcha(3, scanner)) {
-//                tmpUser = new User(username, pass, nickname, email, recoveryAns, recoveryQ, );
-//                tmpUser.showProperties();
+                tmpUser = new User(username, pass, nickname, email, recoveryAns,
+                        recoveryQ, "", initialMoney, 1);
+                tmpUser.addToTable();
             }
         }
     }

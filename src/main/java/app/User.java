@@ -1,10 +1,16 @@
 package app;
 
+import database.Connect;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+
 public class User {
     private String username, password, nickname, email, recoveryAns, recoveryQ, cards;
     private Integer wallet, level;
     public User() {}
-    public User(String username, String password, String nickname, String email, String recoveryAns, String recoveryQ, String cards, Integer wallet, Integer level){
+    public User(String username, String password, String nickname, String email, String recoveryAns,
+                String recoveryQ, String cards, Integer wallet, Integer level){
         this.username = username;
         this.password = password;
         this.nickname = nickname;
@@ -22,6 +28,8 @@ public class User {
         System.out.println("email: " + email);
         System.out.println("recoveryAns: " + recoveryAns);
         System.out.println("recoveryQ: " + recoveryQ);
+        System.out.println("Level:" + level);
+        System.out.println("Wallet:" + wallet);
     }
     public String getUsername() {return username;}
     public String getPassword() {return password;}
@@ -43,4 +51,17 @@ public class User {
     public void setWallet(Integer wallet) {this.wallet = wallet;}
     public void setLevel(Integer level) {this.level = level;}
 
+    public void addToTable() throws SQLException {
+        Connect.insertUser(username, cards, password, nickname,
+                        email, recoveryQ, recoveryAns, wallet);
+    }
+
+    public static boolean usernameInArray(String username, ArrayList<User> usersList){
+        for(User tmpUser : usersList){
+            if(username.equals(tmpUser.getUsername())){
+                return true;
+            }
+        }
+        return false;
+    }
 }
