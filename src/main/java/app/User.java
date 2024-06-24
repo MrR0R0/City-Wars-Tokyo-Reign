@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 public class User {
     private String username, password, nickname, email, recoveryAns, recoveryQ, cards;
     private Integer wallet, level;
-    static public LinkedHashMap<String, User> signedUpdUsers;
+    static public LinkedHashMap<String, User> signedUpUsers;
 
     public User() {}
     public User(String username, String password, String nickname, String email, String recoveryAns,

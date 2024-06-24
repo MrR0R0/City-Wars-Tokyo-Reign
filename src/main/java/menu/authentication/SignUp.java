@@ -1,5 +1,6 @@
 package menu.authentication;
 
+import app.Error;
 import app.User;
 import database.Connect;
 import menu.Menu;
@@ -12,6 +13,7 @@ public class SignUp extends Menu {
     static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
     static private User tmpUser;
     static private Integer initialMoney = 100;
+    static final int maxCaptchaAttempts = 3;
 
     public static void handleInput(String input, Scanner scanner) throws SQLException {
         String createUserCommand = "^user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
@@ -19,22 +21,21 @@ public class SignUp extends Menu {
         String createUserRandomCommand = "^user create -u (?<Username>\\S+) -p random" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
 
-        User.signedUpdUsers = Connect.getUsers();
-
         if (input.matches(createUserCommand)) {
+            if(Error.alreadyLoggedIn())
+                return;
             Matcher matcher = getCommandMatcher(input, createUserCommand);
             if (SignUp.createUser(matcher)) {
                 twoStepVerification(scanner);
             }
         }
         else if (input.matches(createUserRandomCommand)) {
+            if(Error.alreadyLoggedIn())
+                return;
             Matcher matcher = getCommandMatcher(input, createUserRandomCommand);
             if (SignUp.createUserRandom(matcher, scanner)) {
                 twoStepVerification(scanner);
             }
-        }
-        else{
-            System.out.println("What?");
         }
     }
 
@@ -171,7 +172,7 @@ public class SignUp extends Menu {
             return false;
         }
 
-        if(User.signedUpdUsers.containsKey(username)){
+        if(User.signedUpUsers.containsKey(username)){
             System.out.println("A user with the same username exists");
             return false;
         }
@@ -208,12 +209,12 @@ public class SignUp extends Menu {
         return password.toString();
     }
 
-    private static boolean checkCaptcha(int chances, Scanner scanner) {
+    private static boolean checkCaptcha(Scanner scanner) {
         System.out.println("Confirm you're not a robot");
         String randomText = generatePassword(5);
         System.out.println(Captcha.textToASCII(randomText));
         String command;
-        int counter = chances;
+        int counter = maxCaptchaAttempts;
 
         while (counter > 0) {
             counter--;
@@ -233,11 +234,11 @@ public class SignUp extends Menu {
 
     static private void twoStepVerification(Scanner scanner) throws SQLException {
         if (securityQuestion(scanner)) {
-            if (checkCaptcha(3, scanner)) {
+            if (checkCaptcha(scanner)) {
                 tmpUser = new User(username, pass, nickname, email, recoveryAns,
                         recoveryQ, "", initialMoney, 1);
                 tmpUser.addToTable();
-                User.signedUpdUsers.put(username, tmpUser);
+                User.signedUpUsers.put(username, tmpUser);
             }
         }
     }
