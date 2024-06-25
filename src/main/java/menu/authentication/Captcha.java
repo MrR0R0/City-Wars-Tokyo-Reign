@@ -2,11 +2,70 @@ package menu.authentication;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Scanner;
 
 public class Captcha {
     static final int height = 30, width = 90;
+    static private final int maxCaptchaAttempts = 3;
 
-    public static String textToASCII(String txt){
+    public static boolean checkCaptcha(Scanner scanner) {
+        System.out.println("Confirm you're not a robot");
+        String randomText = generatePassword(5);
+        System.out.println(Captcha.textToASCII(randomText));
+        String command;
+        int counter = maxCaptchaAttempts;
+
+        while (counter > 0) {
+            counter--;
+            command = scanner.nextLine().trim();
+            if (command.equals(randomText)) {
+                return true;
+            } else if (command.equals("quit")) {
+                return false;
+            } else {
+                System.out.println("Remaining chances: " + counter);
+                randomText = generatePassword(5);
+                System.out.println(Captcha.textToASCII(randomText));
+            }
+        }
+        return false;
+    }
+
+    //Creates a strong password
+    public static String generatePassword(int PASSWORD_LENGTH) {
+        final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        final String LOWER = UPPER.toLowerCase();
+        final String DIGITS = "0123456789";
+        final String SPECIAL = "!@#$%^&*()-_=+[]{}|;:,.<>?";
+        final String ALL_CHARS = UPPER + LOWER + DIGITS + SPECIAL;
+        SecureRandom random = new SecureRandom();
+        List<Character> chars = new ArrayList<>();
+
+        // Add characters from each character set
+        chars.add(UPPER.charAt(random.nextInt(UPPER.length())));
+        chars.add(LOWER.charAt(random.nextInt(LOWER.length())));
+        chars.add(DIGITS.charAt(random.nextInt(DIGITS.length())));
+        chars.add(SPECIAL.charAt(random.nextInt(SPECIAL.length())));
+
+        // Fill remaining characters randomly
+        for (int i = 4; i < PASSWORD_LENGTH; i++) {
+            chars.add(ALL_CHARS.charAt(random.nextInt(ALL_CHARS.length())));
+        }
+
+        // Shuffle characters and create password string
+        Collections.shuffle(chars);
+        StringBuilder password = new StringBuilder();
+        for (char c : chars) {
+            password.append(c);
+        }
+        return password.toString();
+    }
+
+    private static String textToASCII(String txt){
         BufferedImage buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = buffImg.createGraphics();
         g2d.setFont(new Font("Courier", Font.BOLD, 25));

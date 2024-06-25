@@ -2,12 +2,14 @@ package menu;
 
 import app.Error;
 import app.User;
+import menu.authentication.Captcha;
 import menu.authentication.SignUp;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class ProfileMenu extends Menu {
+
 
     static public void handleInput(String input, Scanner scanner) {
         Matcher matcher;
@@ -49,7 +51,7 @@ public class ProfileMenu extends Menu {
                 return;
             matcher = getCommandMatcher(input, changePasswordCommand);
             if (matcher.find()) {
-                changePassword(matcher);
+                changePassword(matcher, scanner);
             }
         }
 
@@ -93,7 +95,7 @@ public class ProfileMenu extends Menu {
         }
     }
 
-    static private void changePassword(Matcher matcher) {
+    static private void changePassword(Matcher matcher, Scanner scanner) {
         String oldPassword = matcher.group("oldPassword");
         String newPassword = matcher.group("newPassword");
 
@@ -112,15 +114,18 @@ public class ProfileMenu extends Menu {
             System.out.println("The password must contain at least one special character");
             return;
         }
-        if (!loggedInUser.getPassword().equals(oldPassword)) {
-            System.out.println("Current password is incorrect!");
-            return;
-        }
-        if (newPassword.equals(oldPassword)) {
-            System.out.println("Please enter a new password!");
-        } else {
-            loggedInUser.setPassword(newPassword);
-            System.out.println("Password has been changed to " + newPassword + " successfully");
+        if (Captcha.checkCaptcha(scanner)) {
+            if (!loggedInUser.getPassword().equals(oldPassword)) {
+                System.out.println("Current password is incorrect!");
+                return;
+            }
+            if (newPassword.equals(oldPassword)) {
+                System.out.println("Please enter a new password!");
+            }
+            else {
+                loggedInUser.setPassword(newPassword);
+                System.out.println("Password has been changed to " + newPassword + " successfully");
+            }
         }
     }
 
