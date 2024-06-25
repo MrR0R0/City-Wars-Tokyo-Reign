@@ -85,7 +85,7 @@ public class SignUp extends Menu {
         if (!checkCommonFields(username, email, nickname)) {
             return false;
         }
-        String randomPass = Captcha.generatePassword(10);
+        String randomPass = generatePassword(10);
         System.out.println("Your random password: " + randomPass);
         System.out.print("Please enter your password: ");
         String command = scanner.nextLine().trim();
@@ -172,9 +172,62 @@ public class SignUp extends Menu {
         return true;
     }
 
-    static private boolean twoStepVerification(Scanner scanner) throws SQLException {
+    //Creates a strong password
+    private static String generatePassword(int PASSWORD_LENGTH) {
+        final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        final String LOWER = UPPER.toLowerCase();
+        final String DIGITS = "0123456789";
+        final String SPECIAL = "!@#$%^&*()-_=+[]{}|;:,.<>?";
+        final String ALL_CHARS = UPPER + LOWER + DIGITS + SPECIAL;
+        SecureRandom random = new SecureRandom();
+        List<Character> chars = new ArrayList<>();
+
+        // Add characters from each character set
+        chars.add(UPPER.charAt(random.nextInt(UPPER.length())));
+        chars.add(LOWER.charAt(random.nextInt(LOWER.length())));
+        chars.add(DIGITS.charAt(random.nextInt(DIGITS.length())));
+        chars.add(SPECIAL.charAt(random.nextInt(SPECIAL.length())));
+
+        // Fill remaining characters randomly
+        for (int i = 4; i < PASSWORD_LENGTH; i++) {
+            chars.add(ALL_CHARS.charAt(random.nextInt(ALL_CHARS.length())));
+        }
+
+        // Shuffle characters and create password string
+        Collections.shuffle(chars);
+        StringBuilder password = new StringBuilder();
+        for (char c : chars) {
+            password.append(c);
+        }
+        return password.toString();
+    }
+
+    private static boolean checkCaptcha(Scanner scanner) {
+        System.out.println("Confirm you're not a robot");
+        String randomText = generatePassword(5);
+        System.out.println(Captcha.textToASCII(randomText));
+        String command;
+        int counter = maxCaptchaAttempts;
+
+        while (counter > 0) {
+            counter--;
+            command = scanner.nextLine().trim();
+            if (command.equals(randomText)) {
+                return true;
+            } else if (command.equals("quit")) {
+                return false;
+            } else {
+                System.out.println("Remaining chances: " + counter);
+                randomText = generatePassword(5);
+                System.out.println(Captcha.textToASCII(randomText));
+            }
+        }
+        return false;
+    }
+
+    static private void twoStepVerification(Scanner scanner) throws SQLException {
         if (securityQuestion(scanner)) {
-            if (Captcha.checkCaptcha(scanner)) {
+            if (checkCaptcha(scanner)) {
                 tmpUser = new User(username, pass, nickname, email, recoveryAns,
                         recoveryQ, "", initialMoney, 1);
                 tmpUser.addToTable();
@@ -183,6 +236,28 @@ public class SignUp extends Menu {
             }
         }
         return false;
+    }
+
+    static public boolean isValidPasswordFormat(String password){
+        if (emptyField(password, "Password")) {
+            System.out.println("Password is empty");
+            return false;
+        }
+
+        //checking whether the password is weak
+        if (password.length() < 8) {
+            System.out.println("Password should be at least 8 characters!");
+            return false;
+        }
+        if (!password.matches(PASSWORD_REGEX)) {
+            System.out.println("The password must contain at least one uppercase letter and one lowercase letter.");
+            return false;
+        }
+        if (password.replaceAll("[a-zA-Z0-9]", "").isEmpty()) {
+            System.out.println("The password must contain at least one special character");
+            return false;
+        }
+        return true;
     }
 
     static public boolean isValidPasswordFormat(String password){

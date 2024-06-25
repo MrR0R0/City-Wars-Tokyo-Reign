@@ -65,7 +65,7 @@ public class Captcha {
         return password.toString();
     }
 
-    private static String textToASCII(String txt){
+    public static String textToASCII(String txt){
         BufferedImage buffImg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = buffImg.createGraphics();
         g2d.setFont(new Font("Courier", Font.BOLD, 25));
