@@ -59,9 +59,18 @@ public class User {
                         email, recoveryQ, recoveryAns, wallet);
     }
 
-    public static boolean isInUsersList(String username, ArrayList<User> usersList){
-        for(User tmpUser : usersList){
-            if(username.equals(tmpUser.getUsername())){
+    public static <T> boolean isInUsersList(String property, T value){
+        for(User user : signedUpUsers.values()){
+            if(property.matches("^(?i)username") && user.getUsername().equals(value)){
+                return true;
+            }
+            if (property.matches("^(?i)password") && user.getPassword().equals(value)){
+                return true;
+            }
+            if (property.matches("^(?i)nickname") && user.getNickname().equals(value)){
+                return true;
+            }
+            if (property.matches("^(?i)email") && user.getEmail().equals(value)){
                 return true;
             }
         }

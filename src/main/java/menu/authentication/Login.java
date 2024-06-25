@@ -12,6 +12,7 @@ import java.time.Instant;
 
 public class Login extends Menu {
     private static final int maxTry = 3;
+
     public static void handleInput(String input, Scanner scanner) throws IOException {
         String loginCommand = "^user login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";
         String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";

@@ -2,11 +2,10 @@ package app;
 
 import database.Connect;
 import menu.authentication.Login;
+import menu.ProfileMenu;
 import menu.authentication.SignUp;
-
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class ProgramController {
@@ -21,6 +20,7 @@ public class ProgramController {
             }
             SignUp.handleInput(command, scanner);
             Login.handleInput(command, scanner);
+            ProfileMenu.handleInput(command, scanner);
         }
     }
 }
