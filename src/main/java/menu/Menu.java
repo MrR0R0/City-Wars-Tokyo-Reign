@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public abstract class Menu extends app.Error {
     public static User loggedInUser = new User();
     public static boolean isLoggedIn(){
-        return !(loggedInUser.getLevel() == null);
+        return !(loggedInUser == null);
     }
     public static Matcher getCommandMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);

@@ -15,10 +15,14 @@ public class SignUp extends Menu {
     static private Integer initialMoney = 100;
     static final int maxCaptchaAttempts = 3;
 
+    static public final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+    static public final String USERNAME_REGEX = "[a-zA-Z0-9_]+";
+    static public final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z]).+$";
+
     public static void handleInput(String input, Scanner scanner) throws SQLException {
-        String createUserCommand = "^user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
+        String createUserCommand = "^(?i)user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
-        String createUserRandomCommand = "^user create -u (?<Username>\\S+) -p random" +
+        String createUserRandomCommand = "^(?i)user create -u (?<Username>\\S+) -p random" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
 
         if (input.matches(createUserCommand)) {
@@ -65,7 +69,7 @@ public class SignUp extends Menu {
             System.out.println("Password should be at least 8 characters!");
             return false;
         }
-        if (!pass.matches("^(?=.*[a-z])(?=.*[A-Z]).+$")) {
+        if (!pass.matches(PASSWORD_REGEX)) {
             System.out.println("The password must contain at least one uppercase letter and one lowercase letter.");
             return false;
         }
@@ -105,7 +109,7 @@ public class SignUp extends Menu {
     //false: quit
     //true: proper answers have been provided
     private static boolean securityQuestion(Scanner scanner) {
-        String pickAQuestion = "^question pick -q (?<QNumber>.+) -a (?<Ans>.+) -c (?<Confirm>.+)$";
+        String pickAQuestion = "^(?i)question pick -q (?<QNumber>.+) -a (?<Ans>.+) -c (?<Confirm>.+)$";
         System.out.println("User created successfully. Please choose a security question :");
         System.out.println("\t ⚫1-What is your father’s name?");
         System.out.println("\t ⚫2-What is your favourite color?");
@@ -148,7 +152,6 @@ public class SignUp extends Menu {
 
     // Consolidate common logic for createUser and createUserRandom to avoid duplication
     private static boolean checkCommonFields(String username, String email, String nickname) {
-        final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
 
         if (emptyField(username, "Username")) {
             return false;
@@ -161,7 +164,7 @@ public class SignUp extends Menu {
         }
 
         //checking the requirements for username
-        if (!username.matches("[a-zA-Z0-9_]+")) {
+        if (!username.matches(USERNAME_REGEX)) {
             System.out.println("The username should consist of lowercase or uppercase letters, numbers, and underscores.");
             return false;
         }

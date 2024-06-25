@@ -17,4 +17,11 @@ public class Error {
         }
         return false;
     }
+    static public boolean loginFirst(){
+        if(!Menu.isLoggedIn()){
+            System.out.println("You are not logged in!");
+            return true;
+        }
+        return false;
+    }
 }
