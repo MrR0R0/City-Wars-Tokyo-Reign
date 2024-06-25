@@ -4,9 +4,14 @@ import database.Connect;
 
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Card {
-    private String name,type;
+    public static final String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
+    public enum Characters {Character1 , Character2 , Character3 , Character4 , Unity};
+
+    private String name, type, character;
     private Integer level, price, damage, duration, upgradeCost, attackOrDefense, specialProperty, acc, id, isBreakable;
     public static LinkedHashMap<Integer, Card> allCards = new LinkedHashMap<>();
 
@@ -51,6 +56,7 @@ public class Card {
     public Integer getId() {return id;}
     public Integer getSpecialProperty() {return specialProperty;}
     public Integer getAttackOrDefense() {return attackOrDefense;}
+    public String getCharacter() {return character;}
 
 
     public void setName(String name) {this.name = name;}
@@ -65,8 +71,23 @@ public class Card {
     public void setAttackOrDefense(Integer attackOrDefense) {this.attackOrDefense = attackOrDefense;}
     public void setSpecialProperty(Integer specialProperty) {this.specialProperty = specialProperty;}
     public void setId(Integer id) {this.id = id;}
+    public void setCharacter(String character) {this.character = character;}
+
 
     public void addToTable() throws SQLException {
-        Connect.insertCard(name,type,level,price,damage,duration, upgradeCost,attackOrDefense,upgradeCost,specialProperty,acc,isBreakable);
+        Connect.insertCard(this.name,this.type,this.level,this.price,this.damage,this.duration,this.upgradeCost,
+                this.attackOrDefense,this.upgradeCost,this.specialProperty,this.acc,isBreakable,this.character);
     }
+
+    public static void setLevelForDeck(User user) {
+        String[] idAndLevelOfCards = user.getCards().split(",");
+        Pattern pattern = Pattern.compile(CARD_REGEX);
+        for (String idAndLevel : idAndLevelOfCards) {
+            Matcher matcher = pattern.matcher(idAndLevel);
+            String id = matcher.group("id");
+            String level = matcher.group("level");
+            user.deckOfCards.get(Integer.parseInt(id)).setLevel(Integer.parseInt(level));
+        }
+    }
+
 }

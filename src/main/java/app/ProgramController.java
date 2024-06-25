@@ -1,6 +1,7 @@
 package app;
 
 import database.Connect;
+import menu.MainMenu;
 import menu.Menu;
 import menu.ProfileMenu;
 import menu.authentication.Login;
@@ -13,7 +14,7 @@ public class ProgramController {
     public void run() throws SQLException, IOException {
         Scanner scanner = new Scanner(System.in);
         User.signedUpUsers = Connect.getUsers();
-        String logoutCommand = "log out";
+        String logoutCommand = "^log out$";
         while (true) {
             String command = scanner.nextLine().trim().replaceAll(" +", " ");
             if (checkQuit(command)) {
@@ -21,19 +22,24 @@ public class ProgramController {
             }
             else if(command.matches(logoutCommand)){
                 if(Menu.isLoggedIn()){
-                    Menu.loggedInUser = new User();
+                    Menu.logOut();
                     System.out.println("Logged out successfully");
                 }
                 else{
                     System.out.println("You should log in first");
                 }
             }
-            else if(Menu.currentMenu.equals(Menu.MenuType.Authentication)){
-                SignUp.handleInput(command, scanner);
-                Login.handleInput(command, scanner);
-            }
-            else if(Menu.currentMenu.equals(Menu.MenuType.Profile)){
-                ProfileMenu.handleInput(command, scanner);
+            switch (Menu.currentMenu){
+                case Authentication -> {
+                    SignUp.handleInput(command, scanner);
+                    Login.handleInput(command, scanner);
+                }
+                case Main -> {
+
+                }
+                case Profile -> {
+                    ProfileMenu.handleInput(command, scanner);
+                }
             }
         }
     }

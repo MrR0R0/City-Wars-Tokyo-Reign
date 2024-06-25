@@ -30,7 +30,9 @@ public class SignUp extends Menu {
                 return;
             Matcher matcher = getCommandMatcher(input, createUserCommand);
             if (SignUp.createUser(matcher)) {
-                twoStepVerification(scanner);
+                if(twoStepVerification(scanner)){
+                    System.out.println("You signed up successfully!");
+                }
             }
         }
         else if (input.matches(createUserRandomCommand)) {
@@ -38,7 +40,9 @@ public class SignUp extends Menu {
                 return;
             Matcher matcher = getCommandMatcher(input, createUserRandomCommand);
             if (SignUp.createUserRandom(matcher, scanner)) {
-                twoStepVerification(scanner);
+                if(twoStepVerification(scanner)){
+                    System.out.println("You signed up successfully!");
+                }
             }
         }
     }
@@ -168,15 +172,17 @@ public class SignUp extends Menu {
         return true;
     }
 
-    static private void twoStepVerification(Scanner scanner) throws SQLException {
+    static private boolean twoStepVerification(Scanner scanner) throws SQLException {
         if (securityQuestion(scanner)) {
             if (Captcha.checkCaptcha(scanner)) {
                 tmpUser = new User(username, pass, nickname, email, recoveryAns,
                         recoveryQ, "", initialMoney, 1);
                 tmpUser.addToTable();
                 User.signedUpUsers.put(username, tmpUser);
+                return true;
             }
         }
+        return false;
     }
 
     static public boolean isValidPasswordFormat(String password){

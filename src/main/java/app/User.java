@@ -9,6 +9,10 @@ import java.util.LinkedHashMap;
 public class User {
     private String username, password, nickname, email, recoveryAns, recoveryQ, cards;
     private Integer wallet, level;
+
+    // should initialize in signup
+    public LinkedHashMap <Integer, Card> deckOfCards;
+
     static public LinkedHashMap<String, User> signedUpUsers;
 
     public User() {}
@@ -33,6 +37,10 @@ public class User {
         System.out.println("recoveryQ: " + recoveryQ);
         System.out.println("Level:" + level);
         System.out.println("Wallet:" + wallet);
+    }
+
+    public void showCards(){
+
     }
     public String getUsername() {return username;}
     public String getPassword() {return password;}
@@ -75,5 +83,12 @@ public class User {
             }
         }
         return false;
+    }
+
+    public static String formatUsername(String name){
+        if(name.length() > 10) {
+            return name.substring(0, 10) + "...";
+        }
+        return name;
     }
 }
