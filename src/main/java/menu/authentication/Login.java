@@ -114,7 +114,7 @@ public class Login extends Menu {
                     }
                     if(SignUp.isValidPasswordFormat(command)){
                         System.out.println("Password changed successfully");
-                        Connect.updateUserPassword(username, command);
+                        User.signedUpUsers.get(username).setPassword(command);
                         return;
                     }
                     command = scanner.nextLine().trim();
