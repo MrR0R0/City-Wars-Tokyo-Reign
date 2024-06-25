@@ -1,10 +1,15 @@
 package menu.authentication;
 
 import app.Error;
+import app.ProgramController;
 import app.User;
+import database.Connect;
 import menu.Menu;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.time.Duration;
@@ -12,8 +17,7 @@ import java.time.Instant;
 
 public class Login extends Menu {
     private static final int maxTry = 3;
-
-    public static void handleInput(String input, Scanner scanner) throws IOException {
+    public static void handleInput(String input, Scanner scanner) throws IOException, SQLException {
         String loginCommand = "^user login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";
         String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";
         if(input.matches(loginCommand)){
@@ -34,24 +38,23 @@ public class Login extends Menu {
                 return;
             Matcher matcher = getCommandMatcher(input, forgotPassword);
             matcher.find();
+            resetPassword(matcher, scanner);
         }
     }
     private static boolean checkLogIn(Matcher matcher, Scanner scanner) throws IOException {
         //check if the user is in the table
         String username = matcher.group("Username");
         String password = matcher.group("Pass");
-        int credentials = checkCredentials(username, password);
         //valid username and password
-        if(credentials == 0){
+        if(matchingPassword(username, password)){
             return true;
         }
         //invalid username
-        if(credentials == 2){
-            System.out.println("Username does not exist!");
+        else if(!Error.userRegistered(username)){
             return false;
         }
         //non-matching username and password
-        if(credentials == 1){
+        else{
             int counter = maxTry - 1;
             Instant start = Instant.now();
             long elapsed;
@@ -67,7 +70,7 @@ public class Login extends Menu {
                     System.out.println("Re-enter password");
                     command = scanner.nextLine().trim();
                     //if re-entered password is correct
-                    if(checkCredentials(username, command) == 0){
+                    if(matchingPassword(username, command)){
                         return true;
                     }
                     //if re-entered password is incorrect
@@ -90,18 +93,41 @@ public class Login extends Menu {
         return false;
     }
 
-    /*
-    0: valid
-    1: wrong password
-    2: non-existent username
-    */
-    private static int checkCredentials(String username, String pass){
-        if(User.signedUpUsers.containsKey(username)){
-            if(User.signedUpUsers.get(username).getPassword().equals(pass)){
-                return 0;
+    private static void resetPassword(Matcher matcher, Scanner scanner) throws SQLException {
+        String username = matcher.group("Username");
+        if(Error.userRegistered(username)){
+            ArrayList<String> questions = new ArrayList<>(Arrays.asList("What is your father’s name?",
+                    "What is your favourite color?", "What was the name of your first pet?"));
+            User tmpUser = User.signedUpUsers.get(username);
+            System.out.println(questions.get(tmpUser.getRecoveryQ()-1));
+            String command;
+            command = scanner.nextLine().trim();
+            //if user answers correctly
+            if(tmpUser.getRecoveryAns().equals(command)){
+                System.out.println("You have answered correctly \uD83C\uDF89");
+                System.out.println("You can quit or enter you new password:");
+                command = scanner.nextLine().trim();
+                while(true){
+                    if(ProgramController.checkQuit(command)){
+                        System.out.println("You will be directed to the main menu");
+                        return;
+                    }
+                    if(SignUp.isValidPasswordFormat(command)){
+                        System.out.println("Password changed successfully");
+                        Connect.updateUserPassword(username, command);
+                        return;
+                    }
+                    command = scanner.nextLine().trim();
+                }
             }
-            return 1;
+            //if user answers incorrectly
+            else{
+                System.out.println("You have answered incorrectly");
+            }
         }
-        return 2;
+    }
+
+    private static boolean matchingPassword(String username, String pass){
+        return User.signedUpUsers.get(username).getPassword().equals(pass);
     }
 }

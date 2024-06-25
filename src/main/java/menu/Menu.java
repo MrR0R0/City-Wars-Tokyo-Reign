@@ -10,7 +10,7 @@ public abstract class Menu extends app.Error {
     public static User loggedInUser = new User();
 
     public static boolean isLoggedIn(){
-        return !(loggedInUser == null);
+        return !(loggedInUser.getUsername() == null);
     }
     public static Matcher getCommandMatcher(String input, String regex) {
         Pattern pattern = Pattern.compile(regex);
