@@ -30,6 +30,7 @@ public class Login extends Menu {
                 System.out.println("user logged in successfully");
                 System.out.println("Welcome " + username + "!");
                 Menu.loggedInUser = User.signedUpUsers.get(username);
+                Menu.currentMenu = MenuType.Main;
                 return;
             }
         }

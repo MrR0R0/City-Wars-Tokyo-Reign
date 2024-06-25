@@ -4,11 +4,16 @@ import app.Card;
 import app.User;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 
 
 public class Connect {
+    //Current file: jdbc:sqlite:C:\Users\Mahdi\Downloads\history.db
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
+
     private static Connection connection;
 
     public static void connectToDatabase(){
@@ -20,8 +25,9 @@ public class Connect {
             System.out.println(e.getMessage());
         }
     }
-    public static void insertUser(String user_username, String user_cards, String user_password, String user_nickname, String user_email,
-                                  String user_recoveryQuestion, String user_recoveryAnswer, Integer user_wallet) throws SQLException {
+    public static void insertUser(String user_username, String user_cards, String user_password, String user_nickname,
+                                  String user_email, String user_recoveryQuestion, String user_recoveryAnswer,
+                                  Integer user_wallet) throws SQLException {
         String sql = "INSERT INTO user(user_username, user_cards, user_password, user_nickname, user_email, "
                 + "user_recoveryQuestion, user_recoveryAnswer, user_wallet) VALUES(?,?,?,?,?,?,?,?)";
         try {
@@ -111,9 +117,9 @@ public class Connect {
             connection.close();
         }
     }
-    public static void insertCard(String name, String type, Integer level, Integer price,
-                                  Integer damage, Integer duration, Integer upgradeCost, Integer attackOrDefense,
-                                  Integer user_id, Integer specialProperty, Integer Acc, Integer isBreakable) throws SQLException {
+    public static void insertCard(String name, String type, Integer level, Integer price, Integer damage,
+                                  Integer duration, Integer upgradeCost, Integer attackOrDefense, Integer user_id,
+                                  Integer specialProperty, Integer Acc, Integer isBreakable) throws SQLException {
         connectToDatabase();
         String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, user_id, card_specialProperty, card_Acc, card_isBreakable) "
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -160,5 +166,47 @@ public class Connect {
         finally {
             connection.close();
         }
+    }
+
+    //Getting user's match history
+    public static ArrayList<String> getUserHistory(String username, int namePad, int consPad, int numPad) throws SQLException {
+        String query = "SELECT * FROM history WHERE host_name = ? OR guest_name = ?";
+        int counter = 1;
+        ArrayList<String> historyArray = new ArrayList<>();
+        try{
+            connectToDatabase();
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, username);
+            pstmt.setString(2, username);
+            ResultSet resultSet = pstmt.executeQuery();
+            while (resultSet.next()) {
+                //host (host_level), right padded
+                String host = User.formatUsername(resultSet.getString("host_name")) +
+                            " (" + resultSet.getString("host_level") + ")";
+                host = String.format("%-"+namePad+"s", host);
+                //guest (guest_level), right padded
+                String guest = User.formatUsername(resultSet.getString("guest_name")) +
+                        " (" + resultSet.getString("guest_level") + ")";
+                guest = String.format("%-"+namePad+"s", guest);
+                String result = resultSet.getString("result");
+                String time = resultSet.getString("time");
+                String hostCons = resultSet.getString("host_cons");
+                hostCons = String.format("%-"+consPad+"s", hostCons);
+                String guestCons = resultSet.getString("guest_cons");
+                guestCons = String.format("%-"+consPad+"s", guestCons);
+                historyArray.add(String.format("%-"+numPad+"s", counter) + "|" + host +
+                        "|" + guest + "|" + result + "|" + time + "|" + hostCons + "|" + guestCons);
+                counter++;
+            }
+        }
+        catch (SQLException e) {
+            System.out.println("Something went wrong when writing in SQL table");
+            e.printStackTrace();
+        }
+        finally {
+            connection.close();
+            Collections.reverse(historyArray);
+        }
+        return historyArray;
     }
 }

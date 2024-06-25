@@ -34,6 +34,10 @@ public class User {
         System.out.println("Level:" + level);
         System.out.println("Wallet:" + wallet);
     }
+
+    public void showCards(){
+
+    }
     public String getUsername() {return username;}
     public String getPassword() {return password;}
     public String getNickname() {return nickname;}
@@ -75,5 +79,12 @@ public class User {
             }
         }
         return false;
+    }
+
+    public static String formatUsername(String name){
+        if(name.length() > 10) {
+            return name.substring(0, 10) + "...";
+        }
+        return name;
     }
 }
