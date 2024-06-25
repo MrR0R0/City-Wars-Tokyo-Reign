@@ -2,7 +2,6 @@ package menu.authentication;
 
 import app.Error;
 import app.User;
-import database.Connect;
 import menu.Menu;
 import java.security.SecureRandom;
 import java.sql.SQLException;
@@ -12,7 +11,7 @@ import java.util.regex.Matcher;
 public class SignUp extends Menu {
     static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
     static private User tmpUser;
-    static private Integer initialMoney = 100;
+    static final private Integer initialMoney = 100;
     static final int maxCaptchaAttempts = 3;
 
     static public final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
@@ -57,27 +56,13 @@ public class SignUp extends Menu {
         }
 
         //checking whether fields are empty
-        if (emptyField(pass, "Password")) {
-            return false;
-        }
         if (emptyField(passConf, "Password Confirmation")) {
             return false;
         }
-
-        //checking whether the password is weak
-        if (pass.length() < 8) {
-            System.out.println("Password should be at least 8 characters!");
+        //validating password
+        if(!isValidPasswordFormat(pass)) {
             return false;
         }
-        if (!pass.matches(PASSWORD_REGEX)) {
-            System.out.println("The password must contain at least one uppercase letter and one lowercase letter.");
-            return false;
-        }
-        if (pass.replaceAll("[a-zA-Z0-9]", "").isEmpty()) {
-            System.out.println("The password must contain at least one special character");
-            return false;
-        }
-
         //checking password confirmation
         if (!pass.equals(passConf)) {
             System.out.println("Password confirmation does not match the original password");
@@ -244,5 +229,27 @@ public class SignUp extends Menu {
                 User.signedUpUsers.put(username, tmpUser);
             }
         }
+    }
+
+    static public boolean isValidPasswordFormat(String password){
+        if (emptyField(password, "Password")) {
+            System.out.println("Password is empty");
+            return false;
+        }
+
+        //checking whether the password is weak
+        if (password.length() < 8) {
+            System.out.println("Password should be at least 8 characters!");
+            return false;
+        }
+        if (!password.matches(PASSWORD_REGEX)) {
+            System.out.println("The password must contain at least one uppercase letter and one lowercase letter.");
+            return false;
+        }
+        if (password.replaceAll("[a-zA-Z0-9]", "").isEmpty()) {
+            System.out.println("The password must contain at least one special character");
+            return false;
+        }
+        return true;
     }
 }

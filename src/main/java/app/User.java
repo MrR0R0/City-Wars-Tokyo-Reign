@@ -39,7 +39,7 @@ public class User {
     public String getNickname() {return nickname;}
     public String getEmail() {return email;}
     public String getRecoveryAns() {return recoveryAns;}
-    public String getRecoveryQ() {return recoveryQ;}
+    public int getRecoveryQ() {return Integer.parseInt(recoveryQ);}
     public String getCards() {return cards;}
     public Integer getWallet() {return wallet;}
     public Integer getLevel() {return level;}

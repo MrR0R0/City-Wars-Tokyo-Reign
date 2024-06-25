@@ -22,10 +22,10 @@ public class Connect {
     }
     public static void insertUser(String user_username, String user_cards, String user_password, String user_nickname, String user_email,
                                   String user_recoveryQuestion, String user_recoveryAnswer, Integer user_wallet) throws SQLException {
-        connectToDatabase();
         String sql = "INSERT INTO user(user_username, user_cards, user_password, user_nickname, user_email, "
                 + "user_recoveryQuestion, user_recoveryAnswer, user_wallet) VALUES(?,?,?,?,?,?,?,?)";
         try {
+            connectToDatabase();
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, user_username);
             pstmt.setString(2, user_cards);
@@ -45,11 +45,10 @@ public class Connect {
         }
     }
     public static LinkedHashMap<String, User> getUsers() throws SQLException {
-        connectToDatabase();
         String sql = "SELECT * FROM user";
         LinkedHashMap<String, User> userMap = new LinkedHashMap<>();
         try {
-            connection = DriverManager.getConnection(DB_URL);
+            connectToDatabase();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
@@ -60,8 +59,8 @@ public class Connect {
                 user.setPassword(rs.getString("user_password"));
                 user.setNickname(rs.getString("user_nickname"));
                 user.setEmail(rs.getString("user_email"));
-                user.setRecoveryQ(rs.getString("user_recoveryAnswer"));
-                user.setRecoveryAns(rs.getString("user_recoveryQuestion"));
+                user.setRecoveryQ(rs.getString("user_recoveryQuestion"));
+                user.setRecoveryAns(rs.getString("user_recoveryAnswer"));
                 user.setWallet(rs.getInt("user_wallet"));
 
                 userMap.put(rs.getString("user_username"), user);
@@ -112,7 +111,9 @@ public class Connect {
             connection.close();
         }
     }
-    public static void insertCard(String name, String type, Integer level, Integer price, Integer damage, Integer duration, Integer upgradeCost, Integer attackOrDefense, Integer user_id, Integer specialProperty, Integer Acc, Integer isBreakable) throws SQLException {
+    public static void insertCard(String name, String type, Integer level, Integer price,
+                                  Integer damage, Integer duration, Integer upgradeCost, Integer attackOrDefense,
+                                  Integer user_id, Integer specialProperty, Integer Acc, Integer isBreakable) throws SQLException {
         connectToDatabase();
         String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, user_id, card_specialProperty, card_Acc, card_isBreakable) "
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -136,6 +137,25 @@ public class Connect {
         }
         catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+        finally {
+            connection.close();
+        }
+    }
+
+    public static void updateUserPassword(String username, String newPass) throws SQLException {
+        String updateSQL = "UPDATE user SET user_password = ? WHERE user_username = ?";
+        try {
+            connectToDatabase();
+            PreparedStatement pstmt = connection.prepareStatement(updateSQL);
+            pstmt.setString(1, newPass);
+            pstmt.setString(2, username);
+            // Execute the update
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e) {
+            System.out.println("Something went wrong when writing in SQL table");
+            e.printStackTrace();
         }
         finally {
             connection.close();

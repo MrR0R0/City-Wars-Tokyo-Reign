@@ -24,4 +24,12 @@ public class Error {
         }
         return false;
     }
+
+    static public boolean userRegistered(String username){
+        if(!User.signedUpUsers.containsKey(username)){
+            System.out.println("Username \"" + username + "\" does not exist!");
+            return false;
+        }
+        return true;
+    }
 }
