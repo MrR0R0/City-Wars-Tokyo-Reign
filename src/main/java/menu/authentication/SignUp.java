@@ -18,10 +18,6 @@ public class SignUp extends Menu {
     static public final String USERNAME_REGEX = "[a-zA-Z0-9_]+";
     static public final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z]).+$";
 
-    static public final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
-    static public final String USERNAME_REGEX = "[a-zA-Z0-9_]+";
-    static public final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z]).+$";
-
     public static void handleInput(String input, Scanner scanner) throws SQLException {
         String createUserCommand = "^(?i)user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
