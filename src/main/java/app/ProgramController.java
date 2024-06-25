@@ -2,8 +2,8 @@ package app;
 
 import database.Connect;
 import menu.Menu;
+import menu.ProfileMenu;
 import menu.authentication.Login;
-//import menu.ProfileMenu;
 import menu.authentication.SignUp;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -28,11 +28,13 @@ public class ProgramController {
                     System.out.println("You should log in first");
                 }
             }
-            else {
+            else if(Menu.currentMenu.equals(Menu.MenuType.Authentication)){
                 SignUp.handleInput(command, scanner);
                 Login.handleInput(command, scanner);
             }
-            //ProfileMenu.handleInput(command, scanner);
+            else if(Menu.currentMenu.equals(Menu.MenuType.Profile)){
+                ProfileMenu.handleInput(command, scanner);
+            }
         }
     }
 
