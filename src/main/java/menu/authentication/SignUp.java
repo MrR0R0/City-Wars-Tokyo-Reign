@@ -175,9 +175,10 @@ public class SignUp extends Menu {
 
     static private boolean twoStepVerification(Scanner scanner) throws SQLException {
         if (securityQuestion(scanner)) {
-            if (Captcha.checkCaptcha(scanner)) {
+            if (!Captcha.checkCaptcha(scanner)) {
                 tmpUser = new User(username, pass, nickname, email, recoveryAns,
                         recoveryQ, "", initialMoney, 1);
+                tmpUser.giveRandomCard();
                 tmpUser.addToTable();
                 User.signedUpUsers.put(username, tmpUser);
                 return true;
