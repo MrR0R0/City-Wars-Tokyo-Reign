@@ -103,6 +103,7 @@ public class Connect {
                 card.setId(rs.getInt("card_id"));
                 card.setAttackOrDefense(rs.getInt("card_attackOrDefense"));
                 card.setSpecialProperty(rs.getInt("card_specialProperty"));
+                card.setCharacter(String.valueOf(convertCharacterType(rs.getInt("card_character"))));
 
                 cardMap.put(rs.getInt("card_id"), card);
                 //System.out.println("Cards has been retrieved and added to the LinkedHashMap.");
@@ -117,12 +118,12 @@ public class Connect {
             connection.close();
         }
     }
-    public static void insertCard(String name, String type, Integer level, Integer price, Integer damage,
-                                  Integer duration, Integer upgradeCost, Integer attackOrDefense, Integer user_id,
-                                  Integer specialProperty, Integer Acc, Integer isBreakable) throws SQLException {
+    public static void insertCard(String name, String type, Integer level, Integer price, Integer damage, Integer duration,
+                                  Integer upgradeCost, Integer attackOrDefense, Integer user_id, Integer specialProperty,
+                                  Integer Acc, Integer isBreakable, String character) throws SQLException {
         connectToDatabase();
-        String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, user_id, card_specialProperty, card_Acc, card_isBreakable) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, user_id, card_specialProperty, card_Acc, card_isBreakable, card_character) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, name);
@@ -137,6 +138,7 @@ public class Connect {
             pstmt.setInt(10, specialProperty);
             pstmt.setInt(11, Acc);
             pstmt.setInt(12, isBreakable);
+            pstmt.setInt(13, Integer.parseInt(convertCharacterType(character)));
 
             pstmt.executeUpdate();
 //            System.out.println("card has been added to the database.");
@@ -167,7 +169,6 @@ public class Connect {
             connection.close();
         }
     }
-
     //Getting user's match history
     public static ArrayList<String> getUserHistory(String username, int namePad, int consPad, int numPad) throws SQLException {
         String query = "SELECT * FROM history WHERE host_name = ? OR guest_name = ?";
@@ -208,5 +209,43 @@ public class Connect {
             Collections.reverse(historyArray);
         }
         return historyArray;
+    }
+
+    // Converting between character strings and integers.
+    private static  <T> T convertCharacterType(T var){
+        if (var instanceof String){
+            Card.Characters character = Card.Characters.valueOf((String) var);
+            switch (character) {
+                case Character1 -> {
+                    return  (T) "1";
+                }
+                case Character2 -> {
+                    return (T) "2";
+                }
+                case Character3 -> {
+                    return  (T) "3";
+                }
+                case Character4 -> {
+                    return (T) "4";
+                }
+                case Unity -> {
+                    return  (T) "0";
+                }
+                default -> {
+                    return null;
+                }
+            }
+        }
+        if (var instanceof Integer){
+            return switch ((Integer) var) {
+                case 1 -> (T) String.valueOf(Card.Characters.Character1);
+                case 2 -> (T) String.valueOf(Card.Characters.Character2);
+                case 3 -> (T) String.valueOf(Card.Characters.Character3);
+                case 4 -> (T) String.valueOf(Card.Characters.Character4);
+                case 0 -> (T) String.valueOf(Card.Characters.Unity);
+                default -> throw new IllegalStateException("Unexpected value: " + (Integer) var);
+            };
+        }
+        return null;
     }
 }

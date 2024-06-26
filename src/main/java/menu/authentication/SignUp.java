@@ -86,7 +86,7 @@ public class SignUp extends Menu {
         if (!checkCommonFields(username, email, nickname)) {
             return false;
         }
-        String randomPass = generatePassword(10);
+        String randomPass = Captcha.generatePassword(10);
         System.out.println("Your random password: " + randomPass);
         System.out.print("Please enter your password: ");
         String command = scanner.nextLine().trim();
@@ -175,7 +175,7 @@ public class SignUp extends Menu {
 
     static private boolean twoStepVerification(Scanner scanner) throws SQLException {
         if (securityQuestion(scanner)) {
-            if (checkCaptcha(scanner)) {
+            if (Captcha.checkCaptcha(scanner)) {
                 tmpUser = new User(username, pass, nickname, email, recoveryAns,
                         recoveryQ, "", initialMoney, 1);
                 tmpUser.addToTable();

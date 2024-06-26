@@ -20,15 +20,26 @@ public class ProgramController {
             if (checkQuit(command)) {
                 break;
             }
-            else if(Menu.currentMenu.equals(Menu.MenuType.Authentication)){
-                SignUp.handleInput(command, scanner);
-                Login.handleInput(command, scanner);
+            else if(command.matches(logoutCommand)){
+                if(Menu.isLoggedIn()){
+                    Menu.logOut();
+                    System.out.println("Logged out successfully");
+                }
+                else{
+                    System.out.println("You should log in first");
+                }
             }
-            else if(Menu.currentMenu.equals(Menu.MenuType.Profile)){
-                ProfileMenu.handleInput(command, scanner);
-            }
-            else if(Menu.currentMenu.equals(Menu.MenuType.Main)){
-                MainMenu.handleInput(command, scanner);
+            switch (Menu.currentMenu){
+                case Authentication -> {
+                    SignUp.handleInput(command, scanner);
+                    Login.handleInput(command, scanner);
+                }
+                case Main -> {
+
+                }
+                case Profile -> {
+                    ProfileMenu.handleInput(command, scanner);
+                }
             }
         }
     }

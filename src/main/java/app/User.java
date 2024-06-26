@@ -9,6 +9,10 @@ import java.util.LinkedHashMap;
 public class User {
     private String username, password, nickname, email, recoveryAns, recoveryQ, cards;
     private Integer wallet, level;
+
+    // should initialize in signup
+    public LinkedHashMap <Integer, Card> deckOfCards;
+
     static public LinkedHashMap<String, User> signedUpUsers;
 
     public User() {}
