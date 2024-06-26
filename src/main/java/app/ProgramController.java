@@ -21,6 +21,7 @@ public class ProgramController {
         while (true) {
             String command = scanner.nextLine().trim().replaceAll(" +", " ");
             if (checkQuit(command)) {
+
                 break;
             }
             else if(command.matches(logoutCommand)){

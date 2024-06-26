@@ -5,7 +5,6 @@ import app.User;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
@@ -60,7 +59,7 @@ public class Connect {
             while (rs.next()) {
                 User user = new User();
                 user.setLevel(rs.getInt("user_level"));
-                user.setCards(rs.getString("user_cards"));
+                user.setCardsSeries(rs.getString("user_cards"));
                 user.setUsername(rs.getString("user_username"));
                 user.setPassword(rs.getString("user_password"));
                 user.setNickname(rs.getString("user_nickname"));
@@ -68,7 +67,7 @@ public class Connect {
                 user.setRecoveryQ(rs.getString("user_recoveryQuestion"));
                 user.setRecoveryAns(rs.getString("user_recoveryAnswer"));
                 user.setWallet(rs.getInt("user_wallet"));
-
+                user.setID(rs.getInt("user_id"));
                 userMap.put(rs.getString("user_username"), user);
             }
             //System.out.println("Users has been retrieved and added to the LinkedHashMap.");
@@ -170,15 +169,15 @@ public class Connect {
         }
     }
     //Getting user's match history
-    public static ArrayList<String> getUserHistory(String username, int namePad, int consPad, int numPad) throws SQLException {
-        String query = "SELECT * FROM history WHERE host_name = ? OR guest_name = ?";
+    public static ArrayList<String> getUserHistory(String userID, int namePad, int consPad, int numPad) throws SQLException {
+        String query = "SELECT * FROM history WHERE host_id = ? OR guest_id = ?";
         int counter = 1;
         ArrayList<String> historyArray = new ArrayList<>();
         try{
             connectToDatabase();
             PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setString(1, username);
-            pstmt.setString(2, username);
+            pstmt.setString(1, userID);
+            pstmt.setString(2, userID);
             ResultSet resultSet = pstmt.executeQuery();
             while (resultSet.next()) {
                 //host (host_level), right padded
@@ -248,4 +247,5 @@ public class Connect {
         }
         return null;
     }
+
 }
