@@ -79,15 +79,27 @@ public class Card {
                 this.attackOrDefense,this.upgradeCost,this.specialProperty,this.acc,isBreakable,this.character);
     }
 
-    public static void setLevelForDeck(User user) {
+    public static void setCardLevelFromUser(User user) {
         String[] idAndLevelOfCards = user.getCards().split(",");
         Pattern pattern = Pattern.compile(CARD_REGEX);
         for (String idAndLevel : idAndLevelOfCards) {
             Matcher matcher = pattern.matcher(idAndLevel);
-            String id = matcher.group("id");
-            String level = matcher.group("level");
-            user.deckOfCards.get(Integer.parseInt(id)).setLevel(Integer.parseInt(level));
+            if (matcher.find()){
+                String id = matcher.group("id");
+                String level = matcher.group("level");
+                user.deckOfCards.get(Integer.parseInt(id)).setLevel(Integer.parseInt(level));
+            }
         }
+    }
+
+    public static void updateUserCards(User user) {
+        StringBuilder cardSeries = new StringBuilder();
+        for (Card card : user.deckOfCards.values()) {
+            cardSeries.append(card.getId()).append("_").append(card.getLevel()).append(",");
+        }
+        cardSeries.delete(cardSeries.length()-1, cardSeries.length());
+        user.setCards(cardSeries.toString());
+        System.out.println(cardSeries.toString());
     }
 
 }

@@ -15,6 +15,8 @@ public class ProgramController {
         Scanner scanner = new Scanner(System.in);
         User.signedUpUsers = Connect.getUsers();
         String logoutCommand = "^log out$";
+
+
         while (true) {
             String command = scanner.nextLine().trim().replaceAll(" +", " ");
             if (checkQuit(command)) {
