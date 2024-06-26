@@ -3,17 +3,18 @@ package menu.authentication;
 import app.Error;
 import app.User;
 import menu.Menu;
-import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
+
+import static menu.authentication.Captcha.checkCaptcha;
+import static menu.authentication.Captcha.generatePassword;
 
 public class SignUp extends Menu {
     static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
     static private User tmpUser;
 
     static final private Integer initialMoney = 100;
-    static final int maxCaptchaAttempts = 3;
 
     static public final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     static public final String USERNAME_REGEX = "[a-zA-Z0-9_]+";
@@ -174,9 +175,10 @@ public class SignUp extends Menu {
 
     static private boolean twoStepVerification(Scanner scanner) throws SQLException {
         if (securityQuestion(scanner)) {
-            if (Captcha.checkCaptcha(scanner)) {
+            if (!Captcha.checkCaptcha(scanner)) {
                 tmpUser = new User(username, pass, nickname, email, recoveryAns,
                         recoveryQ, "", initialMoney, 1);
+                tmpUser.giveRandomCard();
                 tmpUser.addToTable();
                 User.signedUpUsers.put(username, tmpUser);
                 return true;

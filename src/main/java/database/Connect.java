@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 
 
 public class Connect {
+    //Current file: jdbc:sqlite:C:\Users\Mahdi\Downloads\history.db
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
 
     private static Connection connection;
@@ -98,7 +99,7 @@ public class Connect {
                 card.setLevel(rs.getInt("card_level"));
                 card.setUpgradeCost(rs.getInt("card_upgradeCost"));
                 card.setDuration(rs.getInt("card_duration"));
-                card.setType(rs.getString("card_type"));
+                card.setType(Card.CardType.valueOf(rs.getString("card_type")));
                 card.setId(rs.getInt("card_id"));
                 card.setAttackOrDefense(rs.getInt("card_attackOrDefense"));
                 card.setSpecialProperty(rs.getInt("card_specialProperty"));
@@ -182,7 +183,7 @@ public class Connect {
             while (resultSet.next()) {
                 //host (host_level), right padded
                 String host = User.formatUsername(resultSet.getString("host_name")) +
-                        " (" + resultSet.getString("host_level") + ")";
+                            " (" + resultSet.getString("host_level") + ")";
                 host = String.format("%-"+namePad+"s", host);
                 //guest (guest_level), right padded
                 String guest = User.formatUsername(resultSet.getString("guest_name")) +
@@ -211,7 +212,7 @@ public class Connect {
     }
 
     // Converting between character strings and integers.
-    private static  <T> T convertCharacterType(T var){
+    public static  <T> T convertCharacterType(T var){
         if (var instanceof String){
             Card.Characters character = Card.Characters.valueOf((String) var);
             switch (character) {

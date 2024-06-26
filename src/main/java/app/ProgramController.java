@@ -14,6 +14,7 @@ public class ProgramController {
     public void run() throws SQLException, IOException {
         Scanner scanner = new Scanner(System.in);
         User.signedUpUsers = Connect.getUsers();
+        Card.allCards = Connect.getCards();
         String logoutCommand = "^log out$";
 
 
@@ -37,7 +38,7 @@ public class ProgramController {
                     Login.handleInput(command, scanner);
                 }
                 case Main -> {
-
+                    MainMenu.handleInput(command, scanner);
                 }
                 case Profile -> {
                     ProfileMenu.handleInput(command, scanner);
