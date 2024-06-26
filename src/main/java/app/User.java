@@ -73,8 +73,7 @@ public class User {
     public void setLevel(Integer level) {this.level = level;}
 
     public void addToTable() throws SQLException {
-        Connect.insertUser(username, cardsSeries, password, nickname,
-                        email, recoveryQ, recoveryAns, wallet);
+        Connect.insertUser(this);
     }
 
     public static <T> boolean isInUsersList(String property, T value){

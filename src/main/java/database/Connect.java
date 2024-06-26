@@ -24,22 +24,21 @@ public class Connect {
             System.out.println(e.getMessage());
         }
     }
-    public static void insertUser(String user_username, String user_cards, String user_password, String user_nickname,
-                                  String user_email, String user_recoveryQuestion, String user_recoveryAnswer,
-                                  Integer user_wallet) throws SQLException {
-        String sql = "INSERT INTO user(user_username, user_cards, user_password, user_nickname, user_email, "
-                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet) VALUES(?,?,?,?,?,?,?,?)";
+    public static void insertUser(User user) throws SQLException {
+        String sql = "INSERT INTO user(user_level, user_username, user_cards, user_password, user_nickname, user_email, "
+                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet) VALUES(?,?,?,?,?,?,?,?,?)";
         try {
             connectToDatabase();
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, user_username);
-            pstmt.setString(2, user_cards);
-            pstmt.setString(3, user_password);
-            pstmt.setString(4, user_nickname);
-            pstmt.setString(5, user_email);
-            pstmt.setString(6, user_recoveryQuestion);
-            pstmt.setString(7, user_recoveryAnswer);
-            pstmt.setInt(8, user_wallet);
+            pstmt.setInt(1, user.getLevel());
+            pstmt.setString(2, user.getUsername());
+            pstmt.setString(3, user.getCardsSeries());
+            pstmt.setString(4, user.getPassword());
+            pstmt.setString(5, user.getNickname());
+            pstmt.setString(6, user.getEmail());
+            pstmt.setInt(7, user.getRecoveryQ());
+            pstmt.setString(8, user.getRecoveryAns());
+            pstmt.setInt(9, user.getWallet());
             pstmt.executeUpdate();
             //System.out.println("user has been added to the database.");
         } catch (SQLException e) {
@@ -246,6 +245,25 @@ public class Connect {
             };
         }
         return null;
+    }
+
+    private static void rewriteUsers(){
+        try{
+            String sql = "DELETE FROM user";
+            connectToDatabase();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.executeUpdate();
+            for(User user : User.signedUpUsers.values()){
+                user.addToTable();
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void updateDatabase(){
+        rewriteUsers();
     }
 
 }
