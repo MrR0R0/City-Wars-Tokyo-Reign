@@ -16,6 +16,8 @@ public class ProgramController {
         User.signedUpUsers = Connect.getUsers();
         Card.allCards = Connect.getCards();
         String logoutCommand = "^log out$";
+
+
         while (true) {
             String command = scanner.nextLine().trim().replaceAll(" +", " ");
             if (checkQuit(command)) {
