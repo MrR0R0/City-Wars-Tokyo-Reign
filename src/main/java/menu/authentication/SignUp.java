@@ -1,5 +1,6 @@
 package menu.authentication;
 
+import app.Card;
 import app.Error;
 import app.User;
 import menu.Menu;
@@ -183,9 +184,9 @@ public class SignUp extends Menu {
         if (securityQuestion(scanner)) {
             if (!Captcha.checkCaptcha(scanner)) {
                 tmpUser = new User(username, pass, nickname, email, recoveryAns,
-                        recoveryQ, "", initialMoney, 1);
+                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size()+1);
                 tmpUser.giveRandomCard();
-                tmpUser.addToTable();
+                Card.updateUserCards(tmpUser);
                 User.signedUpUsers.put(username, tmpUser);
                 return true;
             }

@@ -39,7 +39,7 @@ public class MainMenu extends Menu {
     }
 
     static private void showHistory(Scanner scanner) throws SQLException {
-        ArrayList<String> history = Connect.getUserHistory(Menu.loggedInUser.getUsername(), NAME_PAD, CONS_PAD, NUM_PAD);
+        ArrayList<String> history = Connect.getUserHistory(String.valueOf(Menu.loggedInUser.getId()), NAME_PAD, CONS_PAD, NUM_PAD);
         int len = history.size();
         int numberOfPages = Math.ceilDiv(len, LINES_ON_PAGE);
         int currentPage = 1;

@@ -81,25 +81,25 @@ public class Card {
     }
 
     public static void setCardLevelFromUser(User user) {
-        String[] idAndLevelOfCards = user.getCards().split(",");
+        String[] idAndLevelOfCards = user.getCardsSeries().split(",");
         Pattern pattern = Pattern.compile(CARD_REGEX);
         for (String idAndLevel : idAndLevelOfCards) {
             Matcher matcher = pattern.matcher(idAndLevel);
             if (matcher.find()){
                 String id = matcher.group("id");
                 String level = matcher.group("level");
-                user.deckOfCards.get(Integer.parseInt(id)).setLevel(Integer.parseInt(level));
+                user.getDeckOfCards().get(Integer.parseInt(id)).setLevel(Integer.parseInt(level));
             }
         }
     }
 
     public static void updateUserCards(User user) {
         StringBuilder cardSeries = new StringBuilder();
-        for (Card card : user.deckOfCards.values()) {
+        for (Card card : user.getDeckOfCards().values()) {
             cardSeries.append(card.getId()).append("_").append(card.getLevel()).append(",");
         }
         cardSeries.delete(cardSeries.length()-1, cardSeries.length());
-        user.setCards(cardSeries.toString());
+        user.setCardsSeries(cardSeries.toString());
         System.out.println(cardSeries.toString());
     }
 

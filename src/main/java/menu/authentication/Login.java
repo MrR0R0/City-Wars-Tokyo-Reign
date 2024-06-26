@@ -46,13 +46,13 @@ public class Login extends Menu {
         //check if the user is in the table
         String username = matcher.group("Username");
         String password = matcher.group("Pass");
+        //invalid username
+        if(!Error.userRegistered(username)){
+            return false;
+        }
         //valid username and password
         if(matchingPassword(username, password)){
             return true;
-        }
-        //invalid username
-        else if(!Error.userRegistered(username)){
-            return false;
         }
         //non-matching username and password
         else{
