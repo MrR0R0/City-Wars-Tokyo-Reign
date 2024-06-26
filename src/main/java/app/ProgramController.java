@@ -1,6 +1,7 @@
 package app;
 
 import database.Connect;
+import menu.Admin;
 import menu.MainMenu;
 import menu.Menu;
 import menu.ProfileMenu;
@@ -43,6 +44,9 @@ public class ProgramController {
                 }
                 case Profile -> {
                     ProfileMenu.handleInput(command, scanner);
+                }
+                case Admin -> {
+                    Admin.handleInput(command, scanner);
                 }
             }
         }
