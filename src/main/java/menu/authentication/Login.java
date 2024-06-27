@@ -3,7 +3,6 @@ package menu.authentication;
 import app.Error;
 import app.ProgramController;
 import app.User;
-import database.Connect;
 import menu.Menu;
 
 import java.io.IOException;
@@ -29,7 +28,7 @@ public class Login extends Menu {
                 String username = matcher.group("Username");
                 System.out.println("user logged in successfully");
                 System.out.println("Welcome " + username + "!");
-                Menu.loggedInUser = User.signedUpUsers.get(username);
+                Menu.loggedInUser = User.signedUpUsers.get(User.getIdByUsername(username));
                 Menu.currentMenu = MenuType.Main;
                 return;
             }
@@ -46,12 +45,13 @@ public class Login extends Menu {
         //check if the user is in the table
         String username = matcher.group("Username");
         String password = matcher.group("Pass");
+        Integer id = User.getIdByUsername(username);
         //invalid username
         if(!Error.userRegistered(username)){
             return false;
         }
         //valid username and password
-        if(matchingPassword(username, password)){
+        if(matchingPassword(id, password)){
             return true;
         }
         //non-matching username and password
@@ -71,7 +71,7 @@ public class Login extends Menu {
                     System.out.println("Re-enter password");
                     command = scanner.nextLine().trim();
                     //if re-entered password is correct
-                    if(matchingPassword(username, command)){
+                    if(matchingPassword(id, command)){
                         return true;
                     }
                     //if re-entered password is incorrect
@@ -94,12 +94,12 @@ public class Login extends Menu {
         return false;
     }
 
-    private static void resetPassword(Matcher matcher, Scanner scanner) throws SQLException {
+    private static void resetPassword(Matcher matcher, Scanner scanner) {
         String username = matcher.group("Username");
         if(Error.userRegistered(username)){
             ArrayList<String> questions = new ArrayList<>(Arrays.asList("What is your father’s name?",
                     "What is your favourite color?", "What was the name of your first pet?"));
-            User tmpUser = User.signedUpUsers.get(username);
+            User tmpUser = User.signedUpUsers.get(User.getIdByUsername(username));
             System.out.println(questions.get(tmpUser.getRecoveryQ()-1));
             String command;
             command = scanner.nextLine().trim();
@@ -115,7 +115,7 @@ public class Login extends Menu {
                     }
                     if(SignUp.isValidPasswordFormat(command)){
                         System.out.println("Password changed successfully");
-                        User.signedUpUsers.get(username).setPassword(command);
+                        User.signedUpUsers.get(User.getIdByUsername(username)).setPassword(command);
                         return;
                     }
                     command = scanner.nextLine().trim();
@@ -128,7 +128,7 @@ public class Login extends Menu {
         }
     }
 
-    private static boolean matchingPassword(String username, String pass){
-        return User.signedUpUsers.get(username).getPassword().equals(pass);
+    private static boolean matchingPassword(Integer id, String pass){
+        return User.signedUpUsers.get(id).getPassword().equals(pass);
     }
 }

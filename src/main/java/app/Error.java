@@ -26,7 +26,7 @@ public class Error {
     }
 
     static public boolean userRegistered(String username){
-        if(!User.signedUpUsers.containsKey(username)){
+        if(!User.signedUpUsers.containsKey(User.getIdByUsername(username))){
             System.out.println("Username \"" + username + "\" does not exist!");
             return false;
         }

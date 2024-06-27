@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 
 public abstract class Menu extends app.Error {
     public enum MenuType {Profile, Main, Shop, Authentication, Play}
-    public static boolean isInMenu = false;
     public static User loggedInUser = new User();
     public static MenuType currentMenu = MenuType.Authentication;
 

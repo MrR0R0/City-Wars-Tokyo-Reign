@@ -15,7 +15,7 @@ public class User {
     // should initialize in signup
     private LinkedHashMap <Integer, Card> deckOfCards = new LinkedHashMap<>();
 
-    static public LinkedHashMap<String, User> signedUpUsers;
+    static public LinkedHashMap<Integer, User> signedUpUsers;
 
     public User() {}
     public User(String username, String password, String nickname, String email, String recoveryAns,
@@ -134,5 +134,13 @@ public class User {
         List<T> copy = new ArrayList<>(list);
         Collections.shuffle(copy);
         return copy.subList(0, Math.min(subsetSize, copy.size()));
+    }
+
+    public static Integer getIdByUsername(String username){
+        for(User user : User.signedUpUsers.values()){
+            if(user.getUsername().equals(username))
+                return user.getId();
+        }
+        return -1;
     }
 }

@@ -5,6 +5,7 @@ import app.User;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
@@ -15,7 +16,7 @@ public class Connect {
 
     private static Connection connection;
 
-    public static void connectToDatabase(){
+    public static void connectToDatabase() {
         try {
             connection = DriverManager.getConnection(DB_URL);
             //System.out.println("Connection to SQLite has been established.");
@@ -24,6 +25,7 @@ public class Connect {
             System.out.println(e.getMessage());
         }
     }
+
     public static void insertUser(User user) throws SQLException {
         String sql = "INSERT INTO user(user_level, user_username, user_cards, user_password, user_nickname, user_email, "
                 + "user_recoveryQuestion, user_recoveryAnswer, user_wallet) VALUES(?,?,?,?,?,?,?,?,?)";
@@ -43,14 +45,14 @@ public class Connect {
             //System.out.println("user has been added to the database.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }
-        finally{
+        } finally {
             connection.close();
         }
     }
-    public static LinkedHashMap<String, User> getUsers() throws SQLException {
+
+    public static LinkedHashMap<Integer, User> getUsers() throws SQLException {
         String sql = "SELECT * FROM user";
-        LinkedHashMap<String, User> userMap = new LinkedHashMap<>();
+        LinkedHashMap<Integer, User> userMap = new LinkedHashMap<>();
         try {
             connectToDatabase();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -67,24 +69,23 @@ public class Connect {
                 user.setRecoveryAns(rs.getString("user_recoveryAnswer"));
                 user.setWallet(rs.getInt("user_wallet"));
                 user.setID(rs.getInt("user_id"));
-                userMap.put(rs.getString("user_username"), user);
+                userMap.put(rs.getInt("user_id"), user);
             }
             //System.out.println("Users has been retrieved and added to the LinkedHashMap.");
             return userMap;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
-        }
-        finally {
+        } finally {
             connection.close();
         }
     }
+
     public static LinkedHashMap<Integer, Card> getCards() throws SQLException {
         connectToDatabase();
         String sql = "SELECT * FROM card";
         LinkedHashMap<Integer, Card> cardMap = new LinkedHashMap<>();
-        try{
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
@@ -107,15 +108,14 @@ public class Connect {
                 //System.out.println("Cards has been retrieved and added to the LinkedHashMap.");
             }
             return cardMap;
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
             return null;
-        }
-        finally {
+        } finally {
             connection.close();
         }
     }
+
     public static void insertCard(String name, String type, Integer level, Integer price, Integer damage, Integer duration,
                                   Integer upgradeCost, Integer attackOrDefense, Integer user_id, Integer specialProperty,
                                   Integer Acc, Integer isBreakable, String character) throws SQLException {
@@ -140,11 +140,9 @@ public class Connect {
 
             pstmt.executeUpdate();
 //            System.out.println("card has been added to the database.");
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }
-        finally {
+        } finally {
             connection.close();
         }
     }
@@ -158,51 +156,49 @@ public class Connect {
             pstmt.setString(2, username);
             // Execute the update
             pstmt.executeUpdate();
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Something went wrong when writing in SQL table");
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             connection.close();
         }
     }
+
     //Getting user's match history
-    public static ArrayList<String> getUserHistory(String userID, int namePad, int consPad, int numPad) throws SQLException {
+    public static ArrayList<History> getUserHistory(String userID) throws SQLException {
         String query = "SELECT * FROM history WHERE host_id = ? OR guest_id = ?";
         int counter = 1;
-        ArrayList<String> historyArray = new ArrayList<>();
-        try{
+        ArrayList<History> historyArray = new ArrayList<>();
+        try {
             connectToDatabase();
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, userID);
             pstmt.setString(2, userID);
             ResultSet resultSet = pstmt.executeQuery();
+            ArrayList<Integer> self_opponent_ID = getOpponent(
+                    Integer.parseInt(userID),
+                    Integer.parseInt(resultSet.getString("host_id")),
+                    Integer.parseInt(resultSet.getString("guest_id"))
+            );
             while (resultSet.next()) {
-                //host (host_level), right padded
-                String host = User.formatUsername(resultSet.getString("host_name")) +
-                            " (" + resultSet.getString("host_level") + ")";
-                host = String.format("%-"+namePad+"s", host);
-                //guest (guest_level), right padded
-                String guest = User.formatUsername(resultSet.getString("guest_name")) +
-                        " (" + resultSet.getString("guest_level") + ")";
-                guest = String.format("%-"+namePad+"s", guest);
-                String result = resultSet.getString("result");
-                String time = resultSet.getString("time");
-                String hostCons = resultSet.getString("host_cons");
-                hostCons = String.format("%-"+consPad+"s", hostCons);
-                String guestCons = resultSet.getString("guest_cons");
-                guestCons = String.format("%-"+consPad+"s", guestCons);
-                historyArray.add(String.format("%-"+numPad+"s", counter) + "|" + host +
-                        "|" + guest + "|" + result + "|" + time + "|" + hostCons + "|" + guestCons);
+                History tmpHist = new History(
+                        counter,
+                        User.signedUpUsers.get(self_opponent_ID.get(0)).getUsername(),
+                        resultSet.getString("host_level"),
+                        User.signedUpUsers.get(self_opponent_ID.get(1)).getUsername(),
+                        resultSet.getString("guest_level"),
+                        resultSet.getString("result"),
+                        resultSet.getString("time"),
+                        resultSet.getString("host_cons"),
+                        resultSet.getString("guest_cons")
+                );
+                historyArray.add(tmpHist);
                 counter++;
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Something went wrong when writing in SQL table");
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             connection.close();
             Collections.reverse(historyArray);
         }
@@ -210,50 +206,50 @@ public class Connect {
     }
 
     // Converting between character strings and integers.
-    public static  <T> T convertCharacterType(T var){
-        if (var instanceof String){
+    public static <T> T convertCharacterType(T var) {
+        if (var instanceof String) {
             Card.Characters character = Card.Characters.valueOf((String) var);
             switch (character) {
                 case Character1 -> {
-                    return  (T) "1";
+                    return (T) "1";
                 }
                 case Character2 -> {
                     return (T) "2";
                 }
                 case Character3 -> {
-                    return  (T) "3";
+                    return (T) "3";
                 }
                 case Character4 -> {
                     return (T) "4";
                 }
                 case Unity -> {
-                    return  (T) "0";
+                    return (T) "0";
                 }
                 default -> {
                     return null;
                 }
             }
         }
-        if (var instanceof Integer){
+        if (var instanceof Integer) {
             return switch ((Integer) var) {
                 case 1 -> (T) String.valueOf(Card.Characters.Character1);
                 case 2 -> (T) String.valueOf(Card.Characters.Character2);
                 case 3 -> (T) String.valueOf(Card.Characters.Character3);
                 case 4 -> (T) String.valueOf(Card.Characters.Character4);
                 case 0 -> (T) String.valueOf(Card.Characters.Unity);
-                default -> throw new IllegalStateException("Unexpected value: " + (Integer) var);
+                default -> throw new IllegalStateException("Unexpected value: " + var);
             };
         }
         return null;
     }
 
-    private static void rewriteUsers(){
-        try{
+    private static void rewriteUsers() {
+        try {
             String sql = "DELETE FROM user";
             connectToDatabase();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.executeUpdate();
-            for(User user : User.signedUpUsers.values()){
+            for (User user : User.signedUpUsers.values()) {
                 user.addToTable();
             }
 
@@ -262,8 +258,16 @@ public class Connect {
         }
     }
 
-    public static void updateDatabase(){
+    public static void updateDatabase() {
         rewriteUsers();
     }
 
+    //this function will return the player's and their opponent's name
+    //[player_name, opponent_name]
+    private static ArrayList<Integer> getOpponent(Integer selfID, Integer id1, Integer id2){
+        if(selfID.equals(id1)){
+            return new ArrayList<>(Arrays.asList(id1, id2));
+        }
+        return new ArrayList<>(Arrays.asList(id2, id1));
+    }
 }
