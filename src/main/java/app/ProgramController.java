@@ -14,13 +14,13 @@ import java.util.Scanner;
 public class ProgramController {
     public void run() throws SQLException, IOException {
         Scanner scanner = new Scanner(System.in);
-        User.signedUpUsers = Connect.getUsers();
         Card.allCards = Connect.getCards();
+        User.signedUpUsers = Connect.getUsers();
         String logoutCommand = "^log out$";
 
 
         while (true) {
-            String command = scanner.nextLine().trim().replaceAll(" +", " ");
+            String command = scanner.nextLine().trim();
             if (checkQuit(command)) {
                 Connect.updateDatabase();
                 break;
