@@ -9,16 +9,23 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class ProfileMenu extends Menu {
+    final static private String showInfoCommand = "^(?i)Show information\\s*$";
+    final static private String changeUsernameCommand = "^(?i)Profile change -u (?<Username>\\S+)$";
+    final static private String changeNicknameCommand = "^(?i)Profile change -n (?<Nickname>\\S+)$";
+    final static private String changePasswordCommand = "^(?i)Profile change password -o (?<oldPassword>\\S+) -n (?<newPassword>\\S+)$";
+    final static private String changeEmailCommand = "^(?i)Profile change -e (?<Email>\\S+)$";
 
 
     static public void handleInput(String input, Scanner scanner) {
         Matcher matcher;
 
-        String showInfoCommand = "^(?i)Show information\\s*$";
-        String changeUsernameCommand = "^(?i)Profile change -u (?<Username>\\S+)$";
-        String changeNicknameCommand = "^(?i)Profile change -n (?<Nickname>\\S+)$";
-        String changePasswordCommand = "^(?i)Profile change password -o (?<oldPassword>\\S+) -n (?<newPassword>\\S+)$";
-        String changeEmailCommand = "^(?i)Profile change -e (?<Email>\\S+)$";
+
+        if (input.matches(backCommand)){
+            if (Error.loginFirst())
+                return;
+            currentMenu = MenuType.Main;
+            showCurrentMenu();
+        }
 
         if (input.matches(showInfoCommand)) {
             if (Error.loginFirst())

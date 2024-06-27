@@ -7,19 +7,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class User {
     private String username, password, nickname, email, recoveryAns, recoveryQ, cardsSeries;
-    private Integer wallet, level, id;
+    private Integer wallet, level, id, XP , HP;
 
     // should initialize in signup
     private LinkedHashMap <Integer, Card> deckOfCards = new LinkedHashMap<>();
 
-    static public LinkedHashMap<String, User> signedUpUsers;
+    static public LinkedHashMap<Integer, User> signedUpUsers;
 
     public User() {}
     public User(String username, String password, String nickname, String email, String recoveryAns,
-                String recoveryQ, String cardsSeries, Integer wallet, Integer level, Integer id){
+                String recoveryQ, String cardsSeries, Integer wallet, Integer level, Integer id, Integer XP, Integer HP){
         this.username = username;
         this.password = password;
         this.nickname = nickname;
@@ -30,20 +32,24 @@ public class User {
         this.wallet = wallet;
         this.level = level;
         this.id = id;
+        this.XP = XP;
+        this.HP = HP;
     }
     public void showProperties(){
-        System.out.println("Username: " + username);
-        System.out.println("password: " + password);
-        System.out.println("nickname: " + nickname);
-        System.out.println("email: " + email);
-        System.out.println("recoveryAns: " + recoveryAns);
-        System.out.println("recoveryQ: " + recoveryQ);
-        System.out.println("Level:" + level);
-        System.out.println("Wallet:" + wallet);
+        System.out.print("Username: " + username + "|");
+        System.out.print("password: " + password + "|");
+        System.out.print("nickname: " + nickname + "|");
+        System.out.print("email: " + email + "|");
+        System.out.print("recoveryAns: " + recoveryAns + "|");
+        System.out.print("recoveryQ: " + recoveryQ + "|");
+        System.out.print("Level:" + level + "|");
+        System.out.print("Wallet:" + wallet + "|");
+        System.out.print("XP:" + XP + "|");
+        System.out.println("HP:" + HP + "|");
     }
     public void showCards(){
         for(Card card : deckOfCards.values()){
-            card.showProperties();
+            card.showProperties(25);
             System.out.println();
         }
     }
@@ -57,10 +63,10 @@ public class User {
     public Integer getWallet() {return wallet;}
     public Integer getLevel() {return level;}
     public Integer getId() {return id;}
+    public Integer getXP() {return XP;}
+    public Integer getHP() {return HP;}
+    public LinkedHashMap<Integer, Card> getDeckOfCards() {return deckOfCards;}
 
-    public LinkedHashMap<Integer, Card> getDeckOfCards() {
-        return deckOfCards;
-    }
     public void setID(Integer id) {this.id = id;}
     public void setUsername(String username) {this.username = username;}
     public void setPassword(String password) {this.password = password;}
@@ -71,10 +77,13 @@ public class User {
     public void setCardsSeries(String cardsSeries) {this.cardsSeries = cardsSeries;}
     public void setWallet(Integer wallet) {this.wallet = wallet;}
     public void setLevel(Integer level) {this.level = level;}
+    public void addToDeck(Integer id, Card card) {deckOfCards.put(id, card);}
+    public void setId(Integer id) {this.id = id;}
+    public void setXP(Integer XP) {this.XP = XP;}
+    public void setHP(Integer HP) {this.HP = HP;}
 
     public void addToTable() throws SQLException {
-        Connect.insertUser(username, cardsSeries, password, nickname,
-                        email, recoveryQ, recoveryAns, wallet);
+        Connect.insertUser(this);
     }
 
     public static <T> boolean isInUsersList(String property, T value){
@@ -115,10 +124,10 @@ public class User {
                 shieldOrSpell.add(card);
             }
             if(card.getType().equals(Card.CardType.common)){
-                common.get(Integer.parseInt(Connect.convertCharacterType(card.getCharacter())) - 1).add(card);
+                common.get(Integer.parseInt(String.valueOf(Connect.convertCharacterType(card.getCharacter()))) - 1).add(card);
             }
             if(card.getType().equals(Card.CardType.timeStrike)){
-                timeStrike.get(Integer.parseInt(Connect.convertCharacterType(card.getCharacter())) - 1).add(card);
+                timeStrike.get(Integer.parseInt(String.valueOf(Connect.convertCharacterType(card.getCharacter()))) - 1).add(card);
             }
         }
         ArrayList<Card> finalCards = new ArrayList<>(getRandomSubset(shieldOrSpell, 8));
@@ -135,5 +144,31 @@ public class User {
         List<T> copy = new ArrayList<>(list);
         Collections.shuffle(copy);
         return copy.subList(0, Math.min(subsetSize, copy.size()));
+    }
+
+    public void getCardsFromTable(){
+        String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
+        String[] series = cardsSeries.split(",");
+        Pattern pattern = Pattern.compile(CARD_REGEX);
+        for (String card : series) {
+            Matcher matcher = pattern.matcher(card);
+            if (matcher.find()){
+                int id = Integer.parseInt(matcher.group("id"));
+                int level = Integer.parseInt(matcher.group("level"));
+                deckOfCards.put(id, Card.allCards.get(id));
+                deckOfCards.get(id).setLevel(level);
+                deckOfCards.get(id).setAcc(Card.levelUpFormula(deckOfCards.get(id).getAcc(),deckOfCards.get(id).getLevel()));
+                deckOfCards.get(id).setAttackOrDefense(Card.levelUpFormula(deckOfCards.get(id).getAttackOrDefense(),deckOfCards.get(id).getLevel()));
+                deckOfCards.get(id).setDamage(Card.levelUpFormula(deckOfCards.get(id).getDamage(),deckOfCards.get(id).getLevel()));
+                deckOfCards.get(id).setUpgradeCost(Card.levelUpFormula(deckOfCards.get(id).getUpgradeCost(),deckOfCards.get(id).getLevel()));
+            }
+        }
+    }
+    public static Integer getIdByUsername(String username){
+        for(User user : User.signedUpUsers.values()){
+            if(user.getUsername().equals(username))
+                return user.getId();
+        }
+        return -1;
     }
 }

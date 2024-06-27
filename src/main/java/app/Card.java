@@ -14,11 +14,11 @@ public class Card {
 
     private CardType type;
     private String name, character;
-    private Integer level, price, damage, duration, upgradeCost, attackOrDefense, specialProperty, acc, id, isBreakable;
+    private Integer level, price, damage, duration, upgradeCost, attackOrDefense, specialProperty, acc, id, isBreakable, upgradeLevel;
     public static LinkedHashMap<Integer, Card> allCards = new LinkedHashMap<>();
 
     public Card(){}
-    public Card(String name, CardType type, Integer level, Integer price, Integer damage, Integer duration, Integer upgradeCost, Integer attackOrDefense, Integer specialProperty, Integer acc, Integer isBreakable, Integer id) {
+    public Card(String name, CardType type, Integer level, Integer price, Integer damage, Integer duration, Integer upgradeCost, Integer attackOrDefense, Integer specialProperty, Integer acc, Integer isBreakable, Integer id, Integer upgradeLevel) {
         this.name = name;
         this.type = type;
         this.level = level;
@@ -31,20 +31,35 @@ public class Card {
         this.id = id;
         this.specialProperty = specialProperty;
         this.attackOrDefense = attackOrDefense;
+        this.upgradeLevel = upgradeLevel;
     }
-    public void showProperties(){
-        System.out.print("name: " + name + "|");
-        System.out.print("type: " + type + "|");
-        System.out.print("level: " + level + "|");
-        System.out.print("price: " + price + "|");
-        System.out.print("damage: " + damage + "|");
-        System.out.print("duration: " + duration + "|");
-        System.out.print("updateCost:" + upgradeCost + "|");
-        System.out.print("isBreakable:" + isBreakable + "|");
-        System.out.print("acc: " + acc + "|");
-        System.out.print("id: " + id + "|");
-        System.out.print("specialProperty: " + specialProperty + "|");
-        System.out.println("attackOrDefense: " + attackOrDefense + "|");
+    public void showProperties(int pad){
+        System.out.printf("%-"+pad+"s", ("name: " + name));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("type: " + type));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("level: " + level));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("price: " + price));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("damage: " + damage));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("duration: " + duration));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("upgradeCost:" + upgradeCost));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("breakable:" + (isBreakable != 0)));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("acc: " + acc));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("id: " + id));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("special: " + specialProperty));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("Att/Def: " + attackOrDefense));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("Upgrade lvl: " + upgradeLevel));
+        System.out.println();
     }
     public String getName() {return name;}
     public CardType getType() {return type;}
@@ -59,6 +74,7 @@ public class Card {
     public Integer getSpecialProperty() {return specialProperty;}
     public Integer getAttackOrDefense() {return attackOrDefense;}
     public String getCharacter() {return character;}
+    public Integer getUpgradeLevel() {return upgradeLevel;}
 
     public void setName(String name) {this.name = name;}
     public void setType(CardType type) {this.type = type;}
@@ -73,7 +89,7 @@ public class Card {
     public void setSpecialProperty(Integer specialProperty) {this.specialProperty = specialProperty;}
     public void setId(Integer id) {this.id = id;}
     public void setCharacter(String character) {this.character = character;}
-
+    public void setUpgradeLevel(Integer upgradeLevel) {this.upgradeLevel = upgradeLevel;}
 
     public void addToTable() throws SQLException {
         Connect.insertCard(this.name, String.valueOf(this.type),this.level,this.price,this.damage,this.duration,this.upgradeCost,
@@ -103,4 +119,22 @@ public class Card {
         System.out.println(cardSeries.toString());
     }
 
+    public static Integer levelUpFormula(Integer value, Integer level){
+        return (int) (value *Math.exp(-1*Double.valueOf(level)/10)+1);
+    }
+
+    public static <T> Card findCardInlist(String property, T value, LinkedHashMap<Integer,Card> linkedHashMap) {
+        for (Card card : linkedHashMap.values()) {
+            if (property.matches("^(?i)name") && card.getName().equals(value)) {
+                return card;
+            }
+            if (property.matches("^(?i)type") && card.getType().equals(value)) {
+                return card;
+            }
+            if (property.matches("^(?i)character") && card.getCharacter().equals(value)) {
+                return card;
+            }
+        }
+        return null;
+    }
 }

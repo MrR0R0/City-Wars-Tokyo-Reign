@@ -4,15 +4,12 @@ import app.Card;
 import app.Error;
 import app.User;
 import menu.Menu;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 
-import static menu.authentication.Captcha.checkCaptcha;
-import static menu.authentication.Captcha.generatePassword;
-
 public class SignUp extends Menu {
     static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
+    static private Integer HP, XP;
     static private User tmpUser;
 
     static final private Integer initialMoney = 100;
@@ -21,7 +18,7 @@ public class SignUp extends Menu {
     static public final String USERNAME_REGEX = "[a-zA-Z0-9_]+";
     static public final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z]).+$";
 
-    public static void handleInput(String input, Scanner scanner) throws SQLException {
+    public static void handleInput(String input, Scanner scanner) {
         String createUserCommand = "^(?i)user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
         String createUserRandomCommand = "^(?i)user create -u (?<Username>\\S+) -p random" +
@@ -155,12 +152,6 @@ public class SignUp extends Menu {
             return false;
         }
 
-        //checking username length
-        if(username.length()<5 || username.length()>25){
-            System.out.println("Username must be between 5 and 25 characters long");
-            return false;
-        }
-
         //checking the requirements for username
         if (!username.matches(USERNAME_REGEX)) {
             System.out.println("The username should consist of lowercase or uppercase letters, numbers, and underscores.");
@@ -173,21 +164,21 @@ public class SignUp extends Menu {
             return false;
         }
 
-        if(User.signedUpUsers.containsKey(username)){
+        if(User.isInUsersList("username", username)){
             System.out.println("A user with the same username exists");
             return false;
         }
         return true;
     }
 
-    static private boolean twoStepVerification(Scanner scanner) throws SQLException {
+    static private boolean twoStepVerification(Scanner scanner) {
         if (securityQuestion(scanner)) {
-            if (!Captcha.checkCaptcha(scanner)) {
+            if (Captcha.checkCaptcha(scanner)) {
                 tmpUser = new User(username, pass, nickname, email, recoveryAns,
-                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size()+1);
+                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size()+1,XP,HP);
                 tmpUser.giveRandomCard();
                 Card.updateUserCards(tmpUser);
-                User.signedUpUsers.put(username, tmpUser);
+                User.signedUpUsers.put(User.signedUpUsers.size()+1, tmpUser);
                 return true;
             }
         }
