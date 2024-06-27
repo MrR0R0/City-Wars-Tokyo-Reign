@@ -5,7 +5,6 @@ import app.User;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
@@ -25,22 +24,21 @@ public class Connect {
             System.out.println(e.getMessage());
         }
     }
-    public static void insertUser(String user_username, String user_cards, String user_password, String user_nickname,
-                                  String user_email, String user_recoveryQuestion, String user_recoveryAnswer,
-                                  Integer user_wallet) throws SQLException {
-        String sql = "INSERT INTO user(user_username, user_cards, user_password, user_nickname, user_email, "
-                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet) VALUES(?,?,?,?,?,?,?,?)";
+    public static void insertUser(User user) throws SQLException {
+        String sql = "INSERT INTO user(user_level, user_username, user_cards, user_password, user_nickname, user_email, "
+                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet) VALUES(?,?,?,?,?,?,?,?,?)";
         try {
             connectToDatabase();
             PreparedStatement pstmt = connection.prepareStatement(sql);
-            pstmt.setString(1, user_username);
-            pstmt.setString(2, user_cards);
-            pstmt.setString(3, user_password);
-            pstmt.setString(4, user_nickname);
-            pstmt.setString(5, user_email);
-            pstmt.setString(6, user_recoveryQuestion);
-            pstmt.setString(7, user_recoveryAnswer);
-            pstmt.setInt(8, user_wallet);
+            pstmt.setInt(1, user.getLevel());
+            pstmt.setString(2, user.getUsername());
+            pstmt.setString(3, user.getCardsSeries());
+            pstmt.setString(4, user.getPassword());
+            pstmt.setString(5, user.getNickname());
+            pstmt.setString(6, user.getEmail());
+            pstmt.setInt(7, user.getRecoveryQ());
+            pstmt.setString(8, user.getRecoveryAns());
+            pstmt.setInt(9, user.getWallet());
             pstmt.executeUpdate();
             //System.out.println("user has been added to the database.");
         } catch (SQLException e) {
@@ -60,7 +58,7 @@ public class Connect {
             while (rs.next()) {
                 User user = new User();
                 user.setLevel(rs.getInt("user_level"));
-                user.setCards(rs.getString("user_cards"));
+                user.setCardsSeries(rs.getString("user_cards"));
                 user.setUsername(rs.getString("user_username"));
                 user.setPassword(rs.getString("user_password"));
                 user.setNickname(rs.getString("user_nickname"));
@@ -68,7 +66,9 @@ public class Connect {
                 user.setRecoveryQ(rs.getString("user_recoveryQuestion"));
                 user.setRecoveryAns(rs.getString("user_recoveryAnswer"));
                 user.setWallet(rs.getInt("user_wallet"));
+                user.setID(rs.getInt("user_id"));
 
+                user.getCardsFromTable();
                 userMap.put(rs.getString("user_username"), user);
             }
             //System.out.println("Users has been retrieved and added to the LinkedHashMap.");
@@ -99,10 +99,11 @@ public class Connect {
                 card.setLevel(rs.getInt("card_level"));
                 card.setUpgradeCost(rs.getInt("card_upgradeCost"));
                 card.setDuration(rs.getInt("card_duration"));
-                card.setType(rs.getString("card_type"));
+                card.setType(Card.CardType.valueOf(rs.getString("card_type")));
                 card.setId(rs.getInt("card_id"));
                 card.setAttackOrDefense(rs.getInt("card_attackOrDefense"));
                 card.setSpecialProperty(rs.getInt("card_specialProperty"));
+                card.setCharacter(String.valueOf(convertCharacterType(rs.getInt("card_character"))));
 
                 cardMap.put(rs.getInt("card_id"), card);
                 //System.out.println("Cards has been retrieved and added to the LinkedHashMap.");
@@ -117,12 +118,12 @@ public class Connect {
             connection.close();
         }
     }
-    public static void insertCard(String name, String type, Integer level, Integer price, Integer damage,
-                                  Integer duration, Integer upgradeCost, Integer attackOrDefense, Integer user_id,
-                                  Integer specialProperty, Integer Acc, Integer isBreakable) throws SQLException {
+    public static void insertCard(String name, String type, Integer level, Integer price, Integer damage, Integer duration,
+                                  Integer upgradeCost, Integer attackOrDefense, Integer user_id, Integer specialProperty,
+                                  Integer Acc, Integer isBreakable, String character) throws SQLException {
         connectToDatabase();
-        String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, user_id, card_specialProperty, card_Acc, card_isBreakable) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, user_id, card_specialProperty, card_Acc, card_isBreakable, card_character) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, name);
@@ -137,6 +138,7 @@ public class Connect {
             pstmt.setInt(10, specialProperty);
             pstmt.setInt(11, Acc);
             pstmt.setInt(12, isBreakable);
+            pstmt.setInt(13, Integer.parseInt(convertCharacterType(character)));
 
             pstmt.executeUpdate();
 //            System.out.println("card has been added to the database.");
@@ -167,17 +169,16 @@ public class Connect {
             connection.close();
         }
     }
-
     //Getting user's match history
-    public static ArrayList<String> getUserHistory(String username, int namePad, int consPad, int numPad) throws SQLException {
-        String query = "SELECT * FROM history WHERE host_name = ? OR guest_name = ?";
+    public static ArrayList<String> getUserHistory(String userID, int namePad, int consPad, int numPad) throws SQLException {
+        String query = "SELECT * FROM history WHERE host_id = ? OR guest_id = ?";
         int counter = 1;
         ArrayList<String> historyArray = new ArrayList<>();
         try{
             connectToDatabase();
             PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setString(1, username);
-            pstmt.setString(2, username);
+            pstmt.setString(1, userID);
+            pstmt.setString(2, userID);
             ResultSet resultSet = pstmt.executeQuery();
             while (resultSet.next()) {
                 //host (host_level), right padded
@@ -209,4 +210,62 @@ public class Connect {
         }
         return historyArray;
     }
+
+    // Converting between character strings and integers.
+    public static  <T> T convertCharacterType(T var){
+        if (var instanceof String){
+            Card.Characters character = Card.Characters.valueOf((String) var);
+            switch (character) {
+                case Character1 -> {
+                    return  (T) "1";
+                }
+                case Character2 -> {
+                    return (T) "2";
+                }
+                case Character3 -> {
+                    return  (T) "3";
+                }
+                case Character4 -> {
+                    return (T) "4";
+                }
+                case Unity -> {
+                    return  (T) "0";
+                }
+                default -> {
+                    return null;
+                }
+            }
+        }
+        if (var instanceof Integer){
+            return switch ((Integer) var) {
+                case 1 -> (T) String.valueOf(Card.Characters.Character1);
+                case 2 -> (T) String.valueOf(Card.Characters.Character2);
+                case 3 -> (T) String.valueOf(Card.Characters.Character3);
+                case 4 -> (T) String.valueOf(Card.Characters.Character4);
+                case 0 -> (T) String.valueOf(Card.Characters.Unity);
+                default -> throw new IllegalStateException("Unexpected value: " + (Integer) var);
+            };
+        }
+        return null;
+    }
+
+    private static void rewriteUsers(){
+        try{
+            String sql = "DELETE FROM user";
+            connectToDatabase();
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.executeUpdate();
+            for(User user : User.signedUpUsers.values()){
+                user.addToTable();
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void updateDatabase(){
+        rewriteUsers();
+    }
+
 }

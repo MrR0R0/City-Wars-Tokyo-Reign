@@ -1,5 +1,6 @@
 package menu.authentication;
 
+import app.Card;
 import app.Error;
 import app.User;
 import menu.Menu;
@@ -7,12 +8,8 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.regex.Matcher;
 
-import static menu.authentication.Captcha.checkCaptcha;
-import static menu.authentication.Captcha.generatePassword;
-
 public class SignUp extends Menu {
-    static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
-    static private User tmpUser;
+    static private String username, pass, email, nickname, recoveryAns, recoveryQ;
 
     static final private Integer initialMoney = 100;
 
@@ -21,9 +18,9 @@ public class SignUp extends Menu {
     static public final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z]).+$";
 
     public static void handleInput(String input, Scanner scanner) throws SQLException {
-        String createUserCommand = "^(?i)user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
+        String createUserCommand = "^user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
-        String createUserRandomCommand = "^(?i)user create -u (?<Username>\\S+) -p random" +
+        String createUserRandomCommand = "^user create -u (?<Username>\\S+) -p random" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
 
         if (input.matches(createUserCommand)) {
@@ -49,7 +46,7 @@ public class SignUp extends Menu {
     }
 
     private static boolean createUser(Matcher matcher) {
-
+        String passConf;
         matcher.find();
         username = matcher.group("Username");
         pass = matcher.group("Pass");
@@ -86,7 +83,7 @@ public class SignUp extends Menu {
         if (!checkCommonFields(username, email, nickname)) {
             return false;
         }
-        String randomPass = generatePassword(10);
+        String randomPass = Captcha.generatePassword(10);
         System.out.println("Your random password: " + randomPass);
         System.out.print("Please enter your password: ");
         String command = scanner.nextLine().trim();
@@ -179,12 +176,13 @@ public class SignUp extends Menu {
         return true;
     }
 
-    static private boolean twoStepVerification(Scanner scanner) throws SQLException {
+    static private boolean twoStepVerification(Scanner scanner){
         if (securityQuestion(scanner)) {
-            if (checkCaptcha(scanner)) {
-                tmpUser = new User(username, pass, nickname, email, recoveryAns,
-                        recoveryQ, "", initialMoney, 1);
-                tmpUser.addToTable();
+            if (Captcha.checkCaptcha(scanner)) {
+                User tmpUser = new User(username, pass, nickname, email, recoveryAns,
+                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size()+1);
+                tmpUser.giveRandomCard();
+                Card.updateUserCards(tmpUser);
                 User.signedUpUsers.put(username, tmpUser);
                 return true;
             }
