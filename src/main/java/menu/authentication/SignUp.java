@@ -21,7 +21,7 @@ public class SignUp extends Menu {
     public static void handleInput(String input, Scanner scanner) {
         String createUserCommand = "^(?i)user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
-        String createUserRandomCommand = "^(?i)user create -u (?<Username>\\S+) -p random" +
+        String createUserRandomCommand = "^user create -u (?<Username>\\S+) -p random" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
 
         if (input.matches(createUserCommand)) {

@@ -11,7 +11,6 @@ import java.util.LinkedHashMap;
 
 
 public class Connect {
-    //Current file: jdbc:sqlite:C:\Users\Mahdi\Downloads\history.db
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
 
     private static Connection connection;
@@ -238,7 +237,7 @@ public class Connect {
                 case 3 -> (T) String.valueOf(Card.Characters.Character3);
                 case 4 -> (T) String.valueOf(Card.Characters.Character4);
                 case 0 -> (T) String.valueOf(Card.Characters.Unity);
-                default -> throw new IllegalStateException("Unexpected value: " + (Integer) var);
+                default -> throw new IllegalStateException("Unexpected value: " + var);
             };
         }
         return null;
