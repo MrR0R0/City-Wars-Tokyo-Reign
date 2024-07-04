@@ -153,7 +153,7 @@ public class SignUp extends Menu {
 
         //checking the requirements for username
         if (!username.matches(USERNAME_REGEX)) {
-            System.out.println("The username should consist of lowercase or uppercase letters, numbers, and underscores.");
+            System.out.println("Username should consist of lowercase or uppercase letters, numbers, and underscores.");
             return false;
         }
 
