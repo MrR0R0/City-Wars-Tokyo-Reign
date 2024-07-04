@@ -164,6 +164,7 @@ public class Connect {
             connection.close();
         }
     }
+
     //Getting user's match history
     public static ArrayList<History> getUserHistory(String userID) throws SQLException {
         String query = "SELECT * FROM history WHERE host_id = ? OR guest_id = ?";
@@ -249,7 +250,7 @@ public class Connect {
             connectToDatabase();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.executeUpdate();
-            for(User user : User.signedUpUsers.values()){
+            for (User user : User.signedUpUsers.values()) {
                 user.addToTable();
             }
 

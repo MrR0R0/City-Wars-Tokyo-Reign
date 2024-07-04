@@ -20,7 +20,7 @@ public class ProgramController {
 
 
         while (true) {
-            String command = scanner.nextLine().trim().replaceAll(" +", " ");
+            String command = scanner.nextLine().trim();
             if (checkQuit(command)) {
                 Connect.updateDatabase();
                 break;

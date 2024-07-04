@@ -20,23 +20,27 @@ public class History {
     public void show(int namePad, int consPad, int numPad){
         String self = String.format("%-"+namePad+"s", User.formatUsername(name) + " ("+level+")");
         String opponent = String.format("%-"+namePad+"s", User.formatUsername(opponentName) + " ("+opponentLevel+")");
-            System.out.println(
-                    String.format("%-"+numPad+"s", index) + "|" +
-                            self + "|" + opponent + "|" + result + "|" + time + "|" +
-                            String.format("%-"+consPad+"s", userCons) +
-                            String.format("%-"+consPad+"s", oppCons)
-            );
+
+        System.out.println(
+                String.format("%-"+numPad+"s", index) + "|" +
+                self + "|" + opponent + "|" + result + "|" + time + "|" +
+                String.format("%-"+consPad+"s", userCons) +
+                String.format("%-"+consPad+"s", oppCons)
+        );
     }
 
     public String getTime() {
         return time;
     }
+
     public String getOpponentLevel() {
         return opponentLevel;
     }
+
     public String getOpponentName() {
         return opponentName;
     }
+
     public String getResult() {
         return result;
     }
