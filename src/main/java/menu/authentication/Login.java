@@ -16,11 +16,13 @@ import java.time.Instant;
 
 public class Login extends Menu {
     private static final int maxTry = 3;
+    private static final String adminPass = "sonic";
+
     final static private String loginCommand = "^user login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";
     final static private String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";
+    final static private String adminLogin = "^login admin (?<Pass>\\S+)$";
 
     public static void handleInput(String input, Scanner scanner) throws IOException, SQLException {
-
         if(input.matches(loginCommand)){
             if(Error.alreadyLoggedIn())
                 return;
@@ -41,6 +43,17 @@ public class Login extends Menu {
             Matcher matcher = getCommandMatcher(input, forgotPassword);
             matcher.find();
             resetPassword(matcher, scanner);
+        }
+        if(input.matches(adminLogin)){
+            Matcher matcher = getCommandMatcher(input, adminLogin);
+            matcher.find();
+            String pass = matcher.group("Pass");
+            if(pass.equals(adminPass)){
+                Menu.currentMenu = Menu.MenuType.Admin;
+            }
+            else{
+                System.out.println("You are not admin :)");
+            }
         }
     }
     private static boolean checkLogIn(Matcher matcher, Scanner scanner) throws IOException {
@@ -101,7 +114,7 @@ public class Login extends Menu {
         if(Error.userRegistered(username)){
             ArrayList<String> questions = new ArrayList<>(Arrays.asList("What is your father’s name?",
                     "What is your favourite color?", "What was the name of your first pet?"));
-            User tmpUser = User.signedUpUsers.get(username);
+            User tmpUser = User.signedUpUsers.get(User.getIdByUsername(username));
             System.out.println(questions.get(tmpUser.getRecoveryQ()-1));
             String command;
             command = scanner.nextLine().trim();

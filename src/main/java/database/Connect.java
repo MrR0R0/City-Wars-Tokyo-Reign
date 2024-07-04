@@ -116,6 +116,7 @@ public class Connect {
             connection.close();
         }
     }
+
     public static void insertCard(String name, String type, Integer level, Integer price, Integer damage, Integer duration,
                                   Integer upgradeCost, Integer attackOrDefense, Integer user_id, Integer specialProperty,
                                   Integer Acc, Integer isBreakable, String character) throws SQLException {
@@ -194,12 +195,10 @@ public class Connect {
                 historyArray.add(tmpHist);
                 counter++;
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println("Something went wrong when writing in SQL table");
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             connection.close();
             Collections.reverse(historyArray);
         }
@@ -224,14 +223,14 @@ public class Connect {
                     return (T) "4";
                 }
                 case Unity -> {
-                    return  (T) "0";
+                    return (T) "0";
                 }
                 default -> {
                     return null;
                 }
             }
         }
-        if (var instanceof Integer){
+        if (var instanceof Integer) {
             return switch ((Integer) var) {
                 case 1 -> (T) String.valueOf(Card.Characters.Character1);
                 case 2 -> (T) String.valueOf(Card.Characters.Character2);
@@ -244,8 +243,8 @@ public class Connect {
         return null;
     }
 
-    private static void rewriteUsers(){
-        try{
+    private static void rewriteUsers() {
+        try {
             String sql = "DELETE FROM user";
             connectToDatabase();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
@@ -259,7 +258,7 @@ public class Connect {
         }
     }
 
-    public static void updateDatabase(){
+    public static void updateDatabase() {
         rewriteUsers();
     }
 

@@ -47,7 +47,7 @@ public class SignUp extends Menu {
     }
 
     private static boolean createUser(Matcher matcher) {
-
+        String passConf;
         matcher.find();
         username = matcher.group("Username");
         pass = matcher.group("Pass");
@@ -152,9 +152,15 @@ public class SignUp extends Menu {
             return false;
         }
 
+        //checking username length
+        if(username.length()<5 || username.length()>25){
+            System.out.println("Username must be between 5 and 25 characters long");
+            return false;
+        }
+
         //checking the requirements for username
         if (!username.matches(USERNAME_REGEX)) {
-            System.out.println("The username should consist of lowercase or uppercase letters, numbers, and underscores.");
+            System.out.println("Username should consist of lowercase or uppercase letters, numbers, and underscores.");
             return false;
         }
 
