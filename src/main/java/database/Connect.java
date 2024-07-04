@@ -11,7 +11,6 @@ import java.util.LinkedHashMap;
 
 
 public class Connect {
-    //Current file: jdbc:sqlite:C:\Users\Mahdi\Downloads\history.db
     private static final String DB_URL = "jdbc:sqlite:identifier.sqlite";
 
     private static Connection connection;
