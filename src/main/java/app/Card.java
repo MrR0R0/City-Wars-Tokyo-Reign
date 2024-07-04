@@ -32,20 +32,33 @@ public class Card {
         this.specialProperty = specialProperty;
         this.attackOrDefense = attackOrDefense;
     }
-    public void showProperties(){
-        System.out.print("name: " + name + "|");
-        System.out.print("type: " + type + "|");
-        System.out.print("level: " + level + "|");
-        System.out.print("price: " + price + "|");
-        System.out.print("damage: " + damage + "|");
-        System.out.print("duration: " + duration + "|");
-        System.out.print("updateCost:" + upgradeCost + "|");
-        System.out.print("isBreakable:" + isBreakable + "|");
-        System.out.print("acc: " + acc + "|");
-        System.out.print("id: " + id + "|");
-        System.out.print("specialProperty: " + specialProperty + "|");
-        System.out.println("attackOrDefense: " + attackOrDefense + "|");
+    public void showProperties(int pad){
+        System.out.printf("%-"+pad+"s", ("name: " + name));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("type: " + type));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("level: " + level));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("price: " + price));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("damage: " + damage));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("duration: " + duration));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("upgradeCost:" + upgradeCost));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("breakable:" + isBreakable));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("acc: " + acc));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("id: " + id));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("special: " + specialProperty));
+        System.out.print("|");
+        System.out.printf("%-"+pad+"s", ("Att/Def: " + attackOrDefense));
+        System.out.println();
     }
+
     public String getName() {return name;}
     public CardType getType() {return type;}
     public Integer getLevel() {return level;}
@@ -102,5 +115,4 @@ public class Card {
         user.setCardsSeries(cardSeries.toString());
         System.out.println(cardSeries.toString());
     }
-
 }

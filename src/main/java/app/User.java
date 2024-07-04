@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class User {
     private String username, password, nickname, email, recoveryAns, recoveryQ, cardsSeries;
@@ -43,7 +45,7 @@ public class User {
     }
     public void showCards(){
         for(Card card : deckOfCards.values()){
-            card.showProperties();
+            card.showProperties(25);
             System.out.println();
         }
     }
@@ -71,6 +73,7 @@ public class User {
     public void setCardsSeries(String cardsSeries) {this.cardsSeries = cardsSeries;}
     public void setWallet(Integer wallet) {this.wallet = wallet;}
     public void setLevel(Integer level) {this.level = level;}
+    public void addToDeck(Integer id, Card card) {deckOfCards.put(id, card);}
 
     public void addToTable() throws SQLException {
         Connect.insertUser(this);
@@ -142,5 +145,19 @@ public class User {
                 return user.getId();
         }
         return -1;
+    }
+    public void getCardsFromTable(){
+        String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
+        String[] series = cardsSeries.split(",");
+        Pattern pattern = Pattern.compile(CARD_REGEX);
+        for (String card : series) {
+            Matcher matcher = pattern.matcher(card);
+            if (matcher.find()){
+                int id = Integer.parseInt(matcher.group("id"));
+                int level = Integer.parseInt(matcher.group("level"));
+                deckOfCards.put(id, Card.allCards.get(id));
+                deckOfCards.get(id).setLevel(level);
+            }
+        }
     }
 }

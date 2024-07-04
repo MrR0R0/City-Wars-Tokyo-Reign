@@ -16,9 +16,11 @@ import java.time.Instant;
 
 public class Login extends Menu {
     private static final int maxTry = 3;
+    private static final String adminPass = "sonic";
     public static void handleInput(String input, Scanner scanner) throws IOException, SQLException {
         String loginCommand = "^user login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";
         String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";
+        String adminLogin = "^login admin (?<Pass>\\S+)$";
         if(input.matches(loginCommand)){
             if(Error.alreadyLoggedIn())
                 return;
@@ -39,6 +41,17 @@ public class Login extends Menu {
             Matcher matcher = getCommandMatcher(input, forgotPassword);
             matcher.find();
             resetPassword(matcher, scanner);
+        }
+        if(input.matches(adminLogin)){
+            Matcher matcher = getCommandMatcher(input, adminLogin);
+            matcher.find();
+            String pass = matcher.group("Pass");
+            if(pass.equals(adminPass)){
+                Menu.currentMenu = Menu.MenuType.Admin;
+            }
+            else{
+                System.out.println("You are not admin :)");
+            }
         }
     }
     private static boolean checkLogIn(Matcher matcher, Scanner scanner) throws IOException {

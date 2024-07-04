@@ -5,9 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class Menu extends app.Error {
-    public enum MenuType {Profile, Main, Shop, Authentication, Play}
+    public enum MenuType {Profile, Main, Shop, Authentication, Play, Admin}
+    public static boolean isInMenu = false;
     public static User loggedInUser = new User();
-    public static MenuType currentMenu = MenuType.Authentication;
+    public static MenuType currentMenu = MenuType.Admin;
 
     public static boolean isLoggedIn(){
         return !(loggedInUser.getUsername() == null);

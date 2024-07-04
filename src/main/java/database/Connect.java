@@ -69,6 +69,7 @@ public class Connect {
                 user.setRecoveryAns(rs.getString("user_recoveryAnswer"));
                 user.setWallet(rs.getInt("user_wallet"));
                 user.setID(rs.getInt("user_id"));
+                user.getCardsFromTable();
                 userMap.put(rs.getInt("user_id"), user);
             }
             //System.out.println("Users has been retrieved and added to the LinkedHashMap.");

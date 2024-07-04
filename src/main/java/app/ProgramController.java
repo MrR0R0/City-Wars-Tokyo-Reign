@@ -1,6 +1,7 @@
 package app;
 
 import database.Connect;
+import menu.Admin;
 import menu.MainMenu;
 import menu.Menu;
 import menu.ProfileMenu;
@@ -13,13 +14,13 @@ import java.util.Scanner;
 public class ProgramController {
     public void run() throws SQLException, IOException {
         Scanner scanner = new Scanner(System.in);
-        User.signedUpUsers = Connect.getUsers();
         Card.allCards = Connect.getCards();
+        User.signedUpUsers = Connect.getUsers();
         String logoutCommand = "^log out$";
 
 
         while (true) {
-            String command = scanner.nextLine().trim().replaceAll(" +", " ");
+            String command = scanner.nextLine().trim();
             if (checkQuit(command)) {
                 Connect.updateDatabase();
                 break;
@@ -43,6 +44,9 @@ public class ProgramController {
                 }
                 case Profile -> {
                     ProfileMenu.handleInput(command, scanner);
+                }
+                case Admin -> {
+                    Admin.handleInput(command, scanner);
                 }
             }
         }
