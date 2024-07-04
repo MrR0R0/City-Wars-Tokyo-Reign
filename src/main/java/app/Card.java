@@ -18,6 +18,11 @@ public class Card implements Cloneable{
     private Integer level, price, damage, duration, upgradeCost, attackOrDefense, specialProperty, acc, id, isBreakable, upgradeLevel;
     public static LinkedHashMap<Integer, Card> allCards = new LinkedHashMap<>();
 
+    //gaming properties
+    private Integer gamingDamage = this.getDamage()/this.getDuration();
+    private Integer gamingACC = this.getAcc()/this.getDuration();
+    private Integer gamingAttackOrDefense = this.getAttackOrDefense()/this.getDuration();
+
     public Card(){}
     public Card(String name, CardType type, Integer level, Integer price, Integer damage, Integer duration, Integer upgradeCost, Integer attackOrDefense, Integer specialProperty, Integer acc, Integer isBreakable, Integer id, Integer upgradeLevel) {
         this.name = name;
@@ -113,6 +118,10 @@ public class Card implements Cloneable{
     public Integer getAttackOrDefense() {return attackOrDefense;}
     public String getCharacter() {return character;}
     public Integer getUpgradeLevel() {return upgradeLevel;}
+    public Integer getGamingDamage() {return gamingDamage;}
+    public Integer getGamingACC() {return gamingACC;}
+    public Integer getGamingAttackOrDefense() {return gamingAttackOrDefense;}
+    public boolean getIsBreakable() {return isBreakable == 0;}
 
     public void setName(String name) {this.name = name;}
     public void setType(CardType type) {this.type = type;}
@@ -128,6 +137,10 @@ public class Card implements Cloneable{
     public void setId(Integer id) {this.id = id;}
     public void setCharacter(String character) {this.character = character;}
     public void setUpgradeLevel(Integer upgradeLevel) {this.upgradeLevel = upgradeLevel;}
+    public void setGamingDamage(Integer gamingDamage) {this.gamingDamage = gamingDamage;}
+    public void setGamingACC(Integer gamingACC) {this.gamingACC = gamingACC;}
+    public void setGamingAttackOrDefense(Integer gamingAttackOrDefense) {this.gamingAttackOrDefense = gamingAttackOrDefense;}
+
 
     public void addToTable() throws SQLException {
         Connect.insertCard(this.name, String.valueOf(this.type),this.level,this.price,this.damage,this.duration,this.upgradeCost,
