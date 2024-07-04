@@ -4,10 +4,11 @@ import database.Connect;
 
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Card {
+public class Card implements Cloneable{
     public static final String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
     public enum Characters {Character1 , Character2 , Character3 , Character4 , Unity}
     public enum CardType {shield, spell, common, timeStrike}
@@ -33,34 +34,71 @@ public class Card {
         this.attackOrDefense = attackOrDefense;
         this.upgradeLevel = upgradeLevel;
     }
-    public void showProperties(int pad){
+    public void showProperties(int pad, boolean isInGame){
         System.out.printf("%-"+pad+"s", ("name: " + name));
         System.out.print("|");
         System.out.printf("%-"+pad+"s", ("type: " + type));
         System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("level: " + level));
-        System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("price: " + price));
+        System.out.printf("%-"+pad+"s", ("duration: " + duration));
         System.out.print("|");
         System.out.printf("%-"+pad+"s", ("damage: " + damage));
         System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("duration: " + duration));
-        System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("upgradeCost:" + upgradeCost));
-        System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("breakable:" + (isBreakable != 0)));
-        System.out.print("|");
         System.out.printf("%-"+pad+"s", ("acc: " + acc));
         System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("id: " + id));
-        System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("special: " + specialProperty));
-        System.out.print("|");
         System.out.printf("%-"+pad+"s", ("Att/Def: " + attackOrDefense));
-        System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("Upgrade lvl: " + upgradeLevel));
+        if (!isInGame){
+            System.out.print("|");
+
+            System.out.printf("%-" + pad + "s", ("level: " + level));
+            System.out.print("|");
+            System.out.printf("%-" + pad + "s", ("price: " + price));
+            System.out.print("|");
+            System.out.printf("%-" + pad + "s", ("duration: " + duration));
+            System.out.print("|");
+            System.out.printf("%-" + pad + "s", ("upgradeCost:" + upgradeCost));
+            System.out.print("|");
+            System.out.printf("%-" + pad + "s", ("breakable:" + (isBreakable != 0)));
+            System.out.print("|");
+            System.out.printf("%-" + pad + "s", ("id: " + id));
+            System.out.print("|");
+            System.out.printf("%-" + pad + "s", ("special: " + specialProperty));
+            System.out.print("|");
+            System.out.printf("%-" + pad + "s", ("Upgrade lvl: " + upgradeLevel));
+        }
         System.out.println();
     }
+
+    @Override
+    public Card clone() {
+        try {
+            return (Card) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // نباید اتفاق بیفتد
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Card card = (Card) obj;
+        return Objects.equals(type, card.type) &&
+                Objects.equals(name, card.name) &&
+                Objects.equals(character, card.character) &&
+                Objects.equals(level, card.level) &&
+                Objects.equals(price, card.price) &&
+                Objects.equals(damage, card.damage) &&
+                Objects.equals(duration, card.duration) &&
+                Objects.equals(upgradeCost, card.upgradeCost) &&
+                Objects.equals(attackOrDefense, card.attackOrDefense) &&
+                Objects.equals(specialProperty, card.specialProperty) &&
+                Objects.equals(acc, card.acc) &&
+                Objects.equals(id, card.id) &&
+                Objects.equals(isBreakable, card.isBreakable) &&
+                Objects.equals(upgradeLevel, card.upgradeLevel);
+    }
+
+
     public String getName() {return name;}
     public CardType getType() {return type;}
     public Integer getLevel() {return level;}

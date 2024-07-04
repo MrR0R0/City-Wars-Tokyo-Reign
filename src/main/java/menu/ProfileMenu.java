@@ -19,7 +19,6 @@ public class ProfileMenu extends Menu {
     static public void handleInput(String input, Scanner scanner) {
         Matcher matcher;
 
-
         if (input.matches(backCommand)){
             if (Error.loginFirst())
                 return;

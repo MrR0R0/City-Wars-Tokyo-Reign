@@ -1,10 +1,7 @@
 package app;
 
 import database.Connect;
-import menu.Admin;
-import menu.MainMenu;
-import menu.Menu;
-import menu.ProfileMenu;
+import menu.*;
 import menu.authentication.Login;
 import menu.authentication.SignUp;
 import java.io.IOException;
@@ -47,6 +44,12 @@ public class ProgramController {
                 }
                 case Admin -> {
                     Admin.handleInput(command, scanner);
+                }
+                case Shop -> {
+                    Shop.handleInput(command,scanner);
+                }
+                case Play -> {
+                    Play.handleInput(command, scanner);
                 }
             }
         }

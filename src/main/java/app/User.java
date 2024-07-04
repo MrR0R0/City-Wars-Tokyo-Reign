@@ -3,14 +3,11 @@ package app;
 import database.Connect;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class User {
+public class User implements Cloneable {
     private String username, password, nickname, email, recoveryAns, recoveryQ, cardsSeries;
     private Integer wallet, level, id, XP , HP;
 
@@ -49,10 +46,11 @@ public class User {
     }
     public void showCards(){
         for(Card card : deckOfCards.values()){
-            card.showProperties(25);
+            card.showProperties(25,false);
             System.out.println();
         }
     }
+
     public String getUsername() {return username;}
     public String getPassword() {return password;}
     public String getNickname() {return nickname;}
@@ -81,6 +79,42 @@ public class User {
     public void setId(Integer id) {this.id = id;}
     public void setXP(Integer XP) {this.XP = XP;}
     public void setHP(Integer HP) {this.HP = HP;}
+
+
+    @Override
+    public User clone() {
+        try {
+            User cloned = (User) super.clone();
+            cloned.deckOfCards = new LinkedHashMap<>();
+            for (Integer key : this.deckOfCards.keySet()) {
+                cloned.deckOfCards.put(key, this.deckOfCards.get(key).clone());
+            }
+            return cloned;
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError(); // Can't happen
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        User user = (User) obj;
+        return Objects.equals(username, user.username) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(nickname, user.nickname) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(recoveryAns, user.recoveryAns) &&
+                Objects.equals(recoveryQ, user.recoveryQ) &&
+                Objects.equals(cardsSeries, user.cardsSeries) &&
+                Objects.equals(wallet, user.wallet) &&
+                Objects.equals(level, user.level) &&
+                Objects.equals(id, user.id) &&
+                Objects.equals(XP, user.XP) &&
+                Objects.equals(HP, user.HP) &&
+                Objects.equals(deckOfCards, user.deckOfCards);
+    }
+
 
     public void addToTable() throws SQLException {
         Connect.insertUser(this);

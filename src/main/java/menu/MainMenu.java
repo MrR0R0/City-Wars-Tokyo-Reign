@@ -21,6 +21,8 @@ public class MainMenu extends Menu {
     final static private String showCards = "^show cards$";
     final static private String showHistory = "^show history$";
     final static private String logoutCommand = "^log out$";
+    final static private String sortCommand = "^sort by (?<Field>\\d+) (?<Type>\\d+)$";
+
 
     static public void handleInput(String input, Scanner scanner) throws SQLException {
 
@@ -30,6 +32,7 @@ public class MainMenu extends Menu {
         } else if (input.matches(switchToPlay)) {
             Menu.currentMenu = MenuType.Play;
             System.out.println("You are now in \"Play\" menu");
+            System.out.println("Please choose a game mode to continue. Type \"select Normal as the play mode\" or \"select Betting as the play mode\".");
         } else if (input.matches(switchToShop)) {
             Menu.currentMenu = MenuType.Shop;
             System.out.println("You are now in \"Shop\" menu");
@@ -42,7 +45,6 @@ public class MainMenu extends Menu {
     }
 
     static private void showHistory(Scanner scanner) throws SQLException {
-        String sortCommand = "^sort by (?<Field>\\d+) (?<Type>\\d+)$";
         history = Connect.getUserHistory(String.valueOf(Menu.loggedInUser.getId()));
         int len = history.size();
         int numberOfPages = Math.ceilDiv(len, LINES_ON_PAGE);
@@ -62,10 +64,12 @@ public class MainMenu extends Menu {
                 return;
             } else if (command.matches(sortCommand)) {
                 Matcher matcher = getCommandMatcher(command, sortCommand);
-                matcher.find();
-                String field = matcher.group("Field");
-                String type = matcher.group("Type");
-                sortHistory(field, type);
+                if(matcher.find())
+                {
+                    String field = matcher.group("Field");
+                    String type = matcher.group("Type");
+                    sortHistory(field, type);
+                }
             } else if (command.matches("\\d+")) {
                 if (Integer.parseInt(command) > numberOfPages) {
                     System.out.println("Please enter a number between 1 & " + numberOfPages);
@@ -125,4 +129,5 @@ public class MainMenu extends Menu {
             Collections.reverse(history);
         }
     }
+
 }

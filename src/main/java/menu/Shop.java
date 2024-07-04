@@ -91,7 +91,7 @@ public class Shop extends Menu{
         }
     }
     private static void chooseCardToBuy(Matcher matcher, Scanner scanner, Card card){
-        card.showProperties(25);
+        card.showProperties(25,false);
         System.out.println();
         System.out.println("buy " + card.getName() + " or back");
 

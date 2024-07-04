@@ -18,9 +18,9 @@ public class Login extends Menu {
     private static final int maxTry = 3;
     private static final String adminPass = "sonic";
 
-    final static private String loginCommand = "^user login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";
-    final static private String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";
-    final static private String adminLogin = "^login admin (?<Pass>\\S+)$";
+    final static public String loginCommand = "^user login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";
+    final static public String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";
+    final static public String adminLogin = "^login admin (?<Pass>\\S+)$";
 
     public static void handleInput(String input, Scanner scanner) throws IOException, SQLException {
         if(input.matches(loginCommand)){
@@ -44,7 +44,7 @@ public class Login extends Menu {
             matcher.find();
             resetPassword(matcher, scanner);
         }
-        if(input.matches(adminLogin)){
+        if(input.matches(adminLogin) && Menu.currentMenu == MenuType.Main){
             Matcher matcher = getCommandMatcher(input, adminLogin);
             matcher.find();
             String pass = matcher.group("Pass");
@@ -56,7 +56,7 @@ public class Login extends Menu {
             }
         }
     }
-    private static boolean checkLogIn(Matcher matcher, Scanner scanner) throws IOException {
+    public static boolean checkLogIn(Matcher matcher, Scanner scanner) throws IOException {
         //check if the user is in the table
         String username = matcher.group("Username");
         String password = matcher.group("Pass");
@@ -109,7 +109,7 @@ public class Login extends Menu {
         return false;
     }
 
-    private static void resetPassword(Matcher matcher, Scanner scanner) {
+    public static void resetPassword(Matcher matcher, Scanner scanner) {
         String username = matcher.group("Username");
         if(Error.userRegistered(username)){
             ArrayList<String> questions = new ArrayList<>(Arrays.asList("What is your father’s name?",
@@ -143,7 +143,7 @@ public class Login extends Menu {
         }
     }
 
-    private static boolean matchingPassword(Integer id, String pass){
+    public static boolean matchingPassword(Integer id, String pass){
         return User.signedUpUsers.get(id).getPassword().equals(pass);
     }
 }
