@@ -17,10 +17,12 @@ import java.time.Instant;
 public class Login extends Menu {
     private static final int maxTry = 3;
     private static final String adminPass = "sonic";
+
+    final static private String loginCommand = "^user login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";
+    final static private String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";
+    final static private String adminLogin = "^login admin (?<Pass>\\S+)$";
+
     public static void handleInput(String input, Scanner scanner) throws IOException, SQLException {
-        String loginCommand = "^user login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";
-        String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";
-        String adminLogin = "^login admin (?<Pass>\\S+)$";
         if(input.matches(loginCommand)){
             if(Error.alreadyLoggedIn())
                 return;

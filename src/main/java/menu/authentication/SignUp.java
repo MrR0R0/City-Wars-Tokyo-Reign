@@ -8,7 +8,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 
 public class SignUp extends Menu {
-    static private String username, pass, email, nickname, recoveryAns, recoveryQ;
+    static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
+    static private Integer HP, XP;
+    static private User tmpUser;
 
     static final private Integer initialMoney = 100;
 
@@ -16,8 +18,8 @@ public class SignUp extends Menu {
     static public final String USERNAME_REGEX = "[a-zA-Z0-9_]+";
     static public final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z]).+$";
 
-    public static void handleInput(String input, Scanner scanner) throws SQLException {
-        String createUserCommand = "^user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
+    public static void handleInput(String input, Scanner scanner) {
+        String createUserCommand = "^(?i)user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
         String createUserRandomCommand = "^user create -u (?<Username>\\S+) -p random" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
@@ -178,8 +180,8 @@ public class SignUp extends Menu {
     static private boolean twoStepVerification(Scanner scanner) {
         if (securityQuestion(scanner)) {
             if (Captcha.checkCaptcha(scanner)) {
-                User tmpUser = new User(username, pass, nickname, email, recoveryAns,
-                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size()+1);
+                tmpUser = new User(username, pass, nickname, email, recoveryAns,
+                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size()+1,XP,HP);
                 tmpUser.giveRandomCard();
                 Card.updateUserCards(tmpUser);
                 User.signedUpUsers.put(User.signedUpUsers.size()+1, tmpUser);

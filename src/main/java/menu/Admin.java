@@ -2,17 +2,25 @@ package menu;
 
 import app.Card;
 import app.ProgramController;
+import app.Error;
 import app.User;
 import database.Connect;
 
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class Admin {
+public class Admin extends Menu {
+    final static private String addCardCommand = "^add card$";
+    final static private String editCardCommand = "^edit card$";
+    final static private String showUsers = "^show users$";
+
     public static void handleInput(String input, Scanner scanner) throws SQLException {
-        String addCardCommand = "^add card$";
-        String editCardCommand = "^edit card$";
-        String showUsers = "^show users$";
+        if (input.matches(backCommand)){
+            if (Error.loginFirst())
+                return;
+            currentMenu = MenuType.Main;
+            showCurrentMenu();
+        }
         if (input.matches(addCardCommand)) {
             addCard(scanner);
         }

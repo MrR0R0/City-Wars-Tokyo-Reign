@@ -13,16 +13,18 @@ import java.util.regex.Matcher;
 import java.util.stream.IntStream;
 
 public class MainMenu extends Menu {
-    private static final int LINES_ON_PAGE = 10, NAME_PAD = 19, NUM_PAD = 3, CONS_PAD = 5;
+    final static private int LINES_ON_PAGE = 10, NAME_PAD = 19, NUM_PAD = 3, CONS_PAD = 5;
     static private ArrayList<History> history;
 
+    final static private String switchToPlay = "^select menu play$";
+    final static private String switchToShop = "^select menu shop$";
+    final static private String showCards = "^show cards$";
+    final static private String showHistory = "^show history$";
+    final static private String logoutCommand = "^log out$";
+
     static public void handleInput(String input, Scanner scanner) throws SQLException {
-        String switchToPlay = "^select menu play$";
-        String switchToShop = "^select menu shop$";
-        String showCards = "^show cards$";
-        String showHistory = "^show history$";
-        String logoutCommand = "^log out$";
-        if (input.matches(logoutCommand)) {
+
+        if(input.matches(logoutCommand)){
             Menu.logOut();
             System.out.println("Logged out successfully");
         } else if (input.matches(switchToPlay)) {
