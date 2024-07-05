@@ -29,10 +29,10 @@ public class Play extends Menu {
 
     static private Card.Characters guestCharacter;
     static private Card.Characters hostCharacter;
-    static private ArrayList<Cell> hostDurationLine = new ArrayList<>(durationLineSize);
-    static private ArrayList<Cell> guestDurationLine = new ArrayList<>(durationLineSize);
-    static private ArrayList<Cell> hostDeck = new ArrayList<>(deckSize);
-    static private ArrayList<Cell> guestDeck = new ArrayList<>(deckSize);
+    static private ArrayList<Cell> hostDurationLine = new ArrayList<>();
+    static private ArrayList<Cell> guestDurationLine = new ArrayList<>();
+    static private ArrayList<Cell> hostDeck = new ArrayList<>();
+    static private ArrayList<Cell> guestDeck = new ArrayList<>();
     static private Integer hostTotalAttack = 0;
     static private Integer guestTotalAttack = 0;
 
@@ -167,11 +167,16 @@ public class Play extends Menu {
 
     private static void initEachRound(){
         // remove everything
+        hostDeck = new ArrayList<>();
+        guestDeck = new ArrayList<>();
+        hostDurationLine = new ArrayList<>();
+        guestDurationLine = new ArrayList<>();
+        initArrays(guestDeck,deckSize);
+        initArrays(hostDeck,deckSize);
+        initArrays(guestDurationLine,durationLineSize);
+        initArrays(hostDurationLine,durationLineSize);
         hostDurationLine.forEach(cell -> {cell.isHollow = false;});
-        hostDeck = new ArrayList<>(deckSize);
-        guestDeck = new ArrayList<>(deckSize);
-        hostDurationLine = new ArrayList<>(durationLineSize);
-        guestDurationLine = new ArrayList<>(durationLineSize);
+
         hostTotalAttack = 0;
         guestTotalAttack =0;
 
@@ -230,7 +235,7 @@ public class Play extends Menu {
                 System.out.println("card has been placed successfully");
 
                 // same type with middle card
-                if (hostDeck.size()%2==1 && hostDeck.get(selectedCard).card.getValue().getType().equals(hostDeck.get((hostDeck.size()-1)/2).card.getValue().getType())){
+                if (random.nextInt(4) == 1 && hostDeck.size()%2==1 && hostDeck.get(selectedCard).card.getValue().getType().equals(hostDeck.get((hostDeck.size()-1)/2).card.getValue().getType())){
                     hostDeck.get(selectedCard).card.getValue().boostAttackDefense(1.2);
                 }
 
@@ -284,7 +289,7 @@ public class Play extends Menu {
                 System.out.println("card has been placed successfully");
 
                 // same type with middle card
-                if (hostDeck.size()%2==1 && hostDeck.get(selectedCard).card.getValue().getType().equals(hostDeck.get((hostDeck.size()-1)/2).card.getValue().getType())){
+                if (random.nextInt(4) == 1 && hostDeck.size()%2==1 && hostDeck.get(selectedCard).card.getValue().getType().equals(hostDeck.get((hostDeck.size()-1)/2).card.getValue().getType())){
                     hostDeck.get(selectedCard).card.getValue().boostAttackDefense(1.2);
                 }
 
@@ -344,7 +349,6 @@ public class Play extends Menu {
                 }
             }
         }
-
         if (turnPlayer.equals(host)){
             iterator = hostDeck.listIterator();
             // replace with empty card
@@ -419,6 +423,28 @@ public class Play extends Menu {
         }
         if (user.equals(guest)){
 
+        }
+    }
+
+    private static void printPlayGround(){
+        System.out.println("-------------------------------------------------------------------------");
+        System.out.println(guest.getHP() + "                    " + host.getHP());
+        System.out.println("..........................................................................");
+        for (int i = 0; i < durationLineSize; i++){
+            Cell hostCell = hostDurationLine.get(i);
+            Cell guestCell = guestDurationLine.get(i);
+            if (hostCell.isHollow)
+                System.out.print("Hollow");
+            else if (hostCell.isEmpty)
+                System.out.print("empty");
+
+
+        }
+    }
+
+    private static void initArrays(ArrayList <Cell> list ,Integer capacity){
+        for (int i = 0; i < capacity; i++){
+            list.add(new Cell());
         }
     }
 }
