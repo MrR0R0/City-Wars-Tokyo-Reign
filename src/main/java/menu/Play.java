@@ -301,18 +301,15 @@ public class Play extends Menu {
                         return;
                     }
                 }
-                System.out.println("card has been placed successfully");
 
                 // same type with middle card
                 if (random.nextInt(4) == 1 && hostDeck.size() % 2 == 1 && hostDeck.get(selectedCard).card.getValue().getType().equals(hostDeck.get((hostDeck.size() - 1) / 2).card.getValue().getType())) {
                     hostDeck.get(selectedCard).card.getValue().boostAttackDefense(1.2);
                 }
 
-
-                // destruction of cards
+                //destruction of cards
                 for (int i = selectedCell - 1; i < hostDeck.get(selectedCard).card.getValue().getDuration(); i++) {
-                    hostDurationLine.get(i).card = new Pair<>(hostDeck.get(selectedCard).card.getValue().getId(), hostDeck.get(selectedCard).card.getValue().clone());
-                    if (!guestDurationLine.get(i).isEmpty) {
+                     if (!guestDurationLine.get(i).isEmpty) {
                         if (guestDurationLine.get(i).card.getValue().getAcc() < hostDurationLine.get(i).card.getValue().getAcc()) {
                             guestDurationLine.get(i).isEmpty = true;
                             guestDurationLine.get(i).card = null;
@@ -428,10 +425,50 @@ public class Play extends Menu {
 
     private static void result(User user) {
         if (user.equals(host)) {
-
+            host.setXP(Double.valueOf(host.getXP() + 0.1 * host.getHP()).intValue());
+            host.setWallet(Double.valueOf(host.getWallet() + 0.2 * host.getHP()).intValue());
+            System.out.println("The winner is " + host.getNickname());
+            System.out.println("obtained coin: " + 0.2 * host.getHP());
+            System.out.println("obtained XP: " + 0.1 * host.getHP());
+            System.out.println("total XP: " + host.getXP());
+            System.out.println("require XP to next level: " + User.nextLevelXP(host.getLevel()));
+            if (User.nextLevelXP(host.getLevel()) < host.getXP()) {
+                host.setLevel(host.getLevel() + 1);
+                System.out.println(host.getNickname() + "'s level is upgraded to " + host.getLevel());
+            }
+            System.out.println();
+            guest.setXP(Double.valueOf(guest.getXP() + 0.01 * guest.getHP()).intValue());
+            System.out.println("The loser is " + guest.getNickname());
+            System.out.println("obtained XP: " + 0.01 * guest.getHP());
+            System.out.println("total XP: " + guest.getXP());
+            System.out.println("require XP to next level: " + User.nextLevelXP(guest.getLevel()));
+            if (User.nextLevelXP(guest.getLevel()) < guest.getXP()) {
+                guest.setLevel(guest.getLevel() + 1);
+                System.out.println(guest.getNickname() + "'s level is upgraded to " + guest.getLevel());
+            }
         }
         if (user.equals(guest)) {
-
+            guest.setXP(Double.valueOf(guest.getXP() + 0.1 * guest.getHP()).intValue());
+            guest.setWallet(Double.valueOf(guest.getWallet() + 0.2 * guest.getHP()).intValue());
+            System.out.println("The winner is " + guest.getNickname());
+            System.out.println("obtained coin: " + 0.2 * guest.getHP());
+            System.out.println("obtained XP: " + 0.1 * guest.getHP());
+            System.out.println("total XP: " + guest.getXP());
+            System.out.println("require XP to next level: " + User.nextLevelXP(guest.getLevel()));
+            if (User.nextLevelXP(guest.getLevel()) < guest.getXP()) {
+                guest.setLevel(guest.getLevel() + 1);
+                System.out.println(guest.getNickname() + "'s level is upgraded to " + guest.getLevel());
+            }
+            System.out.println();
+            host.setXP(Double.valueOf(host.getXP() + 0.01 * host.getHP()).intValue());
+            System.out.println("The loser is " + host.getNickname());
+            System.out.println("obtained XP: " + 0.01 * host.getHP());
+            System.out.println("total XP: " + host.getXP());
+            System.out.println("require XP to next level: " + User.nextLevelXP(host.getLevel()));
+            if (User.nextLevelXP(host.getLevel()) < host.getXP()) {
+                host.setLevel(host.getLevel() + 1);
+                System.out.println(host.getNickname() + "'s level is upgraded to " + host.getLevel());
+            }
         }
     }
 
@@ -443,12 +480,14 @@ public class Play extends Menu {
             Cell hostCell = hostDurationLine.get(i);
             Cell guestCell = guestDurationLine.get(i);
             if (hostCell.card != null && guestCell.card != null) {
+                System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getName(), hostCell.card.getValue().getName());
                 System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getAcc(), hostCell.card.getValue().getAcc());
                 System.out.printf("%-7d | %-7d%n", guestCell.card.getValue().getAttackOrDefense() / guestCell.card.getValue().getDuration(), hostCell.card.getValue().getAttackOrDefense());
                 System.out.printf("%-7d | %-7d%n", guestCell.card.getValue().getDamage(), hostCell.card.getValue().getDamage());
             }
             else if (hostCell.card != null && guestCell.card == null) {
                 if (guestCell.isHollow) {
+                    System.out.printf("%-7s | %-7s%n", "", hostCell.card.getValue().getName());
                     System.out.printf("%-7s | %-7s%n", "", hostCell.card.getValue().getAcc());
                     System.out.printf("%-7s | %-7d%n", "Hollow", hostCell.card.getValue().getAttackOrDefense());
                     System.out.printf("%-7s | %-7d%n", "", hostCell.card.getValue().getDamage());
@@ -461,10 +500,12 @@ public class Play extends Menu {
             }
             else if (hostCell.card == null && guestCell.card != null) {
                 if (hostCell.isHollow) {
+                    System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getName(), "");
                     System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getAcc(), "");
                     System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getAttackOrDefense(), "Hollow");
                     System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getDamage(), "");
                 } else if (hostCell.isEmpty) {
+                    System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getName(), "");
                     System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getAcc(), "");
                     System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getAttackOrDefense(), "Empty");
                     System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getDamage(), "");
