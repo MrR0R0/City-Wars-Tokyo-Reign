@@ -2,10 +2,13 @@ package menu;
 
 import app.Card;
 import app.User;
+import database.Connect;
 import javafx.util.Pair;
 import menu.authentication.Login;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 
@@ -157,6 +160,8 @@ public class Play extends Menu {
 
         if (isGameOver() != null) {
             result(Objects.requireNonNull(isGameOver()));
+            System.out.println("Guest will now be logged out automatically");
+            Menu.currentMenu = MenuType.Main;
         } else {
             // next 4 round
             playing(scanner);
@@ -417,14 +422,18 @@ public class Play extends Menu {
 
     private static User isGameOver() {
         if (guest.getHP() <= 0)
-            return guest;
-        else if (host.getHP() <= 0)
             return host;
+        else if (host.getHP() <= 0)
+            return guest;
         return null;
     }
 
     private static void result(User user) {
+        String result = "", hostCons = "", guestCons="";
         if (user.equals(host)) {
+            result = "Host Won!";
+            hostCons = "XP: +" + 0.1 * host.getHP() + " Coin: +" + 0.2 * host.getHP();
+            guestCons = "XP: +" + 0.01 * guest.getHP();
             host.setXP(Double.valueOf(host.getXP() + 0.1 * host.getHP()).intValue());
             host.setWallet(Double.valueOf(host.getWallet() + 0.2 * host.getHP()).intValue());
             System.out.println("The winner is " + host.getNickname());
@@ -446,8 +455,12 @@ public class Play extends Menu {
                 guest.setLevel(guest.getLevel() + 1);
                 System.out.println(guest.getNickname() + "'s level is upgraded to " + guest.getLevel());
             }
+
         }
-        if (user.equals(guest)) {
+        else if (user.equals(guest)) {
+            result = "Guest Won!";
+            guestCons = "XP: +" + 0.1 * guest.getHP() + " Coin: +" + 0.2 * guest.getHP();
+            hostCons = "XP: +" + 0.01 * host.getHP();
             guest.setXP(Double.valueOf(guest.getXP() + 0.1 * guest.getHP()).intValue());
             guest.setWallet(Double.valueOf(guest.getWallet() + 0.2 * guest.getHP()).intValue());
             System.out.println("The winner is " + guest.getNickname());
@@ -470,6 +483,12 @@ public class Play extends Menu {
                 System.out.println(host.getNickname() + "'s level is upgraded to " + host.getLevel());
             }
         }
+
+        Connect.insertHistory(guest.getUsername(), guest.getLevel(), guestCons,
+                            host.getUsername(), guest.getLevel(), hostCons,
+                            result,
+                            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                            host.getId(), guest.getId());
     }
 
     private static void printPlayGround() {
@@ -532,7 +551,6 @@ public class Play extends Menu {
             list.add(new Cell());
         }
     }
-
 
     public static <K, V> K getRandomKey(HashMap<K, V> map) {
         // Convert the keys to a List
