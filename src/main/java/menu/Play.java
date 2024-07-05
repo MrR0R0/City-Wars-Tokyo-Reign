@@ -489,6 +489,13 @@ public class Play extends Menu {
                             result,
                             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                             host.getId(), guest.getId());
+
+        Menu.loggedInUser.setWallet(host.getWallet());
+        Menu.loggedInUser.setXP(host.getXP());
+        Menu.loggedInUser.setLevel(host.getLevel());
+        User.signedUpUsers.get(guest.getId()).setWallet(guest.getWallet());
+        User.signedUpUsers.get(guest.getId()).setXP(guest.getXP());
+        User.signedUpUsers.get(guest.getId()).setLevel(guest.getLevel());
     }
 
     private static void printPlayGround() {
@@ -504,7 +511,7 @@ public class Play extends Menu {
                 System.out.printf("%-7d | %-7d%n", guestCell.card.getValue().getAttackOrDefense() / guestCell.card.getValue().getDuration(), hostCell.card.getValue().getAttackOrDefense());
                 System.out.printf("%-7d | %-7d%n", guestCell.card.getValue().getDamage(), hostCell.card.getValue().getDamage());
             }
-            else if (hostCell.card != null && guestCell.card == null) {
+            else if (hostCell.card != null) {
                 if (guestCell.isHollow) {
                     System.out.printf("%-7s | %-7s%n", "", hostCell.card.getValue().getName());
                     System.out.printf("%-7s | %-7s%n", "", hostCell.card.getValue().getAcc());
@@ -517,7 +524,7 @@ public class Play extends Menu {
                     System.out.printf("%-7s | %-7d%n", "", hostCell.card.getValue().getDamage());
                 }
             }
-            else if (hostCell.card == null && guestCell.card != null) {
+            else if (guestCell.card != null) {
                 if (hostCell.isHollow) {
                     System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getName(), "");
                     System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getAcc(), "");
