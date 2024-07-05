@@ -166,7 +166,7 @@ public class Play extends Menu {
         // remove everything
         hostDurationLine.forEach(cell -> {cell.isHollow = false;});
         hostDeck = new ArrayList<>();
-        guestDeck = new ArrayList<>(deckSize);
+        guestDeck = new ArrayList<>();
         hostDurationLine = new ArrayList<>();
         guestDurationLine = new ArrayList<>();
         initArrays(guestDeck,deckSize);
@@ -433,7 +433,10 @@ public class Play extends Menu {
             Cell hostCell = hostDurationLine.get(i);
             Cell guestCell = guestDurationLine.get(i);
             if (hostCell.isHollow)
-                System.out.println("Hollow");
+                System.out.print("Hollow");
+            else if (hostCell.isEmpty)
+                System.out.print("empty");
+
 
         }
     }
