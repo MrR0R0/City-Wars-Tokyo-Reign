@@ -36,6 +36,7 @@ public class Play extends Menu {
     static private ArrayList<Cell> guestDeck = new ArrayList<>();
     static private Integer hostTotalAttack = 0;
     static private Integer guestTotalAttack = 0;
+    static private Integer pot = 0;
 
     static private Random random = new Random();
 
@@ -73,7 +74,6 @@ public class Play extends Menu {
             }
             return;
         }
-
         if (input.matches(Login.forgotPassword)) {
             Matcher matcher = getCommandMatcher(input, Login.forgotPassword);
             if (matcher.find())
@@ -94,11 +94,32 @@ public class Play extends Menu {
         }
 
         if (guestCharacter != null && hostCharacter != null) {
-            playing(scanner);
+            if (isInNormalMode)
+                playing(scanner);
+            if (isInBettingMode){
+
+                playing(scanner);
+            }
         } else {
             System.out.println("you should choose your Characters first");
         }
 
+    }
+    private static void betting(Scanner scanner) {
+        System.out.println("Enter the betting amount for the guest:");
+        int guestBet = scanner.nextInt();
+        System.out.println("Enter the betting amount for the host:");
+        int hostBet = scanner.nextInt();
+
+        if (guestBet <= guest.getWallet() && hostBet <= host.getWallet()) {
+            guest.setWallet(guest.getWallet() - guestBet);
+            host.setWallet(host.getWallet() - hostBet);
+            pot = guestBet + hostBet;
+            System.out.println("The total pot is: " + pot);
+        } else {
+            System.out.println("Both players must have enough money to place the bet.");
+            pot = 0;
+        }
     }
 
     static public void choosePlayMode(Matcher matcher) {
@@ -181,7 +202,9 @@ public class Play extends Menu {
         guestTotalAttack = 0;
 
 
+
         // init everything
+        gameRound = 8;
         hostDurationLine.get(random.nextInt(durationLineSize)).isHollow = true;
         guestDurationLine.get(random.nextInt(durationLineSize)).isHollow = true;
 
@@ -419,9 +442,9 @@ public class Play extends Menu {
 
     private static User isGameOver() {
         if (guest.getHP() <= 0)
-            return guest;
-        else if (host.getHP() <= 0)
             return host;
+        else if (host.getHP() <= 0)
+            return guest;
         return null;
     }
 
