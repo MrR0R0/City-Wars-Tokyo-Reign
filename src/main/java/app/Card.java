@@ -53,7 +53,6 @@ public class Card implements Cloneable{
         System.out.printf("%-"+pad+"s", ("Att/Def: " + attackOrDefense));
         if (!isInGame){
             System.out.print("|");
-
             System.out.printf("%-" + pad + "s", ("level: " + level));
             System.out.print("|");
             System.out.printf("%-" + pad + "s", ("price: " + price));
