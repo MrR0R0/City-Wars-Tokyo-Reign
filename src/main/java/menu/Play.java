@@ -144,9 +144,11 @@ public class Play extends Menu {
             String input = scanner.nextLine();
             selectCard(input);
             if (turnPlayer.equals(host)) {
+                System.out.println("Host's turn");
                 placeCard(input);
             }
             else if (turnPlayer.equals(guest)) {
+                System.out.println("Guest's turn");
                 placeCard(input);
             }
             printPlayGround();
@@ -230,8 +232,8 @@ public class Play extends Menu {
         String placeCardCommand = "place card number (?<cardNum>\\d+) in block (?<cellNum>\\d+)";
         Matcher matcher = getCommandMatcher(input, placeCardCommand);
         if (matcher.find()) {
-            int selectedCard = Integer.parseInt(matcher.group("CardNum"));
-            int selectedCell = Integer.parseInt(matcher.group("CellNum"));
+            int selectedCard = Integer.parseInt(matcher.group("cardNum"));
+            int selectedCell = Integer.parseInt(matcher.group("cellNum"));
             if (turnPlayer.equals(guest)) {
                 // special cards need to define here ...
 
@@ -265,13 +267,14 @@ public class Play extends Menu {
                             if (random.nextInt(4) == 0) guest.setXP(guest.getXP() + 10);
                             else if (random.nextInt(4) == 1) guest.setWallet(guest.getWallet() + 20);
 
-
                             System.out.println("host's card is destroyed");
-                        } else if (hostDurationLine.get(i).card.getValue().getAcc() > guestDurationLine.get(i).card.getValue().getAcc()) {
+                        }
+                        else if (hostDurationLine.get(i).card.getValue().getAcc() > guestDurationLine.get(i).card.getValue().getAcc()) {
                             guestDurationLine.get(i).isEmpty = true;
                             guestDurationLine.get(i).card = null;
                             System.out.println("guest's card is destroyed");
-                        } else {
+                        }
+                        else {
                             guestDurationLine.get(i).isEmpty = true;
                             guestDurationLine.get(i).card = null;
                             hostDurationLine.get(i).isEmpty = true;
@@ -284,7 +287,7 @@ public class Play extends Menu {
                 guestDeck.get(selectedCard).card = null;
                 replaceRandomCard();
             }
-            if (turnPlayer.equals(host)) {
+            else if (turnPlayer.equals(host)) {
                 // special cards need to define here ...
 
                 //checking cells
@@ -345,7 +348,7 @@ public class Play extends Menu {
         if (turnPlayer.equals(guest)) {
             iterator = guestDeck.listIterator();
             // replace with empty card
-            if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 if (iterator.next().isEmpty) {
                     int randomId = getRandomKey(guest.getDeckOfCards());
                     //same character boost
@@ -362,7 +365,7 @@ public class Play extends Menu {
         if (turnPlayer.equals(host)) {
             iterator = hostDeck.listIterator();
             // replace with empty card
-            if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 if (iterator.next().isEmpty) {
                     int randomId = getRandomKey(host.getDeckOfCards());
                     //same character boost
@@ -441,34 +444,39 @@ public class Play extends Menu {
             Cell guestCell = guestDurationLine.get(i);
             if (hostCell.card != null && guestCell.card != null) {
                 System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getAcc(), hostCell.card.getValue().getAcc());
-                System.out.printf("%-7.2f | %-7.2f%n", guestCell.card.getValue().getAttackOrDefense() / guestCell.card.getValue().getDuration(), hostCell.card.getValue().getAttackOrDefense());
+                System.out.printf("%-7d | %-7d%n", guestCell.card.getValue().getAttackOrDefense() / guestCell.card.getValue().getDuration(), hostCell.card.getValue().getAttackOrDefense());
                 System.out.printf("%-7d | %-7d%n", guestCell.card.getValue().getDamage(), hostCell.card.getValue().getDamage());
-            } else if (hostCell.card != null && guestCell.card == null) {
+            }
+            else if (hostCell.card != null && guestCell.card == null) {
                 if (guestCell.isHollow) {
                     System.out.printf("%-7s | %-7s%n", "", hostCell.card.getValue().getAcc());
-                    System.out.printf("%-7s | %-7.2f%n", "Hollow", hostCell.card.getValue().getAttackOrDefense());
+                    System.out.printf("%-7s | %-7d%n", "Hollow", hostCell.card.getValue().getAttackOrDefense());
                     System.out.printf("%-7s | %-7d%n", "", hostCell.card.getValue().getDamage());
-                } else if (guestCell.isEmpty) {
+                }
+                else if (guestCell.isEmpty) {
                     System.out.printf("%-7s | %-7s%n", "", hostCell.card.getValue().getAcc());
                     System.out.printf("%-7s | %-7s%n", "Empty", hostCell.card.getValue().getAcc());
                     System.out.printf("%-7s | %-7d%n", "", hostCell.card.getValue().getDamage());
                 }
-            } else if (hostCell.card == null && guestCell.card != null) {
+            }
+            else if (hostCell.card == null && guestCell.card != null) {
                 if (hostCell.isHollow) {
                     System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getAcc(), "");
-                    System.out.printf("%-7.2f | %-7s%n", guestCell.card.getValue().getAttackOrDefense(), "Hollow");
+                    System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getAttackOrDefense(), "Hollow");
                     System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getDamage(), "");
                 } else if (hostCell.isEmpty) {
                     System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getAcc(), "");
-                    System.out.printf("%-7.2f | %-7s%n", guestCell.card.getValue().getAttackOrDefense(), "Empty");
+                    System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getAttackOrDefense(), "Empty");
                     System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getDamage(), "");
                 }
-            } else {
+            }
+            else {
                 if (hostCell.isHollow) {
                     System.out.printf("%-7s | %-7s%n", "Hollow", "Hollow");
                     System.out.printf("%-7s | %-7s%n", "", "");
                     System.out.printf("%-7s | %-7s%n", "", "");
-                } else if (hostCell.isEmpty) {
+                }
+                else if (hostCell.isEmpty) {
                     System.out.printf("%-7s | %-7s%n", "Empty", "Empty");
                     System.out.printf("%-7s | %-7s%n", "", "");
                     System.out.printf("%-7s | %-7s%n", "", "");
