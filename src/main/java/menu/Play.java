@@ -40,7 +40,7 @@ public class Play extends Menu {
 
     static private boolean isInBettingMode = false;
     static private boolean isInNormalMode = false;
-    final static private String playModeCommand = "^select (?<Mode>\\w+) as thr play mode$";
+    final static private String playModeCommand = "^select (?<Mode>\\w+) as the play mode$";
     final static private String selectCharacter = "^(?<Character>\\w+)$";
 
     static public void handleInput(String input, Scanner scanner) throws IOException {
@@ -67,7 +67,7 @@ public class Play extends Menu {
                 System.out.println("Welcome " + username + "!");
                 tmepUser = User.signedUpUsers.get(User.getIdByUsername(username));
                 guest = tmepUser.clone();
-                Menu.currentMenu = MenuType.Main;
+                System.out.println("Please choose a character: " + String.join(", ", Card.Characters.Character1.name(), Card.Characters.Character2.name(), Card.Characters.Character3.name(), Card.Characters.Character4.name()));
                 return;
             }
             return;
@@ -95,6 +95,7 @@ public class Play extends Menu {
         if (guestCharacter != null && hostCharacter != null) {
             playing(scanner);
         }
+
         else {
             System.out.println("you should choose your Characters first");
         }
@@ -106,17 +107,18 @@ public class Play extends Menu {
             isInNormalMode = true;
             isInBettingMode = false;
             System.out.println("Normal mode is selected");
+            System.out.println("Second player should now log in!");
         }
         else if (matcher.group("Mode").equals("Betting")) {
             isInNormalMode = false;
             isInBettingMode = true;
             System.out.println("Betting mode is selected");
+            System.out.println("Second player should now log in!");
         }
         else {
             System.out.println("Invalid play mode selected. Please choose either \"Normal\" or \"Betting\" mode.");
             return;
         }
-        System.out.println("Please choose a character: " + String.join(", ", Card.Characters.Character1.name(), Card.Characters.Character2.name(), Card.Characters.Character3.name(), Card.Characters.Character4.name()));
     }
 
     // each player choose their character
@@ -175,7 +177,6 @@ public class Play extends Menu {
         guestTotalAttack =0;
 
 
-
         // init everything
         hostDurationLine.get(random.nextInt(durationLineSize)).isHollow = true;
         guestDurationLine.get(random.nextInt(durationLineSize)).isHollow = true;
@@ -231,7 +232,7 @@ public class Play extends Menu {
 
                 // same type with middle card
                 if (hostDeck.size()%2==1 && hostDeck.get(selectedCard).card.getValue().getType().equals(hostDeck.get((hostDeck.size()-1)/2).card.getValue().getType())){
-                    hostDeck.get(selectedCard).card.getValue().setGamingAttackOrDefense(Double.valueOf(hostDeck.get(selectedCard).card.getValue().getGamingAttackOrDefense() * 1.2).intValue());
+                    hostDeck.get(selectedCard).card.getValue().boostAttackDefense(1.2);
                 }
 
                 // destruction of cards
@@ -281,7 +282,7 @@ public class Play extends Menu {
 
                 // same type with middle card
                 if (hostDeck.size()%2==1 && hostDeck.get(selectedCard).card.getValue().getType().equals(hostDeck.get((hostDeck.size()-1)/2).card.getValue().getType())){
-                    hostDeck.get(selectedCard).card.getValue().setGamingAttackOrDefense(Double.valueOf(hostDeck.get(selectedCard).card.getValue().getGamingAttackOrDefense() * 1.2).intValue());
+                    hostDeck.get(selectedCard).card.getValue().boostAttackDefense(1.2);
                 }
 
 
@@ -327,7 +328,7 @@ public class Play extends Menu {
                     int randomId = random.nextInt(guest.getDeckOfCards().entrySet().size());
                     //same character boost
                     if (guest.getDeckOfCards().get(randomId).getCharacter().equals(guestCharacter.name()))
-                        guest.getDeckOfCards().get(randomId).setGamingAttackOrDefense(Double.valueOf(guest.getDeckOfCards().get(randomId).getGamingAttackOrDefense()*1.5).intValue());
+                        guest.getDeckOfCards().get(randomId).boostAttackDefense(1.5);
                     iterator.next().card = new Pair<>(guest.getDeckOfCards().get(randomId).getId(), guest.getDeckOfCards().get(randomId).clone());
                     System.out.println("card has been replaced successfully");
 
@@ -344,7 +345,7 @@ public class Play extends Menu {
                     int randomId = random.nextInt(host.getDeckOfCards().entrySet().size());
                     //same character boost
                     if (host.getDeckOfCards().get(randomId).getCharacter().equals(hostCharacter.name()))
-                        host.getDeckOfCards().get(randomId).setGamingAttackOrDefense(Double.valueOf(host.getDeckOfCards().get(randomId).getGamingAttackOrDefense()*1.5).intValue());
+                        host.getDeckOfCards().get(randomId).boostAttackDefense(1.5);
                     iterator.next().card = new Pair<>(host.getDeckOfCards().get(randomId).getId(), host.getDeckOfCards().get(randomId).clone());
                     System.out.println("card has been replaced successfully");
 
