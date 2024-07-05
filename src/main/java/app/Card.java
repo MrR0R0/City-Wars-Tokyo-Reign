@@ -99,7 +99,6 @@ public class Card implements Cloneable{
                 Objects.equals(upgradeLevel, card.upgradeLevel);
     }
 
-
     public String getName() {return name;}
     public CardType getType() {return type;}
     public Integer getLevel() {return level;}

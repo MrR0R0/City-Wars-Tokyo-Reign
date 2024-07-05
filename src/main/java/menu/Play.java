@@ -23,7 +23,7 @@ public class Play extends Menu {
 
 
     static private User guest;
-    static private User host = loggedInUser.clone();
+    static private final User host = loggedInUser.clone();
     static private User turnPlayer;
     static private Integer gameRound = 4;
 
@@ -37,7 +37,7 @@ public class Play extends Menu {
     static private Integer hostTotalAttack = 0;
     static private Integer guestTotalAttack = 0;
 
-    static private Random random = new Random();
+    static private final Random random = new Random();
 
     static private boolean isInBettingMode = false;
     static private boolean isInNormalMode = false;
@@ -114,7 +114,6 @@ public class Play extends Menu {
             System.out.println("Second player should now log in!");
         } else {
             System.out.println("Invalid play mode selected. Please choose either \"Normal\" or \"Betting\" mode.");
-            return;
         }
     }
 
@@ -140,21 +139,21 @@ public class Play extends Menu {
         //init first round
         initEachRound();
 
-
         while (gameRound > 0) {
             gameRound -= 1;
             String input = scanner.nextLine();
             selectCard(input);
             if (turnPlayer.equals(host)) {
                 placeCard(input);
-            } else if (turnPlayer.equals(guest)) {
+            }
+            else if (turnPlayer.equals(guest)) {
                 placeCard(input);
             }
         }
         movingTimeLine();
 
         if (isGameOver() != null) {
-            result(isGameOver());
+            result(Objects.requireNonNull(isGameOver()));
         } else {
             // next 4 round
             playing(scanner);
@@ -169,12 +168,8 @@ public class Play extends Menu {
         guestDurationLine = new ArrayList<>();
         initArrays(guestDurationLine, durationLineSize);
         initArrays(hostDurationLine, durationLineSize);
-        hostDurationLine.forEach(cell -> {
-            cell.isHollow = false;
-        });
-        guestDurationLine.forEach(cell -> {
-            cell.isHollow = false;
-        });
+        hostDurationLine.forEach(cell -> cell.isHollow = false);
+        guestDurationLine.forEach(cell -> cell.isHollow = false);
 
         hostTotalAttack = 0;
         guestTotalAttack = 0;
@@ -220,12 +215,12 @@ public class Play extends Menu {
         String selectCardCommand = "^select card number (?<number>\\d+) player (?<player>\\S+)$";
         Matcher matcher = getCommandMatcher(input, selectCardCommand);
         if (matcher.find()) {
-            Integer selectedNumber = Integer.parseInt(matcher.group("Number"));
+            int selectedNumber = Integer.parseInt(matcher.group("number"));
             if (matcher.group("player").equals("host")) {
-                hostDeck.get(selectedNumber).card.getValue().showProperties(15, true);
+                hostDeck.get(selectedNumber).card.getValue().showProperties(20, true);
             }
             if (matcher.group("player").equals("guest")) {
-                guestDeck.get(selectedNumber).card.getValue().showProperties(15, true);
+                guestDeck.get(selectedNumber).card.getValue().showProperties(20, true);
             }
         }
     }
