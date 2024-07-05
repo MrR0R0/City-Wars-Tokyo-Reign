@@ -205,4 +205,9 @@ public class User implements Cloneable {
         }
         return -1;
     }
+
+    public static Integer nextLevelXP(Integer level){
+        return (int) (Math.exp((double) (level + 35) /5) - Math.exp(5) + 20);
+    }
+
 }
