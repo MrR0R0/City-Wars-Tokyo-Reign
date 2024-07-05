@@ -31,8 +31,8 @@ public class Play extends Menu {
     static private Card.Characters hostCharacter;
     static private ArrayList<Cell> hostDurationLine = new ArrayList<>(durationLineSize);
     static private ArrayList<Cell> guestDurationLine = new ArrayList<>(durationLineSize);
-    static private ArrayList<Cell> hostDeck = new ArrayList<>(deckSize);
-    static private ArrayList<Cell> guestDeck = new ArrayList<>(deckSize);
+    static private ArrayList<Cell> hostDeck = new ArrayList<>();
+    static private ArrayList<Cell> guestDeck = new ArrayList<>();
     static private Integer hostTotalAttack = 0;
     static private Integer guestTotalAttack = 0;
 
@@ -67,7 +67,7 @@ public class Play extends Menu {
                 System.out.println("Welcome " + username + "!");
                 tmepUser = User.signedUpUsers.get(User.getIdByUsername(username));
                 guest = tmepUser.clone();
-                Menu.currentMenu = MenuType.Main;
+                System.out.println("Please choose a character: " + String.join(", ", Card.Characters.Character1.name(), Card.Characters.Character2.name(), Card.Characters.Character3.name(), Card.Characters.Character4.name()));
                 return;
             }
             return;
@@ -116,7 +116,6 @@ public class Play extends Menu {
             System.out.println("Invalid play mode selected. Please choose either \"Normal\" or \"Betting\" mode.");
             return;
         }
-        System.out.println("Please choose a character: " + String.join(", ", Card.Characters.Character1.name(), Card.Characters.Character2.name(), Card.Characters.Character3.name(), Card.Characters.Character4.name()));
     }
 
     // each player choose their character
@@ -166,10 +165,15 @@ public class Play extends Menu {
     private static void initEachRound(){
         // remove everything
         hostDurationLine.forEach(cell -> {cell.isHollow = false;});
-        hostDeck = new ArrayList<>(deckSize);
+        hostDeck = new ArrayList<>();
         guestDeck = new ArrayList<>(deckSize);
-        hostDurationLine = new ArrayList<>(durationLineSize);
-        guestDurationLine = new ArrayList<>(durationLineSize);
+        hostDurationLine = new ArrayList<>();
+        guestDurationLine = new ArrayList<>();
+        initArrays(guestDeck,deckSize);
+        initArrays(hostDeck,deckSize);
+        initArrays(guestDurationLine,durationLineSize);
+        initArrays(hostDurationLine,durationLineSize);
+
         hostTotalAttack = 0;
         guestTotalAttack =0;
 
@@ -418,6 +422,25 @@ public class Play extends Menu {
         }
         if (user.equals(guest)){
 
+        }
+    }
+
+    private static void printPlayGround(){
+        System.out.println("-------------------------------------------------------------------------");
+        System.out.println(guest.getHP() + "                    " + host.getHP());
+        System.out.println("..........................................................................");
+        for (int i = 0; i < durationLineSize; i++){
+            Cell hostCell = hostDurationLine.get(i);
+            Cell guestCell = guestDurationLine.get(i);
+            if (hostCell.isHollow)
+                System.out.println("Hollow");
+
+        }
+    }
+
+    private static void initArrays(ArrayList <Cell> list ,Integer capacity){
+        for (int i = 0; i < capacity; i++){
+            list.add(new Cell());
         }
     }
 }
