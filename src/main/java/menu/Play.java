@@ -347,7 +347,7 @@ public class Play extends Menu {
             // replace with empty card
             if (iterator.hasNext()) {
                 if (iterator.next().isEmpty) {
-                    int randomId = random.nextInt(guest.getDeckOfCards().entrySet().size());
+                    int randomId = getRandomKey(guest.getDeckOfCards());
                     //same character boost
                     if (guest.getDeckOfCards().get(randomId).getCharacter().equals(guestCharacter.name()))
                         guest.getDeckOfCards().get(randomId).boostAttackDefense(1.5);
@@ -364,7 +364,7 @@ public class Play extends Menu {
             // replace with empty card
             if (iterator.hasNext()) {
                 if (iterator.next().isEmpty) {
-                    int randomId = random.nextInt(host.getDeckOfCards().entrySet().size());
+                    int randomId = getRandomKey(host.getDeckOfCards());
                     //same character boost
                     if (host.getDeckOfCards().get(randomId).getCharacter().equals(hostCharacter.name()))
                         host.getDeckOfCards().get(randomId).boostAttackDefense(1.5);
