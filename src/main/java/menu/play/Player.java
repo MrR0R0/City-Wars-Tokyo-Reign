@@ -11,14 +11,13 @@ public class Player extends User {
     private Card.Characters character;
     private ArrayList<Cell> durationLine;
     private ArrayList<Card> hand;
-    private LinkedHashMap<Integer, Card> deck;
+    private final LinkedHashMap<Integer, Card> deck;
     private Integer roundAttack, totalAttack;
     private final Integer durationLineSize, handSize;
     private String consequence;
 
     Player(User user, int durationLineSize, int handSize) {
-        super(user.getUsername(), "", user.getNickname(), "", "", "", "",
-                user.getWallet(), user.getLevel(), user.getId(), user.getXP(), user.getHP());
+        super(user.getUsername(), "", user.getNickname(), "", "", "", "", user.getWallet(), user.getLevel(), user.getId(), user.getXP(), user.getHP());
         hand = new ArrayList<>();
         this.durationLineSize = durationLineSize;
         this.handSize = handSize;
@@ -55,7 +54,7 @@ public class Player extends User {
         return character;
     }
 
-    public Integer getRoundAttack(){
+    public Integer getRoundAttack() {
         return roundAttack;
     }
 
@@ -75,8 +74,9 @@ public class Player extends User {
             int randomId = getRandomKey(deck);
             if (!repeatedIds.contains(randomId)) {
                 Card card = deck.get(randomId).clone();
-                if (card.getCharacter().equals(character.name()))
+                if (card.getCharacter().equals(character.name())) {
                     card.boostAttackDefense(1.5);
+                }
                 hand.add(card);
                 repeatedIds.add(randomId);
             }
@@ -93,17 +93,25 @@ public class Player extends User {
 
     public void replaceCardInHand(int index) {
         HashSet<Integer> repeatedIds = new HashSet<>();
+        int specialCardCounter = 0;
         for (Card card : hand) {
             repeatedIds.add(card.getId());
+            if (card.getDuration() == 0) {
+                specialCardCounter++;
+            }
         }
-        for (Map.Entry<Integer, Card> entry : deck.entrySet()) {
+        List<Map.Entry<Integer, Card>> shuffledEntries = new ArrayList<>(deck.entrySet());
+        Collections.shuffle(shuffledEntries);
+        for (Map.Entry<Integer, Card> entry : shuffledEntries) {
             if (!repeatedIds.contains(entry.getKey())) {
-                hand.set(index, entry.getValue());
+                if (entry.getValue().getDuration() != 0 || specialCardCounter < 3) {
+                    hand.set(index, entry.getValue());
+                }
             }
         }
     }
 
-    public void increaseRoundAttack(int number){
+    public void increaseRoundAttack(int number) {
         roundAttack += number;
     }
 
@@ -119,24 +127,24 @@ public class Player extends User {
         return keys.get(randomIndex);
     }
 
-    public void showDurationLine(int rightPad){
+    public void showDurationLine(int rightPad) {
         String format = "%1$-" + rightPad + "s";
         for (int i = 0; i < durationLineSize; i++) {
-            if(checkNullForPrinting(durationLine.get(i))){
+            if (checkNullForPrinting(durationLine.get(i))) {
                 System.out.printf(format, durationLine.get(i).getCard().getId());
             }
             System.out.print("|");
         }
         System.out.println();
         for (int i = 0; i < durationLineSize; i++) {
-            if(checkNullForPrinting(durationLine.get(i))) {
+            if (checkNullForPrinting(durationLine.get(i))) {
                 System.out.printf(format, durationLine.get(i).getCard().getAcc());
             }
             System.out.print("|");
         }
         System.out.println();
         for (int i = 0; i < durationLineSize; i++) {
-            if(checkNullForPrinting(durationLine.get(i))) {
+            if (checkNullForPrinting(durationLine.get(i))) {
                 System.out.printf(format, durationLine.get(i).getCard().getGamingAttackOrDefense());
             }
             System.out.print("|");
@@ -144,7 +152,7 @@ public class Player extends User {
         System.out.println();
     }
 
-    public void applyPostMatchUpdates(){
+    public void applyPostMatchUpdates() {
         int obtainedCoins = (int) (max(0.1 * getHP(), 0) + totalAttack * 0.1);
         int obtainedXP = (int) (max(0.2 * getHP(), 0) + totalAttack * 0.2);
         increaseXP(obtainedXP);
@@ -160,40 +168,40 @@ public class Player extends User {
         return consequence;
     }
 
-    public void checkForLevelUpgrade(){
+    public void checkForLevelUpgrade() {
         if (User.nextLevelXP(getLevel()) < getXP()) {
             setLevel(getLevel() + 1);
             System.out.println(getNickname() + "'s level is upgraded to " + getLevel());
         }
     }
 
-    public void applyResults(User user){
+    public void applyResults(User user) {
         user.setWallet(getWallet());
         user.setXP(getXP());
         user.setLevel(getLevel());
     }
 
-    private boolean checkNullForPrinting(Cell cell){
-        if(cell.isShattered()){
+    private boolean checkNullForPrinting(Cell cell) {
+        if (cell.isShattered()) {
             System.out.print("***");
             return false;
         }
-        if(cell.isHollow()){
+        if (cell.isHollow()) {
             System.out.print("HOL");
             return false;
         }
-        if(cell.isEmpty()){
+        if (cell.isEmpty()) {
             System.out.print("   ");
             return false;
         }
-        if(cell.getCard() == null){
+        if (cell.getCard() == null) {
             System.out.print("nul");
             return false;
         }
         return true;
     }
 
-    public void showHand(){
+    public void showHand() {
         System.out.println(formatCards(hand, "name"));
         System.out.println(formatCards(hand, "duration"));
         System.out.println(formatCards(hand, "acc"));
@@ -208,7 +216,7 @@ public class Player extends User {
                 case "name" -> card.getName();
                 case "duration" -> "Duration: " + card.getDuration();
                 case "acc" -> "ACC: " + card.getAcc();
-                case "attackOrDefense" -> "Att/Def: " +  card.getAttackOrDefense();
+                case "attackOrDefense" -> "Att/Def: " + card.getAttackOrDefense();
                 default -> "";
             };
             sb.append(String.format("%-20s", attributeValue));

@@ -23,7 +23,6 @@ public class MainMenu extends Menu {
     final static private String logoutCommand = "^log out$";
     final static private String sortCommand = "^sort by (?<Field>\\d+) (?<Type>\\d+)$";
 
-
     static public void handleInput(String input, Scanner scanner) throws SQLException {
 
         if(input.matches(logoutCommand)){
