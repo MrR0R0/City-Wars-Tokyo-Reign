@@ -16,9 +16,13 @@ public class Play extends Menu {
     public static User tmepUser;
 
     public static class Cell {
-        public boolean isHollow = false;
-        public boolean isEmpty = true;
-        public Pair<Integer, Card> card;
+        private boolean isHollow = false;
+        private boolean isEmpty = true;
+        //id-card pair
+        private Pair<Integer, Card> card;
+        public void makeSolid(){
+            isHollow = false;
+        }
     }
 
     static final Integer durationLineSize = 21;
@@ -47,6 +51,9 @@ public class Play extends Menu {
     static private boolean isInNormalMode = false;
     final static private String playModeCommand = "^select (?<Mode>\\w+) as the play mode$";
     final static private String selectCharacter = "^(?<Character>\\w+)$";
+    final static String selectCardCommand = "^select card number (?<number>\\d+) player (?<player>\\S+)$";
+    final static String placeCardCommand = "place card number (?<cardNum>\\d+) in block (?<cellNum>\\d+)";
+
 
     static public void handleInput(String input, Scanner scanner) throws IOException {
         // should we have an exit command?
@@ -108,6 +115,7 @@ public class Play extends Menu {
         }
 
     }
+
     private static void betting(Scanner scanner) {
         System.out.println("Enter the betting amount for the guest:");
         int guestBet = scanner.nextInt();
@@ -164,18 +172,20 @@ public class Play extends Menu {
         initEachRound();
 
         while (gameRound > 0) {
-            gameRound -= 1;
             String input = scanner.nextLine();
-            selectCard(input);
-            if (turnPlayer.equals(host)) {
-                System.out.println("Host's turn");
-                placeCard(input);
+            if(input.matches(selectCardCommand))
+                selectCard(input);
+            else if(input.matches(placeCardCommand)) {
+                gameRound--;
+                if (turnPlayer.equals(host)) {
+                    System.out.println("Host's turn");
+                    placeCard(input);
+                } else if (turnPlayer.equals(guest)) {
+                    System.out.println("Guest's turn");
+                    placeCard(input);
+                }
+                printPlayGround();
             }
-            else if (turnPlayer.equals(guest)) {
-                System.out.println("Guest's turn");
-                placeCard(input);
-            }
-            printPlayGround();
         }
         movingTimeLine();
 
@@ -214,8 +224,8 @@ public class Play extends Menu {
         HashSet<Integer> guestRepeatedIds = new HashSet<>();
 
         Integer randomId;
-        while (hostDeck.size() < 5 || guestDeck.size() < 5) {
-            if (hostDeck.size() < 5) {
+        while (hostDeck.size() < deckSize || guestDeck.size() < deckSize) {
+            if (hostDeck.size() < deckSize) {
                 randomId = getRandomKey(host.getDeckOfCards());
                 if (!hostRepeatedIds.contains(randomId)) {
                     Cell cell = new Cell();
@@ -227,7 +237,7 @@ public class Play extends Menu {
                     hostRepeatedIds.add(randomId);
                 }
             }
-            if (guestDeck.size() < 5) {
+            if (guestDeck.size() < deckSize) {
                 randomId = getRandomKey(guest.getDeckOfCards());
                 if (!guestRepeatedIds.contains(randomId)) {
                     Cell cell = new Cell();
@@ -243,7 +253,6 @@ public class Play extends Menu {
     }
 
     private static void selectCard(String input) {
-        String selectCardCommand = "^select card number (?<number>\\d+) player (?<player>\\S+)$";
         Matcher matcher = getCommandMatcher(input, selectCardCommand);
         if (matcher.find()) {
             int selectedNumber = Integer.parseInt(matcher.group("number"));
@@ -257,13 +266,23 @@ public class Play extends Menu {
     }
 
     private static void placeCard(String input) {
-        String placeCardCommand = "place card number (?<cardNum>\\d+) in block (?<cellNum>\\d+)";
         Matcher matcher = getCommandMatcher(input, placeCardCommand);
         if (matcher.find()) {
             int selectedCard = Integer.parseInt(matcher.group("cardNum"));
             int selectedCell = Integer.parseInt(matcher.group("cellNum"));
             if (turnPlayer.equals(guest)) {
                 // special cards need to define here ...
+
+                //hole repairer
+                if(guestDeck.get(selectedCard).card.getKey().equals(3)){
+                    if(guestDurationLine.get(selectedCell).isHollow){
+                        guestDurationLine.get(selectedCard).makeSolid();
+                    }
+                    else{
+                        System.out.println("The cell is not hollow!");
+                    }
+                    return;
+                }
 
                 //checking cells
                 for (int i = selectedCell - 1; i < guestDeck.get(selectedCard).card.getValue().getDuration(); i++) {
@@ -317,6 +336,17 @@ public class Play extends Menu {
             }
             else if (turnPlayer.equals(host)) {
                 // special cards need to define here ...
+
+                //hole repairer
+                if(hostDeck.get(selectedCard).card.getKey().equals(3)){
+                    if(hostDurationLine.get(selectedCell).isHollow){
+                        hostDurationLine.get(selectedCard).makeSolid();
+                    }
+                    else{
+                        System.out.println("The cell is not hollow!");
+                    }
+                    return;
+                }
 
                 //checking cells
                 for (int i = selectedCell - 1; i < hostDeck.get(selectedCard).card.getValue().getDuration(); i++) {
