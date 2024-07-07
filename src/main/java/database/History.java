@@ -24,8 +24,8 @@ public class History {
         System.out.println(
                 String.format("%-"+numPad+"s", index) + "|" +
                 self + "|" + opponent + "|" + result + "|" + time + "|" +
-                String.format("%-"+consPad+"s", userCons) +
-                String.format("%-"+consPad+"s", oppCons)
+                String.format("%-"+consPad+"s", "Yours: " + userCons) +
+                String.format("%-"+consPad+"s", "Opponent's: " + oppCons)
         );
     }
 

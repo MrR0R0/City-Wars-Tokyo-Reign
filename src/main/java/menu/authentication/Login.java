@@ -6,7 +6,6 @@ import app.User;
 import menu.Menu;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -22,7 +21,7 @@ public class Login extends Menu {
     final static public String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";
     final static public String adminLogin = "^login admin (?<Pass>\\S+)$";
 
-    public static void handleInput(String input, Scanner scanner) throws IOException, SQLException {
+    public static void handleInput(String input, Scanner scanner) throws IOException{
         if(input.matches(loginCommand)){
             if(Error.alreadyLoggedIn())
                 return;

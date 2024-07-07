@@ -68,6 +68,7 @@ public class Connect {
                 user.setRecoveryAns(rs.getString("user_recoveryAnswer"));
                 user.setWallet(rs.getInt("user_wallet"));
                 user.setID(rs.getInt("user_id"));
+                user.setXP(rs.getInt("user_XP"));
                 user.getCardsFromTable();
                 userMap.put(rs.getInt("user_id"), user);
             }

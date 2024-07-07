@@ -5,12 +5,16 @@ import app.User;
 
 import java.util.*;
 
+import static java.lang.Math.max;
+
 public class Player extends User {
     private Card.Characters character;
     private ArrayList<Cell> durationLine;
     private ArrayList<Card> hand;
     private LinkedHashMap<Integer, Card> deck;
-    private Integer totalAttack, durationLineSize, handSize;
+    private Integer roundAttack, totalAttack;
+    private final Integer durationLineSize, handSize;
+    private String consequence;
 
     Player(User user, int durationLineSize, int handSize) {
         super(user.getUsername(), "", user.getNickname(), "", "", "", "",
@@ -18,7 +22,11 @@ public class Player extends User {
         hand = new ArrayList<>();
         this.durationLineSize = durationLineSize;
         this.handSize = handSize;
+        setXP(user.getXP());
+        roundAttack = 0;
         totalAttack = 0;
+        //1 * (90 + 10 * getLevel())
+        setHP(50);
 
         //Just for now
         //deck = user.getDeck();
@@ -33,7 +41,8 @@ public class Player extends User {
         }
 
         //A new attacking score
-        totalAttack = 0;
+        roundAttack = 0;
+        totalAttack += roundAttack;
 
         //A new hand
         fillHand();
@@ -46,8 +55,8 @@ public class Player extends User {
         return character;
     }
 
-    public Integer getTotalAttack(){
-        return totalAttack;
+    public Integer getRoundAttack(){
+        return roundAttack;
     }
 
     public void setCharacter(Card.Characters character) {
@@ -94,12 +103,8 @@ public class Player extends User {
         }
     }
 
-    public void setTotalAttack(int number){
-        totalAttack = number;
-    }
-
-    public void increaseTotalAttack(int number){
-        totalAttack += number;
+    public void increaseRoundAttack(int number){
+        roundAttack += number;
     }
 
     public static <K, V> K getRandomKey(HashMap<K, V> map) {
@@ -139,11 +144,20 @@ public class Player extends User {
         System.out.println();
     }
 
-    public void showResultPrompt(){
-        System.out.println("obtained coin: " + 0.2 * getHP());
-        System.out.println("obtained XP: " + 0.1 * getHP());
+    public void applyPostMatchUpdates(){
+        int obtainedCoins = (int) (max(0.1 * getHP(), 0) + totalAttack * 0.1);
+        int obtainedXP = (int) (max(0.2 * getHP(), 0) + totalAttack * 0.2);
+        increaseXP(obtainedXP);
+        increaseMoney(obtainedCoins);
+        consequence = "XP: +" + obtainedXP + " Coins: +" + obtainedCoins;
+        System.out.println("obtained coin: " + obtainedCoins);
+        System.out.println("obtained XP: " + obtainedXP);
         System.out.println("total XP: " + getXP());
         System.out.println("required XP to next level: " + User.nextLevelXP(getLevel()));
+    }
+
+    public String getConsequence() {
+        return consequence;
     }
 
     public void checkForLevelUpgrade(){
@@ -160,12 +174,16 @@ public class Player extends User {
     }
 
     private boolean checkNullForPrinting(Cell cell){
+        if(cell.isShattered()){
+            System.out.print("***");
+            return false;
+        }
         if(cell.isHollow()){
-            System.out.print("Hol");
+            System.out.print("HOL");
             return false;
         }
         if(cell.isEmpty()){
-            System.out.print("Emp");
+            System.out.print("   ");
             return false;
         }
         if(cell.getCard() == null){
@@ -173,5 +191,31 @@ public class Player extends User {
             return false;
         }
         return true;
+    }
+
+    public void showHand(){
+        System.out.println(formatCards(hand, "name"));
+        System.out.println(formatCards(hand, "duration"));
+        System.out.println(formatCards(hand, "acc"));
+        System.out.println(formatCards(hand, "attackOrDefense"));
+    }
+
+    public static String formatCards(List<Card> cards, String attributeType) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < cards.size(); i++) {
+            Card card = cards.get(i);
+            String attributeValue = switch (attributeType) {
+                case "name" -> card.getName();
+                case "duration" -> "Duration: " + card.getDuration();
+                case "acc" -> "ACC: " + card.getAcc();
+                case "attackOrDefense" -> "Att/Def: " +  card.getAttackOrDefense();
+                default -> "";
+            };
+            sb.append(String.format("%-20s", attributeValue));
+            if (i < cards.size() - 1) {
+                sb.append("|");
+            }
+        }
+        return sb.toString();
     }
 }

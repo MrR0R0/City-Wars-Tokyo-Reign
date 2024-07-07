@@ -19,11 +19,11 @@ public class Play extends Menu {
     static final Integer durationLineSize = 21;
     static final Integer handSize = 5;
 
-    static private Player host;
+    static private final Player host = new Player(Menu.loggedInUser, durationLineSize, handSize);
     static private Player guest;
     static private Player turnPlayer;
     static private Player opponent;
-    static private Integer gameRound = 8;
+    static private final Integer gameRounds = 2;
 
     static private Integer pot = 0;
 
@@ -36,11 +36,10 @@ public class Play extends Menu {
     final static String selectCardCommand = "^select card number (?<number>\\d+) player (?<player>\\S+)$";
     final static String placeCardCommand = "place card number (?<cardNum>\\d+) in block (?<cellNum>\\d+)";
     final static String showPlaygroundCommand = "show playground";
+    final static String showHandCommand = "show hand";
 
 
     static public void handleInput(String input, Scanner scanner) throws IOException {
-        host = new Player(Menu.loggedInUser, durationLineSize, handSize);
-
         // should we have an exit command?
         if (input.matches(playModeCommand)) {
             Matcher matcher = getCommandMatcher(input, playModeCommand);
@@ -48,47 +47,39 @@ public class Play extends Menu {
                 choosePlayMode(matcher);
             }
             return;
-        }
-
-        if (!isInBettingMode && !isInNormalMode) {
+        } else if (!isInBettingMode && !isInNormalMode) {
             System.out.println("you should choose the play mode first");
             return;
-        }
-
-        if (input.matches(Login.loginCommand)) {
+        } else if (input.matches(Login.loginCommand)) {
             Matcher matcher = getCommandMatcher(input, Login.loginCommand);
             matcher.find();
             if (Login.checkLogIn(matcher, scanner)) {
                 String username = matcher.group("Username");
+                guest = new Player(User.signedUpUsers.get(User.getIdByUsername(username)), durationLineSize, handSize);
+                if (guest.getId().equals(host.getId())) {
+                    guest = null;
+                    System.out.println("Invalid action: You cannot battle yourself.");
+                    return;
+                }
                 System.out.println("user logged in successfully");
                 System.out.println("Welcome " + username + "!");
-                guest = new Player(User.signedUpUsers.get(User.getIdByUsername(username)), durationLineSize, handSize);
-                System.out.println("Please choose a character: " + String.join(", ", Card.Characters.Character1.name(), Card.Characters.Character2.name(), Card.Characters.Character3.name(), Card.Characters.Character4.name()));
                 return;
             }
             return;
-        }
-
-        if (input.matches(Login.forgotPassword)) {
+        } else if (input.matches(Login.forgotPassword)) {
             Matcher matcher = getCommandMatcher(input, Login.forgotPassword);
             if (matcher.find())
                 Login.resetPassword(matcher, scanner);
             return;
-        }
-
-        if (guest == null) {
+        } else if (guest == null) {
             System.out.println("Second player should log in first. Please log in by typing 'user login -u <Username> -p <Password>'.");
             return;
-        }
-
-        if (input.matches(selectCharacter)) {
+        } else if (input.matches(selectCharacter)) {
             Matcher matcher = getCommandMatcher(input, selectCharacter);
             if (matcher.find()) {
                 selectCharacter(matcher);
             }
-        }
-
-        if (guest.getCharacter() != null && host.getCharacter() != null) {
+        } else if (guest.getCharacter() != null && host.getCharacter() != null) {
             if (isInNormalMode)
                 playing(scanner);
             if (isInBettingMode) {
@@ -162,23 +153,20 @@ public class Play extends Menu {
         }
         //init first round
         initEachRound();
-
-        while (gameRound > 0) {
+        int roundCounter = gameRounds;
+        while (roundCounter > 0) {
             String input = scanner.nextLine();
             if (input.matches(selectCardCommand))
                 selectCard(input);
-            if (input.toLowerCase().matches(showPlaygroundCommand)) {
+            else if (input.toLowerCase().matches(showPlaygroundCommand)) {
                 printPlayGround();
+            } else if (input.toLowerCase().matches(showHandCommand)) {
+                turnPlayer.showHand();
             } else if (input.matches(placeCardCommand)) {
-                gameRound--;
-                if (turnPlayer.equals(host)) {
-                    System.out.println("Host's turn");
-                    if (placeCard(input))
-                        changeTurn();
-                } else if (turnPlayer.equals(guest)) {
-                    System.out.println("Guest's turn");
-                    if (placeCard(input))
-                        changeTurn();
+                System.out.println(turnPlayer.getNickname() + "'s turn");
+                if (placeCard(input)){
+                    changeTurn();
+                    roundCounter--;
                 }
                 printPlayGround();
             }
@@ -234,7 +222,7 @@ public class Play extends Menu {
         //Checking if the card can be placed
         //Cells should be empty and solid
         for (int i = selectedCellIndex; i < selectedCellIndex + selectedCard.getDuration(); i++) {
-            if(i >= durationLineSize){
+            if (i >= durationLineSize) {
                 System.out.println("you can't place this card because your card is outside of track's boundaries");
                 return false;
             }
@@ -258,7 +246,7 @@ public class Play extends Menu {
         }
 
         //Check for card destruction
-        for (int i = selectedCellIndex; i < selectedCard.getDuration(); i++) {
+        for (int i = selectedCellIndex; i < selectedCellIndex + selectedCard.getDuration(); i++) {
             turnPlayer.getDurationLine().get(i).setCardPair(new Pair<>(selectedCard.getId(), selectedCard.clone()));
             if (!opponent.getDurationLine().get(i).isEmpty()) {
                 Cell myCell = turnPlayer.getDurationLine().get(i);
@@ -296,35 +284,33 @@ public class Play extends Menu {
             System.out.println("Block " + (i + 1) + " :");
             Cell hostCell = host.getDurationLine().get(i);
             Cell guestCell = guest.getDurationLine().get(i);
-            if (guestCell.isEmpty()) {
-                System.out.println("Guest: Empty cell");
-            } else if (guestCell.isHollow()) {
+            if (guestCell.isHollow()) {
                 System.out.println("Guest: Hollow cell");
+            } else if (guestCell.isEmpty()) {
+                System.out.println("Guest: Empty cell");
             } else if (guestCell.isShattered()) {
                 System.out.println("Guest: Shattered cell");
             } else if (guestCell.getCard() != null) {
-                guest.increaseTotalAttack(guestCell.getCard().getGamingAttackOrDefense());
+                guest.increaseRoundAttack(guestCell.getCard().getGamingAttackOrDefense());
                 host.decreaseHP(guestCell.getCard().getGamingAttackOrDefense());
                 guest.getDurationLine().get(i).getCard().showInGameProperties(10);
                 System.out.println("host HP: " + host.getHP());
-                System.out.println("host total damage: " + guest.getTotalAttack());
+                System.out.println("host total damage: " + guest.getRoundAttack());
             }
 
-            if (hostCell.isEmpty()) {
-                System.out.println("Host: Empty cell");
-            } else if (hostCell.isHollow()) {
+            if (hostCell.isHollow()) {
                 System.out.println("Host: Hollow cell");
+            } else if (hostCell.isEmpty()) {
+                System.out.println("Host: Empty cell");
             } else if (hostCell.isShattered()) {
                 System.out.println("Host: Shattered cell");
             } else if (hostCell.getCard() != null) {
-                host.increaseTotalAttack(hostCell.getCard().getGamingAttackOrDefense());
+                host.increaseRoundAttack(hostCell.getCard().getGamingAttackOrDefense());
                 guest.decreaseHP(hostCell.getCard().getGamingAttackOrDefense());
                 host.getDurationLine().get(i).getCard().showInGameProperties(10);
                 System.out.println("guest HP: " + guest.getHP());
-                System.out.println("guest total damage: " + host.getTotalAttack());
+                System.out.println("guest total damage: " + host.getRoundAttack());
             }
-
-            System.out.println("---------------------------------------------------------------------------------------");
 
             if (isGameOver() != null) {
                 return;
@@ -343,27 +329,18 @@ public class Play extends Menu {
 
     private static void result(Player winner) {
         Player loser = opponent;
-        String result = "", winnerCons, loserCons, hostCons, guestCons;
-        winnerCons = "XP: +" + 0.1 * winner.getHP() + " Coin: +" + 0.2 * winner.getHP();
-        loserCons = "XP: +" + 0.01 * loser.getHP();
-        winner.increaseXP((int) (0.1 * winner.getHP()));
-        winner.increaseMoney((int) (0.2 * winner.getHP()));
+        String result = winner.getNickname() + " won!";
 
         System.out.println("Winner: " + winner.getNickname());
-        winner.showResultPrompt();
+        winner.applyPostMatchUpdates();
         System.out.println();
         System.out.println("Loser: " + loser.getNickname());
-        loser.showResultPrompt();
+        loser.applyPostMatchUpdates();
         winner.checkForLevelUpgrade();
         loser.checkForLevelUpgrade();
 
-        if (winner == host) {
-            hostCons = winnerCons;
-            guestCons = loserCons;
-        } else {
-            guestCons = winnerCons;
-            hostCons = loserCons;
-        }
+        String hostCons = winner == host ? winner.getConsequence() : loser.getConsequence();
+        String guestCons = winner == guest ? winner.getConsequence() : loser.getConsequence();
 
         Connect.insertHistory(guest.getUsername(), guest.getLevel(), guestCons,
                 host.getUsername(), guest.getLevel(), hostCons,
@@ -373,7 +350,6 @@ public class Play extends Menu {
 
         host.applyResults(Menu.loggedInUser);
         guest.applyResults(User.signedUpUsers.get(guest.getId()));
-
     }
 
     private static void printPlayGround() {

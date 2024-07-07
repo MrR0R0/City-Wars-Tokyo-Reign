@@ -286,16 +286,12 @@ public class User implements Cloneable {
         Pattern pattern = Pattern.compile(CARD_REGEX);
         for (String card : series) {
             Matcher matcher = pattern.matcher(card);
-            if (matcher.find()) {
-                int id = Integer.parseInt(matcher.group("id"));
-                int level = Integer.parseInt(matcher.group("level"));
-                cards.put(id, Card.allCards.get(id));
-                cards.get(id).setLevel(level);
-                cards.get(id).setAcc(Card.levelUpFormula(cards.get(id).getAcc(), cards.get(id).getLevel()));
-                cards.get(id).setAttackOrDefense(Card.levelUpFormula(cards.get(id).getAttackOrDefense(), cards.get(id).getLevel()));
-                cards.get(id).setDamage(Card.levelUpFormula(cards.get(id).getDamage(), cards.get(id).getLevel()));
-                cards.get(id).setUpgradeCost(Card.levelUpFormula(cards.get(id).getUpgradeCost(), cards.get(id).getLevel()));
-            }
+            matcher.find();
+            int id = Integer.parseInt(matcher.group("id"));
+            int level = Integer.parseInt(matcher.group("level"));
+            cards.put(id, Card.allCards.get(id).clone());
+            cards.get(id).setLevel(level);
+            cards.get(id).updateFieldsByLevel();
         }
     }
 
@@ -308,6 +304,6 @@ public class User implements Cloneable {
     }
 
     public static Integer nextLevelXP(Integer level) {
-        return (int) (Math.exp((double) (level + 35) / 5) - Math.exp(5) + 20);
+        return (int) (Math.exp((level + 27.7) / 5) - Math.exp(5.5) + 20);
     }
 }

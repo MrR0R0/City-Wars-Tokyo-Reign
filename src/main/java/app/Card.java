@@ -160,11 +160,19 @@ public class Card implements Cloneable{
         }
         cardSeries.delete(cardSeries.length()-1, cardSeries.length());
         user.setCardsSeries(cardSeries.toString());
-        System.out.println(cardSeries.toString());
+        System.out.println(cardSeries);
     }
 
     public static Integer levelUpFormula(Integer value, Integer level){
-        return (int) (value *Math.exp(-1*Double.valueOf(level)/10)+1);
+        //double coefficient = Math.exp(-1*Double.valueOf(level)/10) + 1 + Math.exp(-0.1);
+        return (int) (value * (Math.log(level) + 1));
+    }
+
+    public void updateFieldsByLevel(){
+        acc = levelUpFormula(acc, level);
+        attackOrDefense = levelUpFormula(attackOrDefense, level);
+        damage = levelUpFormula(damage, level);
+        upgradeCost = price * level;
     }
 
     public static <T> Card findCardInlist(String property, T value, LinkedHashMap<Integer,Card> linkedHashMap) {

@@ -8,9 +8,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 
 public class SignUp extends Menu {
-    static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
-    static private Integer HP, XP;
-    static private User tmpUser;
+    static private String username, pass, email, nickname, recoveryAns, recoveryQ;
 
     static final private Integer initialMoney = 100;
 
@@ -180,8 +178,8 @@ public class SignUp extends Menu {
     static private boolean twoStepVerification(Scanner scanner) {
         if (securityQuestion(scanner)) {
             if (Captcha.checkCaptcha(scanner)) {
-                tmpUser = new User(username, pass, nickname, email, recoveryAns,
-                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size()+1,XP,HP);
+                User tmpUser = new User(username, pass, nickname, email, recoveryAns,
+                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size() + 1, 0, 0);
                 tmpUser.giveRandomCard();
                 Card.updateUserCards(tmpUser);
                 User.signedUpUsers.put(User.signedUpUsers.size()+1, tmpUser);
