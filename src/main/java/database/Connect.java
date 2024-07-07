@@ -27,7 +27,7 @@ public class Connect {
 
     public static void insertUser(User user) throws SQLException {
         String sql = "INSERT INTO user(user_level, user_username, user_cards, user_password, user_nickname, user_email, "
-                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet) VALUES(?,?,?,?,?,?,?,?,?)";
+                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet, user_XP) VALUES(?,?,?,?,?,?,?,?,?,?)";
         try {
             connectToDatabase();
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -40,6 +40,7 @@ public class Connect {
             pstmt.setInt(7, user.getRecoveryQ());
             pstmt.setString(8, user.getRecoveryAns());
             pstmt.setInt(9, user.getWallet());
+            pstmt.setInt(10, user.getXP());
             pstmt.executeUpdate();
             //System.out.println("user has been added to the database.");
         } catch (SQLException e) {
