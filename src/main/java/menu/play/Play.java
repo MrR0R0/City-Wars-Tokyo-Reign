@@ -233,8 +233,12 @@ public class Play extends Menu {
 
         //Checking if the card can be placed
         //Cells should be empty and solid
-        for (int i = 0; i < selectedCard.getDuration(); i++) {
-            if (turnPlayer.getDurationLine().get(selectedCellIndex + i).isHollow()) {
+        for (int i = selectedCellIndex; i < selectedCellIndex + selectedCard.getDuration(); i++) {
+            if(i >= durationLineSize){
+                System.out.println("you can't place this card because your card is outside of track's boundaries");
+                return false;
+            }
+            if (turnPlayer.getDurationLine().get(i).isHollow()) {
                 System.out.println("you can't place this card because the cell is hollow");
                 return false;
             }
