@@ -10,7 +10,9 @@ import menu.authentication.Login;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Objects;
+import java.util.Random;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class Play extends Menu {
@@ -89,7 +91,7 @@ public class Play extends Menu {
         if (guest.getCharacter() != null && host.getCharacter() != null) {
             if (isInNormalMode)
                 playing(scanner);
-            if (isInBettingMode){
+            if (isInBettingMode) {
 
                 playing(scanner);
             }
@@ -150,25 +152,33 @@ public class Play extends Menu {
 
     // handling playing events
     public static void playing(Scanner scanner) {
-        turnPlayer = random.nextInt(2) == 0 ? host : guest;
+        int randomPlayer = random.nextInt(2);
+        turnPlayer = randomPlayer == 0 ? host : guest;
+        opponent = randomPlayer == 0 ? guest : host;
+        if (randomPlayer == 0) {
+            System.out.println("Host starts");
+        } else {
+            System.out.println("guest starts");
+        }
         //init first round
         initEachRound();
 
         while (gameRound > 0) {
             String input = scanner.nextLine();
-            if(input.matches(selectCardCommand))
+            if (input.matches(selectCardCommand))
                 selectCard(input);
-            if(input.toLowerCase().matches(showPlaygroundCommand)){
+            if (input.toLowerCase().matches(showPlaygroundCommand)) {
                 printPlayGround();
-            }
-            else if(input.matches(placeCardCommand)) {
+            } else if (input.matches(placeCardCommand)) {
                 gameRound--;
                 if (turnPlayer.equals(host)) {
                     System.out.println("Host's turn");
-                    placeCard(input);
+                    if (placeCard(input))
+                        changeTurn();
                 } else if (turnPlayer.equals(guest)) {
                     System.out.println("Guest's turn");
-                    placeCard(input);
+                    if (placeCard(input))
+                        changeTurn();
                 }
                 printPlayGround();
             }
@@ -194,7 +204,7 @@ public class Play extends Menu {
     private static void selectCard(String input) {
         Matcher matcher = getCommandMatcher(input, selectCardCommand);
         if (matcher.find()) {
-            int selectedNumber = Integer.parseInt(matcher.group("number"));
+            int selectedNumber = Integer.parseInt(matcher.group("number")) - 1;
             if (matcher.group("player").equals("host")) {
                 host.getHand().get(selectedNumber).showInGameProperties(20);
             }
@@ -204,78 +214,76 @@ public class Play extends Menu {
         }
     }
 
-    private static void placeCard(String input) {
+    private static boolean placeCard(String input) {
         Matcher matcher = getCommandMatcher(input, placeCardCommand);
-        if (matcher.find()) {
-            int selectedCardIndex = Integer.parseInt(matcher.group("cardNum")) - 1;
-            int selectedCellIndex = Integer.parseInt(matcher.group("cellNum")) - 1;
-            Card selectedCard = turnPlayer.getHand().get(selectedCardIndex);
+        matcher.find();
+        int selectedCardIndex = Integer.parseInt(matcher.group("cardNum")) - 1;
+        int selectedCellIndex = Integer.parseInt(matcher.group("cellNum")) - 1;
+        Card selectedCard = turnPlayer.getHand().get(selectedCardIndex);
 
-            //hole repairer
-            if(selectedCard.getId().equals(3)){
-                if(turnPlayer.getDurationLine().get(selectedCellIndex).isHollow()){
-                    turnPlayer.getDurationLine().get(selectedCellIndex).makeSolid();
-                }
-                else{
-                    System.out.println("The cell is not hollow!");
-                }
-                return;
+        //hole repairer
+        if (selectedCard.getId().equals(5)) {
+            if (turnPlayer.getDurationLine().get(selectedCellIndex).isHollow()) {
+                turnPlayer.getDurationLine().get(selectedCellIndex).makeSolid();
+            } else {
+                System.out.println("The cell is not hollow!");
             }
+            return false;
+        }
 
-            //Checking if the card can be placed
-            //Cells should be empty and solid
-            for (int i = selectedCellIndex; i < selectedCard.getDuration(); i++) {
-                if (turnPlayer.getDurationLine().get(i).isHollow()) {
-                    System.out.println("you can't place this card because the cell is hollow");
-                    return;
-                }
-                if (!turnPlayer.getDurationLine().get(i).isEmpty()) {
-                    System.out.println("you can't place this card because the cell is not empty");
-                    return;
-                }
+        //Checking if the card can be placed
+        //Cells should be empty and solid
+        for (int i = 0; i < selectedCard.getDuration(); i++) {
+            if (turnPlayer.getDurationLine().get(selectedCellIndex + i).isHollow()) {
+                System.out.println("you can't place this card because the cell is hollow");
+                return false;
             }
+            if (!turnPlayer.getDurationLine().get(i).isEmpty()) {
+                System.out.println("you can't place this card because the cell is not empty");
+                return false;
+            }
+        }
 
-            //Check for matching middle card boost
-            int middleIndex = (durationLineSize-1)/2;
-            Card middleCard = turnPlayer.getDurationLine().get(middleIndex).getCard();
-            if(random.nextInt(4) == 1 && selectedCard.getType().equals(middleCard.getType())){
+        //Check for matching middle card boost
+        int middleIndex = (durationLineSize - 1) / 2;
+        Card middleCard = turnPlayer.getDurationLine().get(middleIndex).getCard();
+        if (middleCard != null) {
+            if (random.nextInt(4) == 1 && selectedCard.getType().equals(middleCard.getType())) {
                 selectedCard.boostAttackDefense(1.2);
             }
+        }
 
-            //Check for card destruction
-            for(int i=selectedCellIndex; i < selectedCard.getDuration(); i++){
-                turnPlayer.getDurationLine().get(i).setCardPair(new Pair<>(selectedCard.getId(), selectedCard.clone()));
-                if(!opponent.getDurationLine().get(i).isEmpty()){
-                    Cell myCell = turnPlayer.getDurationLine().get(i);
-                    Cell oppCell = opponent.getDurationLine().get(i);
-                    if(myCell.getCard().getAcc() < oppCell.getCard().getAcc()){
-                        myCell.shatter();
-                        System.out.println("your card is shattered");
-                    }
-                    else if(myCell.getCard().getAcc() > oppCell.getCard().getAcc()){
-                        oppCell.shatter();
-                        System.out.println("opponent's card is shattered");
-                    }
-                    else{
-                        myCell.shatter();
-                        oppCell.shatter();
-                        System.out.println("both cards are shattered");
-                    }
+        //Check for card destruction
+        for (int i = selectedCellIndex; i < selectedCard.getDuration(); i++) {
+            turnPlayer.getDurationLine().get(i).setCardPair(new Pair<>(selectedCard.getId(), selectedCard.clone()));
+            if (!opponent.getDurationLine().get(i).isEmpty()) {
+                Cell myCell = turnPlayer.getDurationLine().get(i);
+                Cell oppCell = opponent.getDurationLine().get(i);
+                if (myCell.getCard().getAcc() < oppCell.getCard().getAcc()) {
+                    myCell.shatter();
+                    System.out.println("your card is shattered");
+                } else if (myCell.getCard().getAcc() > oppCell.getCard().getAcc()) {
+                    oppCell.shatter();
+                    System.out.println("opponent's card is shattered");
+                } else {
+                    myCell.shatter();
+                    oppCell.shatter();
+                    System.out.println("both cards are shattered");
                 }
             }
-
-            /*
-            check for complete shatters
-            // reward for destruction of card
-                            if (random.nextInt(4) == 0) guest.setXP(guest.getXP() + 10);
-                            else if (random.nextInt(4) == 1) guest.setWallet(guest.getWallet() + 20);
-
-                            System.out.println("host's card is destroyed");
-             */
-
-            turnPlayer.replaceCardInHand(selectedCardIndex);
-            changeTurn();
         }
+
+        /*
+        check for complete shatters
+        // reward for destruction of card
+                        if (random.nextInt(4) == 0) guest.setXP(guest.getXP() + 10);
+                        else if (random.nextInt(4) == 1) guest.setWallet(guest.getWallet() + 20);
+
+                        System.out.println("host's card is destroyed");
+         */
+
+        turnPlayer.replaceCardInHand(selectedCardIndex);
+        return true;
     }
 
     private static void movingTimeLine() {
@@ -284,16 +292,13 @@ public class Play extends Menu {
             System.out.println("Block " + (i + 1) + " :");
             Cell hostCell = host.getDurationLine().get(i);
             Cell guestCell = guest.getDurationLine().get(i);
-            if(guestCell.isEmpty()){
+            if (guestCell.isEmpty()) {
                 System.out.println("Guest: Empty cell");
-            }
-            else if(guestCell.isHollow()){
+            } else if (guestCell.isHollow()) {
                 System.out.println("Guest: Hollow cell");
-            }
-            else if(guestCell.isShattered()){
+            } else if (guestCell.isShattered()) {
                 System.out.println("Guest: Shattered cell");
-            }
-            else if(guestCell.getCard() != null){
+            } else if (guestCell.getCard() != null) {
                 guest.increaseTotalAttack(guestCell.getCard().getGamingAttackOrDefense());
                 host.decreaseHP(guestCell.getCard().getGamingAttackOrDefense());
                 guest.getDurationLine().get(i).getCard().showInGameProperties(10);
@@ -301,16 +306,13 @@ public class Play extends Menu {
                 System.out.println("host total damage: " + guest.getTotalAttack());
             }
 
-            if(hostCell.isEmpty()){
+            if (hostCell.isEmpty()) {
                 System.out.println("Host: Empty cell");
-            }
-            else if(hostCell.isHollow()){
+            } else if (hostCell.isHollow()) {
                 System.out.println("Host: Hollow cell");
-            }
-            else if(hostCell.isShattered()){
+            } else if (hostCell.isShattered()) {
                 System.out.println("Host: Shattered cell");
-            }
-            else if(hostCell.getCard() != null){
+            } else if (hostCell.getCard() != null) {
                 host.increaseTotalAttack(hostCell.getCard().getGamingAttackOrDefense());
                 guest.decreaseHP(hostCell.getCard().getGamingAttackOrDefense());
                 host.getDurationLine().get(i).getCard().showInGameProperties(10);
@@ -351,20 +353,19 @@ public class Play extends Menu {
         winner.checkForLevelUpgrade();
         loser.checkForLevelUpgrade();
 
-        if(winner == host) {
+        if (winner == host) {
             hostCons = winnerCons;
             guestCons = loserCons;
-        }
-        else{
+        } else {
             guestCons = winnerCons;
             hostCons = loserCons;
         }
 
         Connect.insertHistory(guest.getUsername(), guest.getLevel(), guestCons,
-                            host.getUsername(), guest.getLevel(), hostCons,
-                            result,
-                            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                            host.getId(), guest.getId());
+                host.getUsername(), guest.getLevel(), hostCons,
+                result,
+                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                host.getId(), guest.getId());
 
         host.applyResults(Menu.loggedInUser);
         guest.applyResults(User.signedUpUsers.get(guest.getId()));
@@ -381,7 +382,7 @@ public class Play extends Menu {
         System.out.println(".".repeat(4 * 21));
     }
 
-    private static void changeTurn(){
+    private static void changeTurn() {
         Player tmp = turnPlayer;
         turnPlayer = opponent;
         opponent = tmp;

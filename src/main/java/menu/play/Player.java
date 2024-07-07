@@ -115,23 +115,24 @@ public class Player extends User {
     }
 
     public void showDurationLine(int rightPad){
+        String format = "%1$-" + rightPad + "s";
         for (int i = 0; i < durationLineSize; i++) {
             if(checkNullForPrinting(durationLine.get(i))){
-                System.out.print("%-" + rightPad + durationLine.get(i).getCard().getId());
+                System.out.printf(format, durationLine.get(i).getCard().getId());
             }
             System.out.print("|");
         }
         System.out.println();
         for (int i = 0; i < durationLineSize; i++) {
             if(checkNullForPrinting(durationLine.get(i))) {
-                System.out.print("%-" + rightPad + durationLine.get(i).getCard().getAcc());
+                System.out.printf(format, durationLine.get(i).getCard().getAcc());
             }
             System.out.print("|");
         }
         System.out.println();
         for (int i = 0; i < durationLineSize; i++) {
             if(checkNullForPrinting(durationLine.get(i))) {
-                System.out.print("%-" + rightPad + durationLine.get(i).getCard().getGamingAttackOrDefense());
+                System.out.printf(format, durationLine.get(i).getCard().getGamingAttackOrDefense());
             }
             System.out.print("|");
         }
