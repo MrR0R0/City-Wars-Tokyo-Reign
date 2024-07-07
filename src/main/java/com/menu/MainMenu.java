@@ -1,8 +1,8 @@
-package menu;
+package com.menu;
 
-import app.ProgramController;
-import database.Connect;
-import database.History;
+import com.app.ProgramController;
+import com.database.Connect;
+import com.database.History;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -29,10 +29,10 @@ public class MainMenu extends Menu {
             System.out.println("Logged out successfully");
         } else if (input.matches(switchToPlay)) {
             Menu.currentMenu = MenuType.Play;
-            System.out.println("You are now in \"Play\" menu");
+            System.out.println("You are now in \"Play\" com.menu");
         } else if (input.matches(switchToShop)) {
             Menu.currentMenu = MenuType.Shop;
-            System.out.println("You are now in \"Shop\" menu");
+            System.out.println("You are now in \"Shop\" com.menu");
         } else if (input.matches(showCards)) {
             System.out.println("Here are your cards:");
             Menu.loggedInUser.showCards();
@@ -58,7 +58,7 @@ public class MainMenu extends Menu {
             System.out.println("otherwise, enter 'quit'");
             String command = scanner.nextLine().trim().replaceAll(" +", " ");
             if (ProgramController.checkQuit(command)) {
-                System.out.println("You will be directed to Main menu");
+                System.out.println("You will be directed to com.Main com.menu");
                 return;
             } else if (command.matches(sortCommand)) {
                 Matcher matcher = getCommandMatcher(command, sortCommand);

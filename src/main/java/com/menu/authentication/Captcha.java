@@ -1,4 +1,4 @@
-package menu.authentication;
+package com.menu.authentication;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

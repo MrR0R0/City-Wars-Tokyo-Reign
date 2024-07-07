@@ -1,7 +1,7 @@
-package database;
+package com.database;
 
-import app.Card;
-import app.User;
+import com.app.Card;
+import com.app.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public class Connect {
             pstmt.setString(8, user.getRecoveryAns());
             pstmt.setInt(9, user.getWallet());
             pstmt.executeUpdate();
-            //System.out.println("user has been added to the database.");
+            //System.out.println("user has been added to the com.database.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
@@ -139,7 +139,7 @@ public class Connect {
             pstmt.setInt(13, Integer.parseInt(convertCharacterType(character)));
 
             pstmt.executeUpdate();
-//            System.out.println("card has been added to the database.");
+//            System.out.println("card has been added to the com.database.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {

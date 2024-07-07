@@ -1,9 +1,9 @@
-package menu.authentication;
+package com.menu.authentication;
 
-import app.Card;
-import app.Error;
-import app.User;
-import menu.Menu;
+import com.app.Card;
+import com.app.Error;
+import com.app.User;
+import com.menu.Menu;
 import java.util.*;
 import java.util.regex.Matcher;
 

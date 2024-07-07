@@ -1,9 +1,9 @@
-package menu;
+package com.menu;
 
-import app.Error;
-import app.User;
-import menu.authentication.Captcha;
-import menu.authentication.SignUp;
+import com.app.Error;
+import com.app.User;
+import com.menu.authentication.Captcha;
+import com.menu.authentication.SignUp;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;

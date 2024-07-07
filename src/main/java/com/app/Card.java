@@ -1,6 +1,6 @@
-package app;
+package com.app;
 
-import database.Connect;
+import com.database.Connect;
 
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
