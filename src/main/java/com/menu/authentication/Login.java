@@ -1,9 +1,9 @@
-package menu.authentication;
+package com.menu.authentication;
 
-import app.Error;
-import app.ProgramController;
-import app.User;
-import menu.Menu;
+import com.app.Error;
+import com.app.ProgramController;
+import com.app.User;
+import com.menu.Menu;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -125,7 +125,7 @@ public class Login extends Menu {
                 command = scanner.nextLine().trim();
                 while(true){
                     if(ProgramController.checkQuit(command)){
-                        System.out.println("You will be directed to the main menu");
+                        System.out.println("You will be directed to the main com.menu");
                         return;
                     }
                     if(SignUp.isValidPasswordFormat(command)){

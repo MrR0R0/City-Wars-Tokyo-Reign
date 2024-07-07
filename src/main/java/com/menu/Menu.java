@@ -1,10 +1,10 @@
-package menu;
+package com.menu;
 
-import app.User;
+import com.app.User;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class Menu extends app.Error {
+public abstract class Menu extends com.app.Error {
     public enum MenuType {Profile, Main, Shop, Authentication, Play, Admin}
     public static boolean isInMenu = false;
     public static User loggedInUser = new User();

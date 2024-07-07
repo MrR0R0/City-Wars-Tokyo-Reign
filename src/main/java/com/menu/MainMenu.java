@@ -1,8 +1,8 @@
-package menu;
+package com.menu;
 
-import app.ProgramController;
-import database.Connect;
-import database.History;
+import com.app.ProgramController;
+import com.database.Connect;
+import com.database.History;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -129,5 +129,4 @@ public class MainMenu extends Menu {
             Collections.reverse(history);
         }
     }
-
 }

@@ -1,6 +1,6 @@
-package app;
+package com.app;
 
-import menu.Menu;
+import com.menu.Menu;
 
 public class Error {
     static public boolean emptyField(String input, String fieldName){

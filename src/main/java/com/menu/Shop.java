@@ -1,7 +1,7 @@
-package menu;
+package com.menu;
 
-import app.Card;
-import app.Error;
+import com.app.Card;
+import com.app.Error;
 
 import java.util.*;
 import java.util.regex.Matcher;

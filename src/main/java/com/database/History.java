@@ -1,6 +1,6 @@
-package database;
+package com.database;
 
-import app.User;
+import com.app.User;
 
 public class History {
     private final int index;

@@ -1,10 +1,10 @@
-package menu;
+package com.menu;
 
-import app.Card;
-import app.ProgramController;
-import app.Error;
-import app.User;
-import database.Connect;
+import com.app.Card;
+import com.app.ProgramController;
+import com.app.Error;
+import com.app.User;
+import com.database.Connect;
 
 import java.sql.SQLException;
 import java.util.Scanner;
