@@ -2,10 +2,13 @@ package menu;
 
 import app.Card;
 import app.User;
+import database.Connect;
 import javafx.util.Pair;
 import menu.authentication.Login;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.regex.Matcher;
 
@@ -13,9 +16,13 @@ public class Play extends Menu {
     public static User tmepUser;
 
     public static class Cell {
-        public boolean isHollow = false;
-        public boolean isEmpty = true;
-        public Pair<Integer, Card> card;
+        private boolean isHollow = false;
+        private boolean isEmpty = true;
+        //id-card pair
+        private Pair<Integer, Card> card;
+        public void makeSolid(){
+            isHollow = false;
+        }
     }
 
     static final Integer durationLineSize = 21;
@@ -23,7 +30,7 @@ public class Play extends Menu {
 
 
     static private User guest;
-    static private User host = loggedInUser.clone();
+    static private final User host = loggedInUser.clone();
     static private User turnPlayer;
     static private Integer gameRound = 8;
 
@@ -38,12 +45,15 @@ public class Play extends Menu {
     static private Integer guestTotalAttack = 0;
     static private Integer pot = 0;
 
-    static private Random random = new Random();
+    static private final Random random = new Random();
 
     static private boolean isInBettingMode = false;
     static private boolean isInNormalMode = false;
     final static private String playModeCommand = "^select (?<Mode>\\w+) as the play mode$";
     final static private String selectCharacter = "^(?<Character>\\w+)$";
+    final static String selectCardCommand = "^select card number (?<number>\\d+) player (?<player>\\S+)$";
+    final static String placeCardCommand = "place card number (?<cardNum>\\d+) in block (?<cellNum>\\d+)";
+
 
     static public void handleInput(String input, Scanner scanner) throws IOException {
         // should we have an exit command?
@@ -96,15 +106,17 @@ public class Play extends Menu {
         if (guestCharacter != null && hostCharacter != null) {
             if (isInNormalMode)
                 playing(scanner);
-            if (isInBettingMode){
-
-                playing(scanner);
+            if (isInBettingMode) {
+                betting(scanner);
+                if (pot != 0)
+                    playing(scanner);
             }
         } else {
             System.out.println("you should choose your Characters first");
         }
 
     }
+
     private static void betting(Scanner scanner) {
         System.out.println("Enter the betting amount for the guest:");
         int guestBet = scanner.nextInt();
@@ -135,7 +147,6 @@ public class Play extends Menu {
             System.out.println("Second player should now log in!");
         } else {
             System.out.println("Invalid play mode selected. Please choose either \"Normal\" or \"Betting\" mode.");
-            return;
         }
     }
 
@@ -161,29 +172,35 @@ public class Play extends Menu {
         //init first round
         initEachRound();
 
-
         while (gameRound > 0) {
-            gameRound -= 1;
             String input = scanner.nextLine();
-            selectCard(input);
-            if (turnPlayer.equals(host)) {
-                placeCard(input);
-            } else if (turnPlayer.equals(guest)) {
-                placeCard(input);
+            if(input.matches(selectCardCommand))
+                selectCard(input);
+            else if(input.matches(placeCardCommand)) {
+                gameRound--;
+                if (turnPlayer.equals(host)) {
+                    System.out.println("Host's turn");
+                    placeCard(input);
+                } else if (turnPlayer.equals(guest)) {
+                    System.out.println("Guest's turn");
+                    placeCard(input);
+                }
+                printPlayGround();
             }
-            printPlayGround();
         }
         movingTimeLine();
 
-        if (isGameOver() != null){
-            result(isGameOver());
+        if (isGameOver() != null) {
+            result(Objects.requireNonNull(isGameOver()));
+            System.out.println("Guest will now be logged out automatically");
+            Menu.currentMenu = MenuType.Main;
         } else {
             // next 4 round
             playing(scanner);
         }
     }
 
-    private static void initEachRound(){
+    private static void initEachRound() {
         // remove everything
         hostDeck = new ArrayList<>();
         guestDeck = new ArrayList<>();
@@ -191,12 +208,8 @@ public class Play extends Menu {
         guestDurationLine = new ArrayList<>();
         initArrays(guestDurationLine, durationLineSize);
         initArrays(hostDurationLine, durationLineSize);
-        hostDurationLine.forEach(cell -> {
-            cell.isHollow = false;
-        });
-        guestDurationLine.forEach(cell -> {
-            cell.isHollow = false;
-        });
+        hostDurationLine.forEach(cell -> cell.isHollow = false);
+        guestDurationLine.forEach(cell -> cell.isHollow = false);
 
         hostTotalAttack = 0;
         guestTotalAttack = 0;
@@ -212,8 +225,8 @@ public class Play extends Menu {
         HashSet<Integer> guestRepeatedIds = new HashSet<>();
 
         Integer randomId;
-        while (hostDeck.size() < 5 || guestDeck.size() < 5) {
-            if (hostDeck.size() < 5) {
+        while (hostDeck.size() < deckSize || guestDeck.size() < deckSize) {
+            if (hostDeck.size() < deckSize) {
                 randomId = getRandomKey(host.getDeckOfCards());
                 if (!hostRepeatedIds.contains(randomId)) {
                     Cell cell = new Cell();
@@ -225,7 +238,7 @@ public class Play extends Menu {
                     hostRepeatedIds.add(randomId);
                 }
             }
-            if (guestDeck.size() < 5) {
+            if (guestDeck.size() < deckSize) {
                 randomId = getRandomKey(guest.getDeckOfCards());
                 if (!guestRepeatedIds.contains(randomId)) {
                     Cell cell = new Cell();
@@ -241,27 +254,36 @@ public class Play extends Menu {
     }
 
     private static void selectCard(String input) {
-        String selectCardCommand = "^select card number (?<number>\\d+) player (?<player>\\S+)$";
         Matcher matcher = getCommandMatcher(input, selectCardCommand);
         if (matcher.find()) {
-            Integer selectedNumber = Integer.parseInt(matcher.group("Number"));
+            int selectedNumber = Integer.parseInt(matcher.group("number"));
             if (matcher.group("player").equals("host")) {
-                hostDeck.get(selectedNumber).card.getValue().showProperties(15, true);
+                hostDeck.get(selectedNumber).card.getValue().showProperties(20, true);
             }
             if (matcher.group("player").equals("guest")) {
-                guestDeck.get(selectedNumber).card.getValue().showProperties(15, true);
+                guestDeck.get(selectedNumber).card.getValue().showProperties(20, true);
             }
         }
     }
 
     private static void placeCard(String input) {
-        String placeCardCommand = "place card number (?<cardNum>\\d+) in block (?<cellNum>\\d+)";
         Matcher matcher = getCommandMatcher(input, placeCardCommand);
         if (matcher.find()) {
-            int selectedCard = Integer.parseInt(matcher.group("CardNum"));
-            int selectedCell = Integer.parseInt(matcher.group("CellNum"));
+            int selectedCard = Integer.parseInt(matcher.group("cardNum"));
+            int selectedCell = Integer.parseInt(matcher.group("cellNum"));
             if (turnPlayer.equals(guest)) {
                 // special cards need to define here ...
+
+                //hole repairer
+                if(guestDeck.get(selectedCard).card.getKey().equals(3)){
+                    if(guestDurationLine.get(selectedCell).isHollow){
+                        guestDurationLine.get(selectedCard).makeSolid();
+                    }
+                    else{
+                        System.out.println("The cell is not hollow!");
+                    }
+                    return;
+                }
 
                 //checking cells
                 for (int i = selectedCell - 1; i < guestDeck.get(selectedCard).card.getValue().getDuration(); i++) {
@@ -293,13 +315,14 @@ public class Play extends Menu {
                             if (random.nextInt(4) == 0) guest.setXP(guest.getXP() + 10);
                             else if (random.nextInt(4) == 1) guest.setWallet(guest.getWallet() + 20);
 
-
                             System.out.println("host's card is destroyed");
-                        } else if (hostDurationLine.get(i).card.getValue().getAcc() > guestDurationLine.get(i).card.getValue().getAcc()) {
+                        }
+                        else if (hostDurationLine.get(i).card.getValue().getAcc() > guestDurationLine.get(i).card.getValue().getAcc()) {
                             guestDurationLine.get(i).isEmpty = true;
                             guestDurationLine.get(i).card = null;
                             System.out.println("guest's card is destroyed");
-                        } else {
+                        }
+                        else {
                             guestDurationLine.get(i).isEmpty = true;
                             guestDurationLine.get(i).card = null;
                             hostDurationLine.get(i).isEmpty = true;
@@ -312,8 +335,19 @@ public class Play extends Menu {
                 guestDeck.get(selectedCard).card = null;
                 replaceRandomCard();
             }
-            if (turnPlayer.equals(host)) {
+            else if (turnPlayer.equals(host)) {
                 // special cards need to define here ...
+
+                //hole repairer
+                if(hostDeck.get(selectedCard).card.getKey().equals(3)){
+                    if(hostDurationLine.get(selectedCell).isHollow){
+                        hostDurationLine.get(selectedCard).makeSolid();
+                    }
+                    else{
+                        System.out.println("The cell is not hollow!");
+                    }
+                    return;
+                }
 
                 //checking cells
                 for (int i = selectedCell - 1; i < hostDeck.get(selectedCard).card.getValue().getDuration(); i++) {
@@ -370,7 +404,7 @@ public class Play extends Menu {
         if (turnPlayer.equals(guest)) {
             iterator = guestDeck.listIterator();
             // replace with empty card
-            if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 if (iterator.next().isEmpty) {
                     int randomId = getRandomKey(guest.getDeckOfCards());
                     //same character boost
@@ -387,7 +421,7 @@ public class Play extends Menu {
         if (turnPlayer.equals(host)) {
             iterator = hostDeck.listIterator();
             // replace with empty card
-            if (iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 if (iterator.next().isEmpty) {
                     int randomId = getRandomKey(host.getDeckOfCards());
                     //same character boost
@@ -434,7 +468,7 @@ public class Play extends Menu {
             }
             System.out.println("---------------------------------------------------------------------------------------");
 
-            if(isGameOver() != null) {
+            if (isGameOver() != null) {
                 return;
             }
         }
@@ -449,11 +483,23 @@ public class Play extends Menu {
     }
 
     private static void result(User user) {
+        String result = "", hostCons = "", guestCons="";
         if (user.equals(host)) {
+            result = "Host Won!";
+            hostCons = "XP: +" + 0.1 * host.getHP() + " Coin: +" + 0.2 * host.getHP();
+            guestCons = "XP: +" + 0.01 * guest.getHP();
             host.setXP(Double.valueOf(host.getXP() + 0.1 * host.getHP()).intValue());
             host.setWallet(Double.valueOf(host.getWallet() + 0.2 * host.getHP()).intValue());
             System.out.println("The winner is " + host.getNickname());
-            System.out.println("obtained coin: " + 0.2 * host.getHP());
+            if (isInBettingMode) {
+                host.setWallet(host.getWallet() +pot);
+                System.out.println("All the pot is for " + host.getNickname());
+                System.out.println("obtained coin: " + pot);
+            }
+            if (isInNormalMode){
+                host.setWallet(Double.valueOf(host.getWallet() + 0.2 * host.getHP()).intValue());
+                System.out.println("obtained coin: " + 0.2 * host.getHP());
+            }
             System.out.println("obtained XP: " + 0.1 * host.getHP());
             System.out.println("total XP: " + host.getXP());
             System.out.println("require XP to next level: " + User.nextLevelXP(host.getLevel()));
@@ -464,6 +510,10 @@ public class Play extends Menu {
             System.out.println();
             guest.setXP(Double.valueOf(guest.getXP() + 0.01 * guest.getHP()).intValue());
             System.out.println("The loser is " + guest.getNickname());
+            if (isInBettingMode) {
+                guest.setWallet(guest.getWallet()-pot);
+                System.out.println("lost coin: " + pot);
+            }
             System.out.println("obtained XP: " + 0.01 * guest.getHP());
             System.out.println("total XP: " + guest.getXP());
             System.out.println("require XP to next level: " + User.nextLevelXP(guest.getLevel()));
@@ -471,12 +521,23 @@ public class Play extends Menu {
                 guest.setLevel(guest.getLevel() + 1);
                 System.out.println(guest.getNickname() + "'s level is upgraded to " + guest.getLevel());
             }
+
         }
-        if (user.equals(guest)) {
+        else if (user.equals(guest)) {
+            result = "Guest Won!";
+            guestCons = "XP: +" + 0.1 * guest.getHP() + " Coin: +" + 0.2 * guest.getHP();
+            hostCons = "XP: +" + 0.01 * host.getHP();
             guest.setXP(Double.valueOf(guest.getXP() + 0.1 * guest.getHP()).intValue());
-            guest.setWallet(Double.valueOf(guest.getWallet() + 0.2 * guest.getHP()).intValue());
             System.out.println("The winner is " + guest.getNickname());
-            System.out.println("obtained coin: " + 0.2 * guest.getHP());
+            if (isInBettingMode) {
+                guest.setWallet(guest.getWallet() +pot);
+                System.out.println("All the pot is for " + guest.getNickname());
+                System.out.println("obtained coin: " + pot);
+            }
+            if (isInNormalMode){
+                guest.setWallet(Double.valueOf(guest.getWallet() + 0.2 * guest.getHP()).intValue());
+                System.out.println("obtained coin: " + 0.2 * guest.getHP());
+            }
             System.out.println("obtained XP: " + 0.1 * guest.getHP());
             System.out.println("total XP: " + guest.getXP());
             System.out.println("require XP to next level: " + User.nextLevelXP(guest.getLevel()));
@@ -487,6 +548,10 @@ public class Play extends Menu {
             System.out.println();
             host.setXP(Double.valueOf(host.getXP() + 0.01 * host.getHP()).intValue());
             System.out.println("The loser is " + host.getNickname());
+            if (isInBettingMode) {
+                host.setWallet(host.getWallet()-pot);
+                System.out.println("lost coin: " + pot);
+            }
             System.out.println("obtained XP: " + 0.01 * host.getHP());
             System.out.println("total XP: " + host.getXP());
             System.out.println("require XP to next level: " + User.nextLevelXP(host.getLevel()));
@@ -495,6 +560,19 @@ public class Play extends Menu {
                 System.out.println(host.getNickname() + "'s level is upgraded to " + host.getLevel());
             }
         }
+
+        Connect.insertHistory(guest.getUsername(), guest.getLevel(), guestCons,
+                            host.getUsername(), guest.getLevel(), hostCons,
+                            result,
+                            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                            host.getId(), guest.getId());
+
+        Menu.loggedInUser.setWallet(host.getWallet());
+        Menu.loggedInUser.setXP(host.getXP());
+        Menu.loggedInUser.setLevel(host.getLevel());
+        User.signedUpUsers.get(guest.getId()).setWallet(guest.getWallet());
+        User.signedUpUsers.get(guest.getId()).setXP(guest.getXP());
+        User.signedUpUsers.get(guest.getId()).setLevel(guest.getLevel());
     }
 
     private static void printPlayGround() {
@@ -507,37 +585,42 @@ public class Play extends Menu {
             if (hostCell.card != null && guestCell.card != null) {
                 System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getName(), hostCell.card.getValue().getName());
                 System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getAcc(), hostCell.card.getValue().getAcc());
-                System.out.printf("%-7.2f | %-7.2f%n", guestCell.card.getValue().getAttackOrDefense() / guestCell.card.getValue().getDuration(), hostCell.card.getValue().getAttackOrDefense());
+                System.out.printf("%-7d | %-7d%n", guestCell.card.getValue().getAttackOrDefense() / guestCell.card.getValue().getDuration(), hostCell.card.getValue().getAttackOrDefense());
                 System.out.printf("%-7d | %-7d%n", guestCell.card.getValue().getDamage(), hostCell.card.getValue().getDamage());
-            } else if (hostCell.card != null && guestCell.card == null) {
+            }
+            else if (hostCell.card != null) {
                 if (guestCell.isHollow) {
                     System.out.printf("%-7s | %-7s%n", "", hostCell.card.getValue().getName());
                     System.out.printf("%-7s | %-7s%n", "", hostCell.card.getValue().getAcc());
-                    System.out.printf("%-7s | %-7.2f%n", "Hollow", hostCell.card.getValue().getAttackOrDefense());
+                    System.out.printf("%-7s | %-7d%n", "Hollow", hostCell.card.getValue().getAttackOrDefense());
                     System.out.printf("%-7s | %-7d%n", "", hostCell.card.getValue().getDamage());
-                } else if (guestCell.isEmpty) {
+                }
+                else if (guestCell.isEmpty) {
                     System.out.printf("%-7s | %-7s%n", "", hostCell.card.getValue().getAcc());
                     System.out.printf("%-7s | %-7s%n", "Empty", hostCell.card.getValue().getAcc());
                     System.out.printf("%-7s | %-7d%n", "", hostCell.card.getValue().getDamage());
                 }
-            } else if (hostCell.card == null && guestCell.card != null) {
+            }
+            else if (guestCell.card != null) {
                 if (hostCell.isHollow) {
                     System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getName(), "");
                     System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getAcc(), "");
-                    System.out.printf("%-7.2f | %-7s%n", guestCell.card.getValue().getAttackOrDefense(), "Hollow");
+                    System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getAttackOrDefense(), "Hollow");
                     System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getDamage(), "");
                 } else if (hostCell.isEmpty) {
                     System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getName(), "");
                     System.out.printf("%-7s | %-7s%n", guestCell.card.getValue().getAcc(), "");
-                    System.out.printf("%-7.2f | %-7s%n", guestCell.card.getValue().getAttackOrDefense(), "Empty");
+                    System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getAttackOrDefense(), "Empty");
                     System.out.printf("%-7d | %-7s%n", guestCell.card.getValue().getDamage(), "");
                 }
-            } else {
+            }
+            else {
                 if (hostCell.isHollow) {
                     System.out.printf("%-7s | %-7s%n", "Hollow", "Hollow");
                     System.out.printf("%-7s | %-7s%n", "", "");
                     System.out.printf("%-7s | %-7s%n", "", "");
-                } else if (hostCell.isEmpty) {
+                }
+                else if (hostCell.isEmpty) {
                     System.out.printf("%-7s | %-7s%n", "Empty", "Empty");
                     System.out.printf("%-7s | %-7s%n", "", "");
                     System.out.printf("%-7s | %-7s%n", "", "");
@@ -547,13 +630,11 @@ public class Play extends Menu {
         }
     }
 
-
-    private static void initArrays(ArrayList <Cell> list ,Integer capacity){
-        for (int i = 0; i < capacity; i++){
+    private static void initArrays(ArrayList<Cell> list, Integer capacity) {
+        for (int i = 0; i < capacity; i++) {
             list.add(new Cell());
         }
     }
-
 
     public static <K, V> K getRandomKey(HashMap<K, V> map) {
         // Convert the keys to a List

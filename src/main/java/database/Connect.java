@@ -205,6 +205,32 @@ public class Connect {
         return historyArray;
     }
 
+    public static void insertHistory(String guestName, int guestLevel, String guestCons,
+                                     String hostName, int hostLevel, String hostCons,
+                                     String result, String time, int hostId, int guestId) {
+        connectToDatabase();
+        try {
+            String sql = "INSERT INTO history (guest_name, guest_level, guest_cons, host_name, host_level, host_cons, result, time, host_id, guest_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement statement = connection.prepareStatement(sql);
+
+            // Set parameters
+            statement.setString(1, guestName);
+            statement.setInt(2, guestLevel);
+            statement.setString(3, guestCons);
+            statement.setString(4, hostName);
+            statement.setInt(5, hostLevel);
+            statement.setString(6, hostCons);
+            statement.setString(7, result);
+            statement.setString(8, time);
+            statement.setInt(9, hostId);
+            statement.setInt(10, guestId);
+
+            // Execute the insert statement
+            statement.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
     // Converting between character strings and integers.
     public static <T> T convertCharacterType(T var) {
         if (var instanceof String) {

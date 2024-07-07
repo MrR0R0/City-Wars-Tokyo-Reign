@@ -30,25 +30,27 @@ public class ProgramController {
                     System.out.println("You should log in first");
                 }
             }
-            switch (Menu.currentMenu){
-                case Authentication -> {
-                    SignUp.handleInput(command, scanner);
-                    Login.handleInput(command, scanner);
-                }
-                case Main -> {
-                    MainMenu.handleInput(command, scanner);
-                }
-                case Profile -> {
-                    ProfileMenu.handleInput(command, scanner);
-                }
-                case Admin -> {
-                    Admin.handleInput(command, scanner);
-                }
-                case Shop -> {
-                    Shop.handleInput(command,scanner);
-                }
-                case Play -> {
-                    Play.handleInput(command, scanner);
+            else {
+                switch (Menu.currentMenu) {
+                    case Authentication -> {
+                        SignUp.handleInput(command, scanner);
+                        Login.handleInput(command, scanner);
+                    }
+                    case Main -> {
+                        MainMenu.handleInput(command, scanner);
+                    }
+                    case Profile -> {
+                        ProfileMenu.handleInput(command, scanner);
+                    }
+                    case Admin -> {
+                        Admin.handleInput(command, scanner);
+                    }
+                    case Shop -> {
+                        Shop.handleInput(command, scanner);
+                    }
+                    case Play -> {
+                        Play.handleInput(command, scanner);
+                    }
                 }
             }
         }
