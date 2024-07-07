@@ -1,10 +1,9 @@
-package menu;
+package com.menu;
 
-import app.Card;
-import app.User;
-import database.Connect;
+import com.database.*;
+import com.app.*;
+import com.menu.authentication.*;
 import javafx.util.Pair;
-import menu.authentication.Login;
 
 import java.io.IOException;
 import java.time.LocalDate;

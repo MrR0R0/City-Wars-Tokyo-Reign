@@ -1,9 +1,8 @@
-package app;
+package com.app;
 
-import database.Connect;
-import menu.*;
-import menu.authentication.Login;
-import menu.authentication.SignUp;
+import com.database.*;
+import com.menu.*;
+import com.menu.authentication.*;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Scanner;

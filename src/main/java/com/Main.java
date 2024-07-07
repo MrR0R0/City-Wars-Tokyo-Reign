@@ -1,6 +1,6 @@
 package com;
 
-import com.app.ProgramController;
+import com.app.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -25,7 +25,7 @@ public class Main extends javafx.application.Application{
     public void start(Stage primaryStage) throws Exception {
         stage = primaryStage;
         stage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("hello-view.fxml")));
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("Main-view.fxml")));
         root = loader.load();
         scene = new Scene(root, 400, 400);
         stage.setTitle("Just a test!");
