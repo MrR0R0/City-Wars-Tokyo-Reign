@@ -33,7 +33,7 @@ public class Shop extends Menu{
     private static void showUpgradeable(Matcher matcher, Scanner scanner){
         LinkedHashMap<Integer, Card> upgradeableCards = new LinkedHashMap<>();
         int i = 0;
-        for (Map.Entry<Integer, Card> entry : loggedInUser.getDeckOfCards().entrySet()) {
+        for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
             i++;
             Card card = entry.getValue();
             if (loggedInUser.getLevel() >= card.getUpgradeLevel()) {
@@ -65,7 +65,7 @@ public class Shop extends Menu{
         Random random = new Random();
         while (i < 6){
             Integer cardId = random.nextInt(Card.allCards.size());
-            if (!loggedInUser.getDeckOfCards().containsKey(cardId)){
+            if (!loggedInUser.getCards().containsKey(cardId)){
                 availableCards.put(cardId, Card.allCards.get(cardId));
                 System.out.print(Card.allCards.get(cardId).getName() + " | ");
                 if (i == 4)
@@ -91,7 +91,7 @@ public class Shop extends Menu{
         }
     }
     private static void chooseCardToBuy(Matcher matcher, Scanner scanner, Card card){
-        card.showProperties(25,false);
+        card.showProperties(25);
         System.out.println();
         System.out.println("buy " + card.getName() + " or back");
 
@@ -103,7 +103,7 @@ public class Shop extends Menu{
             matcher = getCommandMatcher(input, buyCommand);
             if (matcher.find()) {
                 if (card.getPrice() <= loggedInUser.getWallet()) {
-                    loggedInUser.addToDeck(card.getId(),card);
+                    loggedInUser.addToCards(card.getId(),card);
                     loggedInUser.setCardsSeries(loggedInUser.getCardsSeries() + "," + card.getId() + "_" + card.getLevel());
                 }
                 else {

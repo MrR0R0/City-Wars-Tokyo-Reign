@@ -290,7 +290,7 @@ public class Admin extends Menu {
 
         while(true){
             showTopBar(pad);
-            Card.allCards.get(id).showProperties(pad,false);
+            Card.allCards.get(id).showProperties(pad);
             editField(id, scanner);
             System.out.print("Do you wish to continue editing? (yes/no)");
             String ans = scanner.nextLine().trim();

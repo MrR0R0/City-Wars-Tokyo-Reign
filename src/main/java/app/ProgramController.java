@@ -4,6 +4,8 @@ import database.Connect;
 import menu.*;
 import menu.authentication.Login;
 import menu.authentication.SignUp;
+import menu.play.Play;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Scanner;

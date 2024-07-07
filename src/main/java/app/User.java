@@ -9,16 +9,20 @@ import java.util.regex.Pattern;
 
 public class User implements Cloneable {
     private String username, password, nickname, email, recoveryAns, recoveryQ, cardsSeries;
-    private Integer wallet, level, id, XP , HP;
+    private Integer wallet, level, id, XP, HP;
 
     // should initialize in signup
-    private LinkedHashMap <Integer, Card> deckOfCards = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, Card> cards = new LinkedHashMap<>();
+
+    private LinkedHashMap<Integer, Card> deck = new LinkedHashMap<>();
 
     static public LinkedHashMap<Integer, User> signedUpUsers;
 
-    public User() {}
+    public User() {
+    }
+
     public User(String username, String password, String nickname, String email, String recoveryAns,
-                String recoveryQ, String cardsSeries, Integer wallet, Integer level, Integer id, Integer XP, Integer HP){
+                String recoveryQ, String cardsSeries, Integer wallet, Integer level, Integer id, Integer XP, Integer HP) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
@@ -32,7 +36,8 @@ public class User implements Cloneable {
         this.XP = XP;
         this.HP = HP;
     }
-    public void showProperties(){
+
+    public void showProperties() {
         System.out.print("Username: " + username + "|");
         System.out.print("password: " + password + "|");
         System.out.print("nickname: " + nickname + "|");
@@ -44,50 +49,146 @@ public class User implements Cloneable {
         System.out.print("XP:" + XP + "|");
         System.out.println("HP:" + HP + "|");
     }
-    public void showCards(){
-        for(Card card : deckOfCards.values()){
-            card.showProperties(25,false);
+
+    public void showCards() {
+        for (Card card : cards.values()) {
+            card.showProperties(25);
             System.out.println();
         }
     }
 
-    public String getUsername() {return username;}
-    public String getPassword() {return password;}
-    public String getNickname() {return nickname;}
-    public String getEmail() {return email;}
-    public String getRecoveryAns() {return recoveryAns;}
-    public int getRecoveryQ() {return Integer.parseInt(recoveryQ);}
-    public String getCardsSeries() {return cardsSeries;}
-    public Integer getWallet() {return wallet;}
-    public Integer getLevel() {return level;}
-    public Integer getId() {return id;}
-    public Integer getXP() {return XP;}
-    public Integer getHP() {return HP;}
-    public LinkedHashMap<Integer, Card> getDeckOfCards() {return deckOfCards;}
+    public String getUsername() {
+        return username;
+    }
 
-    public void setID(Integer id) {this.id = id;}
-    public void setUsername(String username) {this.username = username;}
-    public void setPassword(String password) {this.password = password;}
-    public void setNickname(String nickname) {this.nickname = nickname;}
-    public void setEmail(String email) {this.email = email;}
-    public void setRecoveryAns(String recoveryAns) {this.recoveryAns = recoveryAns;}
-    public void setRecoveryQ(String recoveryQ) {this.recoveryQ = recoveryQ;}
-    public void setCardsSeries(String cardsSeries) {this.cardsSeries = cardsSeries;}
-    public void setWallet(Integer wallet) {this.wallet = wallet;}
-    public void setLevel(Integer level) {this.level = level;}
-    public void addToDeck(Integer id, Card card) {deckOfCards.put(id, card);}
-    public void setId(Integer id) {this.id = id;}
-    public void setXP(Integer XP) {this.XP = XP;}
-    public void setHP(Integer HP) {this.HP = HP;}
+    public String getPassword() {
+        return password;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getRecoveryAns() {
+        return recoveryAns;
+    }
+
+    public int getRecoveryQ() {
+        return Integer.parseInt(recoveryQ);
+    }
+
+    public String getCardsSeries() {
+        return cardsSeries;
+    }
+
+    public Integer getWallet() {
+        return wallet;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getXP() {
+        return XP;
+    }
+
+    public Integer getHP() {
+        return HP;
+    }
+
+    public void decreaseHP(int value){
+        HP -= value;
+    }
+
+    public void increaseXP(int value){
+        XP += value;
+    }
+
+    public void increaseMoney(int value){
+        wallet += value;
+    }
+
+    public LinkedHashMap<Integer, Card> getCards() {
+        return cards;
+    }
+
+    public LinkedHashMap<Integer, Card> getDeck() {
+        return deck;
+    }
+
+    public void setID(Integer id) {
+        this.id = id;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRecoveryAns(String recoveryAns) {
+        this.recoveryAns = recoveryAns;
+    }
+
+    public void setRecoveryQ(String recoveryQ) {
+        this.recoveryQ = recoveryQ;
+    }
+
+    public void setCardsSeries(String cardsSeries) {
+        this.cardsSeries = cardsSeries;
+    }
+
+    public void setWallet(Integer wallet) {
+        this.wallet = wallet;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public void addToCards(Integer id, Card card) {
+        cards.put(id, card);
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setXP(Integer XP) {
+        this.XP = XP;
+    }
+
+    public void setHP(Integer HP) {
+        this.HP = HP;
+    }
 
 
     @Override
     public User clone() {
         try {
             User cloned = (User) super.clone();
-            cloned.deckOfCards = new LinkedHashMap<>();
-            for (Integer key : this.deckOfCards.keySet()) {
-                cloned.deckOfCards.put(key, this.deckOfCards.get(key).clone());
+            cloned.cards = new LinkedHashMap<>();
+            for (Integer key : this.cards.keySet()) {
+                cloned.cards.put(key, this.cards.get(key).clone());
             }
             return cloned;
         } catch (CloneNotSupportedException e) {
@@ -112,40 +213,39 @@ public class User implements Cloneable {
                 Objects.equals(id, user.id) &&
                 Objects.equals(XP, user.XP) &&
                 Objects.equals(HP, user.HP) &&
-                Objects.equals(deckOfCards, user.deckOfCards);
+                Objects.equals(cards, user.cards);
     }
-
 
     public void addToTable() throws SQLException {
         Connect.insertUser(this);
     }
 
-    public static <T> boolean isInUsersList(String property, T value){
-        for(User user : signedUpUsers.values()){
-            if(property.matches("^(?i)username") && user.getUsername().equals(value)){
+    public static <T> boolean isInUsersList(String property, T value) {
+        for (User user : signedUpUsers.values()) {
+            if (property.matches("^(?i)username") && user.getUsername().equals(value)) {
                 return true;
             }
-            if (property.matches("^(?i)password") && user.getPassword().equals(value)){
+            if (property.matches("^(?i)password") && user.getPassword().equals(value)) {
                 return true;
             }
-            if (property.matches("^(?i)nickname") && user.getNickname().equals(value)){
+            if (property.matches("^(?i)nickname") && user.getNickname().equals(value)) {
                 return true;
             }
-            if (property.matches("^(?i)email") && user.getEmail().equals(value)){
+            if (property.matches("^(?i)email") && user.getEmail().equals(value)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static String formatUsername(String name){
-        if(name.length() > 10) {
+    public static String formatUsername(String name) {
+        if (name.length() > 10) {
             return name.substring(0, 10) + "...";
         }
         return name;
     }
 
-    public void giveRandomCard(){
+    public void giveRandomCard() {
         ArrayList<ArrayList<Card>> timeStrike = new ArrayList<>();
         ArrayList<ArrayList<Card>> common = new ArrayList<>();
         ArrayList<Card> shieldOrSpell = new ArrayList<>();
@@ -153,24 +253,24 @@ public class User implements Cloneable {
             common.add(new ArrayList<>());
             timeStrike.add(new ArrayList<>());
         }
-        for(Card card : Card.allCards.values()){
-            if(card.getType().equals(Card.CardType.spell) || card.getType().equals(Card.CardType.shield)){
+        for (Card card : Card.allCards.values()) {
+            if (card.getType().equals(Card.CardType.spell) || card.getType().equals(Card.CardType.shield)) {
                 shieldOrSpell.add(card);
             }
-            if(card.getType().equals(Card.CardType.common)){
+            if (card.getType().equals(Card.CardType.common)) {
                 common.get(Integer.parseInt(String.valueOf(Connect.convertCharacterType(card.getCharacter()))) - 1).add(card);
             }
-            if(card.getType().equals(Card.CardType.timeStrike)){
+            if (card.getType().equals(Card.CardType.timeStrike)) {
                 timeStrike.get(Integer.parseInt(String.valueOf(Connect.convertCharacterType(card.getCharacter()))) - 1).add(card);
             }
         }
         ArrayList<Card> finalCards = new ArrayList<>(getRandomSubset(shieldOrSpell, 8));
-        for(int i=0; i<4; i++){
+        for (int i = 0; i < 4; i++) {
             finalCards.addAll(getRandomSubset(common.get(i), 2));
             finalCards.addAll(getRandomSubset(timeStrike.get(i), 1));
         }
-        for(Card card : finalCards){
-            deckOfCards.put(card.getId(), card);
+        for (Card card : finalCards) {
+            cards.put(card.getId(), card);
         }
     }
 
@@ -180,34 +280,34 @@ public class User implements Cloneable {
         return copy.subList(0, Math.min(subsetSize, copy.size()));
     }
 
-    public void getCardsFromTable(){
+    public void getCardsFromTable() {
         String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
         String[] series = cardsSeries.split(",");
         Pattern pattern = Pattern.compile(CARD_REGEX);
         for (String card : series) {
             Matcher matcher = pattern.matcher(card);
-            if (matcher.find()){
+            if (matcher.find()) {
                 int id = Integer.parseInt(matcher.group("id"));
                 int level = Integer.parseInt(matcher.group("level"));
-                deckOfCards.put(id, Card.allCards.get(id));
-                deckOfCards.get(id).setLevel(level);
-                deckOfCards.get(id).setAcc(Card.levelUpFormula(deckOfCards.get(id).getAcc(),deckOfCards.get(id).getLevel()));
-                deckOfCards.get(id).setAttackOrDefense(Card.levelUpFormula(deckOfCards.get(id).getAttackOrDefense(),deckOfCards.get(id).getLevel()));
-                deckOfCards.get(id).setDamage(Card.levelUpFormula(deckOfCards.get(id).getDamage(),deckOfCards.get(id).getLevel()));
-                deckOfCards.get(id).setUpgradeCost(Card.levelUpFormula(deckOfCards.get(id).getUpgradeCost(),deckOfCards.get(id).getLevel()));
+                cards.put(id, Card.allCards.get(id));
+                cards.get(id).setLevel(level);
+                cards.get(id).setAcc(Card.levelUpFormula(cards.get(id).getAcc(), cards.get(id).getLevel()));
+                cards.get(id).setAttackOrDefense(Card.levelUpFormula(cards.get(id).getAttackOrDefense(), cards.get(id).getLevel()));
+                cards.get(id).setDamage(Card.levelUpFormula(cards.get(id).getDamage(), cards.get(id).getLevel()));
+                cards.get(id).setUpgradeCost(Card.levelUpFormula(cards.get(id).getUpgradeCost(), cards.get(id).getLevel()));
             }
         }
     }
-    public static Integer getIdByUsername(String username){
-        for(User user : User.signedUpUsers.values()){
-            if(user.getUsername().equals(username))
+
+    public static Integer getIdByUsername(String username) {
+        for (User user : User.signedUpUsers.values()) {
+            if (user.getUsername().equals(username))
                 return user.getId();
         }
         return -1;
     }
 
-    public static Integer nextLevelXP(Integer level){
-        return (int) (Math.exp((double) (level + 35) /5) - Math.exp(5) + 20);
+    public static Integer nextLevelXP(Integer level) {
+        return (int) (Math.exp((double) (level + 35) / 5) - Math.exp(5) + 20);
     }
-
 }
