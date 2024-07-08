@@ -116,7 +116,7 @@ public class SignUp extends Menu {
                 String qNumber = matcher.group("QNumber");
                 String ans = matcher.group("Ans");
                 String ansConf = matcher.group("Confirm");
-                if (!qNumber.matches("\\d+")) {
+                if (!qNumber.matches("^\\d+$")) {
                     System.out.println("You should pick a number");
                 } else if (Integer.parseInt(qNumber) < 1 || Integer.parseInt(qNumber) > 3) {
                     System.out.println("You should pick a number between 1 & 3");

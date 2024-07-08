@@ -44,9 +44,8 @@ public class Play extends Menu {
         // should we have an exit command?
         if (input.matches(playModeCommand)) {
             Matcher matcher = getCommandMatcher(input, playModeCommand);
-            if (matcher.find()) {
-                choosePlayMode(matcher);
-            }
+            matcher.find();
+            choosePlayMode(matcher);
         } else if (!isInBettingMode && !isInNormalMode) {
             System.out.println("you should choose the play mode first");
         } else if (input.matches(Login.loginCommand)) {

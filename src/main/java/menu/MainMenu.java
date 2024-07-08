@@ -68,7 +68,7 @@ public class MainMenu extends Menu {
                     String type = matcher.group("Type");
                     sortHistory(field, type);
                 }
-            } else if (command.matches("\\d+")) {
+            } else if (command.matches("^\\d+$")) {
                 if (Integer.parseInt(command) > numberOfPages) {
                     System.out.println("Please enter a number between 1 & " + numberOfPages);
                 } else {

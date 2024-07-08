@@ -120,8 +120,8 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(attack_def)){
             return -2;
         }
-        if (!attack_def.matches("\\d+")) {
-            System.out.println("Attack/Def should be a number!");
+        if (!attack_def.matches("^\\d+$")) {
+            System.out.println("Attack/Def should be a positive number!");
             return -1;
         }
         if (Integer.parseInt(attack_def) < 10 || Integer.parseInt(attack_def) > 100) {
@@ -137,7 +137,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(duration)){
             return -2;
         }
-        if (!duration.matches("\\d+")) {
+        if (!duration.matches("^\\d+$")) {
             System.out.println("Duration should be a number!");
             return -1;
         }
@@ -154,7 +154,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(damage)){
             return -2;
         }
-        if (!damage.matches("\\d+")) {
+        if (!damage.matches("^\\d+$")) {
             System.out.println("Damage should be a number!");
             return -1;
         }
@@ -171,7 +171,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(upgradeCost)){
             return -2;
         }
-        if (!upgradeCost.matches("\\d+")) {
+        if (!upgradeCost.matches("^\\d+$")) {
             System.out.println("Upgrade cost should be a number!");
             return -1;
         }
@@ -199,7 +199,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(price)){
             return -2;
         }
-        if (!price.matches("\\d+")) {
+        if (!price.matches("^\\d+$")) {
             System.out.println("Price should be a number!");
             return -1;
         }
@@ -212,7 +212,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(ACC)){
             return -2;
         }
-        if (!ACC.matches("\\d+")) {
+        if (!ACC.matches("^\\d+$")) {
             System.out.println("ACC should be a number!");
             return -1;
         }
@@ -238,7 +238,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(character)){
             return -2;
         }
-        if (!character.matches("\\d+")) {
+        if (!character.matches("^\\d+$")) {
             System.out.println("Character should be a number");
             return -1;
         }

@@ -25,11 +25,13 @@ public class Shop extends Menu{
                 showCurrentMenu();
             }
         }
-        if (input.matches(showUpgradeableCards)){
+        else if (input.matches(showUpgradeableCards)){
             showUpgradeable(scanner);
         }
-        if(input.matches(upgradeCardCommand)){
-
+        else if(input.matches(upgradeCardCommand)){
+            Matcher matcher = getCommandMatcher(input, upgradeCardCommand);
+            matcher.find();
+            upgradeCard(matcher);
         }
     }
     private static void showUpgradeable(Scanner scanner){
@@ -55,7 +57,7 @@ public class Shop extends Menu{
             if (ProgramController.checkQuit(command)) {
                 System.out.println("You will be directed to Shop menu");
                 return;
-            } else if (command.matches("\\d+")) {
+            } else if (command.matches("^\\d+$")) {
                 if (Integer.parseInt(command) > numberOfPages) {
                     System.out.println("Please enter a number between 1 & " + numberOfPages);
                 } else {
@@ -66,19 +68,6 @@ public class Shop extends Menu{
                 System.out.println("Invalid input!");
             }
         }
-
-        /*
-        if (input.matches(chooseCardCommand)) {
-            Matcher matcher = getCommandMatcher(input, chooseCardCommand);
-            if (matcher.find() && Card.findCardInlist("name",matcher.group("cardName"),upgradeableCards) != null) {
-                if (upgradeableCards.containsKey(Card.findCardInlist("name",matcher.group("cardName"),upgradeableCards).getId()))
-                    chooseCardToUpgrade(matcher, scanner,upgradeableCards.get(Card.findCardInlist("name",matcher.group("cardName"),upgradeableCards).getId()));
-                else
-                    System.out.println("Please choose an upgradable card");
-            }
-        }
-
-         */
     }
     static private void showPage(int page, int numberOfPages) {
         int start = CARDS_ON_PAGE * (page - 1);
@@ -93,6 +82,13 @@ public class Shop extends Menu{
         String cost = String.format("%-" + Shop.COST_PAD + "s", "Cost");
         String details = String.format("%-" + Shop.DETAILS_PAD + "s", "Details");
         System.out.println(name + "|" + cost + "|" + details);
+    }
+
+    static private void upgradeCard(Matcher matcher){
+        String cardNumber = matcher.group("cardNum");
+        if(!cardNumber.matches("^\\d+$")){
+            System.out.println("Card index should be a number");
+        }
     }
 
     /*
