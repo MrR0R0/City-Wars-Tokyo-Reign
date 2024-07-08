@@ -2,55 +2,74 @@ package menu;
 
 import app.Card;
 import app.Error;
+import app.ProgramController;
 
 import java.util.*;
 import java.util.regex.Matcher;
+import java.util.stream.IntStream;
 
 public class Shop extends Menu{
-    final static String upgradeCommand = "^(?i)upgrade\\s*$";
+    final static private int CARDS_ON_PAGE = 10, NAME_PAD = 25, DETAILS_PAD = 35, COST_PAD = 5;
+    final static String upgradeCardCommand = "(?i)upgrade card number (?<cardNum>\\d+)";
     final static String buyCommand = "^(?i)buy\\s*$";
     final static String showUpgradeableCards = "^(?i)show\\s+upgradable\\s+card$";
     final static String showAvailableCards = "^(?i)show\\s+available\\s+card$";
     final static String chooseCardCommand = "^(?i)\\s*(<cardName>\\w+)$";
+    static private ArrayList<Card> upgradableCards;
 
 
     public static void handleInput(String input, Scanner scanner){
-        {
-            if (input.matches(backCommand)){
-                if (Error.loginFirst())
-                    return;
+        if (input.matches(backCommand)){
+            if (!Error.loginFirst()) {
                 currentMenu = MenuType.Main;
                 showCurrentMenu();
             }
-            if (input.matches(showUpgradeableCards)){
-                Matcher matcher = getCommandMatcher(input, showUpgradeableCards);
-                if (matcher.find())
-                    showUpgradeable(matcher,scanner);
+        }
+        if (input.matches(showUpgradeableCards)){
+            showUpgradeable(scanner);
+        }
+        if(input.matches(upgradeCardCommand)){
+
+        }
+    }
+    private static void showUpgradeable(Scanner scanner){
+        upgradableCards = new ArrayList<>();
+        for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
+            Card card = entry.getValue();
+            if (loggedInUser.getLevel() > card.getLevel() && card.isUpgradable()) {
+                upgradableCards.add(entry.getValue());
             }
         }
 
-    }
-    private static void showUpgradeable(Matcher matcher, Scanner scanner){
-        LinkedHashMap<Integer, Card> upgradeableCards = new LinkedHashMap<>();
-        int i = 0;
-        for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
-            i++;
-            Card card = entry.getValue();
-            if (loggedInUser.getLevel() >= card.getUpgradeLevel()) {
-                upgradeableCards.put(card.getId(), card);
-                System.out.print(card.getName() + " | ");
-                if (i == 6)
-                    System.out.println();
-            }
-        }
+        int numberOfPages = Math.ceilDiv(upgradableCards.size(), CARDS_ON_PAGE);
+        int currentPage = 1;
 
         System.out.println("Please choose a card to upgrade or back to shop");
-        String input = scanner.nextLine();
-        if (input.matches(backCommand)){
-            return;
+        System.out.println("You can also select other pages");
+        showPage(currentPage, numberOfPages);
+
+        while (true) {
+            System.out.println("For viewing other pages enter the page's number;");
+            System.out.println("to return to the shop menu, enter 'quit'");
+            String command = scanner.nextLine().trim().replaceAll(" +", " ");
+            if (ProgramController.checkQuit(command)) {
+                System.out.println("You will be directed to Shop menu");
+                return;
+            } else if (command.matches("\\d+")) {
+                if (Integer.parseInt(command) > numberOfPages) {
+                    System.out.println("Please enter a number between 1 & " + numberOfPages);
+                } else {
+                    currentPage = Integer.parseInt(command);
+                    showPage(currentPage, numberOfPages);
+                }
+            } else {
+                System.out.println("Invalid input!");
+            }
         }
+
+        /*
         if (input.matches(chooseCardCommand)) {
-            matcher = getCommandMatcher(input, chooseCardCommand);
+            Matcher matcher = getCommandMatcher(input, chooseCardCommand);
             if (matcher.find() && Card.findCardInlist("name",matcher.group("cardName"),upgradeableCards) != null) {
                 if (upgradeableCards.containsKey(Card.findCardInlist("name",matcher.group("cardName"),upgradeableCards).getId()))
                     chooseCardToUpgrade(matcher, scanner,upgradeableCards.get(Card.findCardInlist("name",matcher.group("cardName"),upgradeableCards).getId()));
@@ -58,8 +77,26 @@ public class Shop extends Menu{
                     System.out.println("Please choose an upgradable card");
             }
         }
+
+         */
     }
-    public static void showAvailable(Matcher matcher, Scanner scanner){
+    static private void showPage(int page, int numberOfPages) {
+        int start = CARDS_ON_PAGE * (page - 1);
+        int end = CARDS_ON_PAGE * (page);
+        showTopBar();
+        IntStream.range(start, Math.min(end, upgradableCards.size()))
+                .forEach(i -> upgradableCards.get(i).showShopProperties(i+1, NAME_PAD, COST_PAD, DETAILS_PAD));
+        menu.MainMenu.showBottomBar(numberOfPages, page);
+    }
+    static private void showTopBar() {
+        String name = String.format("%-" + Shop.NAME_PAD + "s", "Name");
+        String cost = String.format("%-" + Shop.COST_PAD + "s", "Cost");
+        String details = String.format("%-" + Shop.DETAILS_PAD + "s", "Details");
+        System.out.println(name + "|" + cost + "|" + details);
+    }
+
+    /*
+    public static void showAvailable(Scanner scanner){
         LinkedHashMap<Integer, Card> availableCards = new LinkedHashMap<>();
         int i = 0;
         Random random = new Random();
@@ -115,6 +152,7 @@ public class Shop extends Menu{
 
     }
 
+
     private static void chooseCardToUpgrade(Matcher matcher, Scanner scanner, Card card){
         //padding
         String format = "%-15s : %s%n";
@@ -148,5 +186,5 @@ public class Shop extends Menu{
             }
         }
     }
-
+    */
 }

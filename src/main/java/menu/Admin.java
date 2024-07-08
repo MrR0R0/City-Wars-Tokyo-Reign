@@ -94,7 +94,7 @@ public class Admin extends Menu {
         }
 
         Connect.insertCard(name, type, 1, price, damage, duration, upgradeCost, attack_defence, -1,
-                0, ACC, isBreakable, String.valueOf(getEnumValueByIndex(Card.Characters.class, characterIndex)));
+                "", ACC, isBreakable, String.valueOf(getEnumValueByIndex(Card.Characters.class, characterIndex)));
 
         System.out.println("Card created successfully!");
     }

@@ -78,8 +78,9 @@ public class Play extends Menu {
             if (isInNormalMode)
                 playing(scanner);
             if (isInBettingMode) {
-
-                playing(scanner);
+                betting(scanner);
+                if(pot!=0)
+                    playing(scanner);
             }
         } else {
             System.out.println("you should choose your Characters first");
@@ -148,7 +149,6 @@ public class Play extends Menu {
         }
         //init first round
         initEachRound();
-        host.getHand().set(0, Card.allCards.get(8));
         roundCounter = gameRounds;
         while (roundCounter > 0) {
             String input = scanner.nextLine();
@@ -239,7 +239,7 @@ public class Play extends Menu {
             return false;
         }
 
-        // random card buff by 1.2
+        // random card buff
         // It will be wasted if used on a duration line without cards
         if (selectedCard.isPowerBooster()) {
             int initialIndex = turnPlayer.getInitialIndexRandomCard();
@@ -247,7 +247,7 @@ public class Play extends Menu {
                 System.out.println("No cards on the track! You have wasted power booster card!");
             } else {
                 for (int i = initialIndex; i < initialIndex + turnPlayer.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
-                    turnPlayer.getDurationLine().get(i).getCard().boostAttackDefense(1.2);
+                    turnPlayer.getDurationLine().get(i).getCard().boostAttackDefense(selectedCard.getPowerBoostMultiplier());
                 }
             }
             turnPlayer.replaceCardInHand(selectedCardIndex);
@@ -270,15 +270,15 @@ public class Play extends Menu {
             return false;
         }
 
-        // random enemy card "attack or defence" nerf by 0.8
-        // random enemy card "ACC" nerf by 0.8
+        // random enemy card "attack or defence" nerf
+        // random enemy card "ACC" nerf
         if(selectedCard.isCardMitigator()){
             int initialIndex = opponent.getInitialIndexRandomCard();
             if (initialIndex == -1) {
                 System.out.println("No cards on the track! You have wasted mitigator card!");
             } else {
                 for (int i = initialIndex; i < initialIndex + opponent.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
-                    opponent.getDurationLine().get(i).getCard().boostAttackDefense(0.8);
+                    opponent.getDurationLine().get(i).getCard().boostAttackDefense(selectedCard.getMitigatorMultiplier());
                 }
             }
 
@@ -287,7 +287,7 @@ public class Play extends Menu {
                 System.out.println("No cards on the track! You have wasted mitigator card!");
             } else {
                 for (int i = initialIndex; i < initialIndex + opponent.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
-                    opponent.getDurationLine().get(i).getCard().boostACC(0.8);
+                    opponent.getDurationLine().get(i).getCard().boostACC(selectedCard.getMitigatorMultiplier());
                     applyCardsDynamic(turnPlayer.getDurationLine().get(i), opponent.getDurationLine().get(i));
                 }
             }
@@ -333,7 +333,7 @@ public class Play extends Menu {
 
         // heal/heal shield
         if (selectedCard.isHeal()) {
-            turnPlayer.increaseHP(15 * selectedCard.getLevel());
+            turnPlayer.increaseHP(Card.healByLevel * selectedCard.getLevel());
         }
 
         turnPlayer.replaceCardInHand(selectedCardIndex);

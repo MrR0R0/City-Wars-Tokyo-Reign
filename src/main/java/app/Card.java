@@ -1,6 +1,7 @@
 package app;
 
 import database.Connect;
+import menu.Shop;
 
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
@@ -10,21 +11,22 @@ import java.util.regex.Pattern;
 
 public class Card implements Cloneable {
     public static final String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
+    public static final int healByLevel = 15;
 
     public enum Characters {Character1, Character2, Character3, Character4, Unity}
 
     public enum CardType {shield, spell, common, timeStrike}
 
     private CardType type;
-    private String name, character;
-    private Integer level, price, damage, duration, upgradeCost, attackOrDefense, specialProperty, acc, id, isBreakable, upgradeLevel;
+    private String name, character, rarity;
+    private Integer level, price, damage, duration, upgradeCost, attackOrDefense, acc, id, isBreakable, upgradeLevel;
     public static LinkedHashMap<Integer, Card> allCards = new LinkedHashMap<>();
 
     public Card() {
     }
 
     public Card(String name, CardType type, Integer level, Integer price, Integer damage, Integer duration,
-                Integer upgradeCost, Integer attackOrDefense, Integer specialProperty, Integer acc,
+                Integer upgradeCost, Integer attackOrDefense, String rarity, Integer acc,
                 Integer isBreakable, Integer id, Integer upgradeLevel) {
         this.name = name;
         this.type = type;
@@ -36,7 +38,6 @@ public class Card implements Cloneable {
         this.isBreakable = isBreakable;
         this.acc = acc;
         this.id = id;
-        this.specialProperty = specialProperty;
         this.attackOrDefense = attackOrDefense;
         this.upgradeLevel = upgradeLevel;
     }
@@ -68,10 +69,48 @@ public class Card implements Cloneable {
         System.out.print("|");
         System.out.printf("%-" + pad + "s", ("id: " + id));
         System.out.print("|");
-        System.out.printf("%-" + pad + "s", ("special: " + specialProperty));
+        System.out.printf("%-" + pad + "s", ("rarity: " + rarity));
         System.out.print("|");
         System.out.printf("%-" + pad + "s", ("Upgrade lvl: " + upgradeLevel));
         System.out.println();
+    }
+
+    public void showShopProperties(int index, int NAME_PAD, int COST_PAD, int DETAILS_PAD){
+        String cardName = String.format("%-" + NAME_PAD + "s", index + "- " + name);
+        String cardCost = String.format("%-" + COST_PAD + "s", upgradeCost);
+        String firstDetail = getFirstDetail();
+        String secondDetail = getSecondDetail();
+        String details = String.format("%-" + DETAILS_PAD + "s", firstDetail + secondDetail);
+        System.out.println(cardName + "|" + cardCost + "|" + details);
+    }
+
+    private String getFirstDetail() {
+        String detail = "";
+        if(isBreakable())
+            detail = "ACC: " + acc + "->" + levelUpFormula(acc, level+1);
+        else if(isHeal())
+            detail = "added HP: " + level * healByLevel + "->" + (level+1) * healByLevel;
+        else if(isPowerBooster()) {
+            detail = "Multiplier: "
+                    + String.format("%.2f", getPowerBoostMultiplier())
+                    + " -> "
+                    + String.format("%.2f", getPowerBoostMultiplierByLevel(level + 1));
+
+        }
+        else if(isCardMitigator()){
+            detail = "Multiplier: "
+                    + String.format("%.2f", getMitigatorMultiplier())
+                    + " -> "
+                    + String.format("%.2f", getMitigatorMultiplierByLevel(level + 1));
+        }
+        return detail;
+    }
+
+    private String getSecondDetail(){
+        String detail = "";
+        if(isBreakable())
+            detail = ", Att_Def: " + attackOrDefense + "->" + levelUpFormula(attackOrDefense, level+1);
+        return detail;
     }
 
     @Override
@@ -97,7 +136,7 @@ public class Card implements Cloneable {
                 Objects.equals(duration, card.duration) &&
                 Objects.equals(upgradeCost, card.upgradeCost) &&
                 Objects.equals(attackOrDefense, card.attackOrDefense) &&
-                Objects.equals(specialProperty, card.specialProperty) &&
+                Objects.equals(rarity, card.rarity) &&
                 Objects.equals(acc, card.acc) &&
                 Objects.equals(id, card.id) &&
                 Objects.equals(isBreakable, card.isBreakable) &&
@@ -191,8 +230,8 @@ public class Card implements Cloneable {
         return id;
     }
 
-    public Integer getSpecialProperty() {
-        return specialProperty;
+    public String getRarity() {
+        return rarity;
     }
 
     public Integer getAttackOrDefense() {
@@ -255,8 +294,8 @@ public class Card implements Cloneable {
         this.attackOrDefense = attackOrDefense;
     }
 
-    public void setSpecialProperty(Integer specialProperty) {
-        this.specialProperty = specialProperty;
+    public void setRarity(String rarity) {
+        this.rarity = rarity;
     }
 
     public void setId(Integer id) {
@@ -281,7 +320,7 @@ public class Card implements Cloneable {
 
     public void addToTable() throws SQLException {
         Connect.insertCard(this.name, String.valueOf(this.type), this.level, this.price, this.damage, this.duration, this.upgradeCost,
-                this.attackOrDefense, this.upgradeCost, this.specialProperty, this.acc, isBreakable, this.character);
+                this.attackOrDefense, this.upgradeCost, this.rarity, this.acc, isBreakable, this.character);
     }
 
     public static void setCardLevelFromUser(User user) {
@@ -312,11 +351,43 @@ public class Card implements Cloneable {
         return (int) (value * (Math.log(level) + 1));
     }
 
+    public double getPowerBoostMultiplier(){
+        return getPowerBoostMultiplierByLevel(level);
+    }
+    private double getPowerBoostMultiplierByLevel(int level){
+        return 1.1 * (Math.log10(level) + 1);
+    }
+
+    public double getMitigatorMultiplier(){
+        return  getMitigatorMultiplierByLevel(level);
+    }
+
+    private double getMitigatorMultiplierByLevel(int level){
+        return 1/getPowerBoostMultiplierByLevel(level);
+    }
     public void updateFieldsByLevel() {
         acc = levelUpFormula(acc, level);
         attackOrDefense = levelUpFormula(attackOrDefense, level);
         damage = levelUpFormula(damage, level);
         upgradeCost = price * level;
+    }
+
+    public boolean isUpgradable(){
+        if(id == 1)
+            return false;
+        if(id == 4)
+            return false;
+        if(id == 5)
+            return false;
+        if(id == 6)
+            return false;
+        if(id == 7)
+            return false;
+        if(id == 9)
+            return false;
+        if(id == 18)
+            return false;
+        return true;
     }
 
     public static <T> Card findCardInlist(String property, T value, LinkedHashMap<Integer, Card> linkedHashMap) {

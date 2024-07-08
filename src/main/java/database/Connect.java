@@ -103,7 +103,7 @@ public class Connect {
                 card.setType(Card.CardType.valueOf(rs.getString("card_type")));
                 card.setId(rs.getInt("card_id"));
                 card.setAttackOrDefense(rs.getInt("card_attackOrDefense"));
-                card.setSpecialProperty(rs.getInt("card_specialProperty"));
+                card.setRarity(rs.getString("rarity"));
                 card.setCharacter(String.valueOf(convertCharacterType(rs.getInt("card_character"))));
 
                 cardMap.put(rs.getInt("card_id"), card);
@@ -119,10 +119,10 @@ public class Connect {
     }
 
     public static void insertCard(String name, String type, Integer level, Integer price, Integer damage, Integer duration,
-                                  Integer upgradeCost, Integer attackOrDefense, Integer user_id, Integer specialProperty,
+                                  Integer upgradeCost, Integer attackOrDefense, Integer user_id, String rarity,
                                   Integer Acc, Integer isBreakable, String character) throws SQLException {
         connectToDatabase();
-        String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, user_id, card_specialProperty, card_Acc, card_isBreakable, card_character) "
+        String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, user_id, rarity, card_Acc, card_isBreakable, card_character) "
                 + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -135,7 +135,7 @@ public class Connect {
             pstmt.setInt(7, upgradeCost);
             pstmt.setInt(8, attackOrDefense);
             pstmt.setInt(9, user_id);
-            pstmt.setInt(10, specialProperty);
+            pstmt.setString(10, rarity);
             pstmt.setInt(11, Acc);
             pstmt.setInt(12, isBreakable);
             pstmt.setInt(13, Integer.parseInt(convertCharacterType(character)));
