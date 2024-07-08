@@ -218,7 +218,7 @@ public class Player extends User {
     }
 
     // Rewarding players with coins equal to half the ACC of the shattered card
-    public void rewardCompleteShatter(Cell cell){
+    public void rewardCompleteShatter(Cell cell) {
         increaseMoney(cell.getCard().getAcc() / 2);
         System.out.println("Rewarded with coins for shattering!");
     }
@@ -240,5 +240,24 @@ public class Player extends User {
             }
         }
         return sb.toString();
+    }
+
+    public void changeHole() {
+        ArrayList<Integer> validCells = new ArrayList<>();
+        boolean hasFilledHole = false;
+        for (Cell cell : durationLine) {
+            if (cell.isHollow() && !hasFilledHole) {
+                cell.makeSolid();
+                hasFilledHole = true;
+            }
+            if (cell.isEmpty() && !cell.isHollow()) {
+                validCells.add(durationLine.indexOf(cell));
+            }
+        }
+        if (hasFilledHole) {
+            Random rand = new Random();
+            int randomValidIndex = validCells.get(rand.nextInt(validCells.size()));
+            durationLine.get(randomValidIndex).makeHollow();
+        }
     }
 }

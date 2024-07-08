@@ -107,7 +107,8 @@ public class Card implements Cloneable{
     public Integer getDuration() {return duration;}
     public Integer getUpgradeCost() {return upgradeCost;}
     public Integer getAcc() {return acc;}
-    public Integer isBreakable() {return isBreakable;}
+    // 0: unbreakable, 1: breakable
+    public boolean isBreakable() {return isBreakable==1;}
     public Integer getId() {return id;}
     public Integer getSpecialProperty() {return specialProperty;}
     public Integer getAttackOrDefense() {return attackOrDefense;}
@@ -115,8 +116,6 @@ public class Card implements Cloneable{
     public Integer getUpgradeLevel() {return upgradeLevel;}
     public Integer getGamingDamage() {return damage/duration;}
     public Integer getGamingAttackOrDefense() {return attackOrDefense/duration;}
-    public boolean getIsBreakable() {return isBreakable == 0;}
-
     public void setName(String name) {this.name = name;}
     public void setType(CardType type) {this.type = type;}
     public void setLevel(Integer level) {this.level = level;}

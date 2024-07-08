@@ -24,6 +24,7 @@ public class Play extends Menu {
     static private Player turnPlayer;
     static private Player opponent;
     static private final Integer gameRounds = 2;
+    static private int roundCounter;
 
     static private Integer pot = 0;
 
@@ -153,7 +154,7 @@ public class Play extends Menu {
         }
         //init first round
         initEachRound();
-        int roundCounter = gameRounds;
+        roundCounter = gameRounds;
         while (roundCounter > 0) {
             String input = scanner.nextLine();
             if (input.matches(selectCardCommand))
@@ -209,14 +210,31 @@ public class Play extends Menu {
         int selectedCellIndex = Integer.parseInt(matcher.group("cellNum")) - 1;
         Card selectedCard = turnPlayer.getHand().get(selectedCardIndex);
 
-        //hole repairer
-        if (selectedCard.getId().equals(5)) {
-            if (turnPlayer.getDurationLine().get(selectedCellIndex).isHollow()) {
-                turnPlayer.getDurationLine().get(selectedCellIndex).makeSolid();
-            } else {
-                System.out.println("The cell is not hollow!");
+        switch (selectedCard.getId()){
+            // hole changer
+            // It will be waster if used on a duration line without hollow cells
+            case 4 -> {
+                turnPlayer.changeHole();
+                turnPlayer.replaceCardInHand(selectedCardIndex);
+                return false;
             }
-            return false;
+
+            // hole repairer
+            case 5 -> {
+                if (turnPlayer.getDurationLine().get(selectedCellIndex).isHollow()) {
+                    turnPlayer.getDurationLine().get(selectedCellIndex).makeSolid();
+                    turnPlayer.replaceCardInHand(selectedCardIndex);
+                } else {
+                    System.out.println("The cell is not hollow!");
+                }
+                return false;
+            }
+
+            // round reducer
+            case 6 -> {
+                roundCounter = Math.max(roundCounter-2, 0);
+                return false;
+            }
         }
 
         //Checking if the card can be placed
@@ -236,6 +254,7 @@ public class Play extends Menu {
             }
         }
 
+
         //Check for matching middle card boost
         int middleIndex = (durationLineSize - 1) / 2;
         Card middleCard = turnPlayer.getDurationLine().get(middleIndex).getCard();
@@ -245,26 +264,27 @@ public class Play extends Menu {
             }
         }
 
-        //Check for card destruction
+        // Placing the card and checking for shatters
         for (int i = selectedCellIndex; i < selectedCellIndex + selectedCard.getDuration(); i++) {
             Cell myCell = turnPlayer.getDurationLine().get(i);
             myCell.setCardInitialIndex(selectedCellIndex);
             myCell.setCardPair(new Pair<>(selectedCard.getId(), selectedCard.clone()));
             if (!opponent.getDurationLine().get(i).isEmpty()) {
                 Cell oppCell = opponent.getDurationLine().get(i);
-                if (myCell.getCard().getAcc() < oppCell.getCard().getAcc()) {
+                if (myCell.getCard().getAcc() < oppCell.getCard().getAcc() && myCell.getCard().isBreakable()) {
                     myCell.shatter();
                     if(turnPlayer.checkCompleteShatter(myCell)){
                         opponent.rewardCompleteShatter(myCell);
                     }
                     System.out.println("your card is shattered");
-                } else if (myCell.getCard().getAcc() > oppCell.getCard().getAcc()) {
+                } else if (myCell.getCard().getAcc() > oppCell.getCard().getAcc() && oppCell.getCard().isBreakable()) {
                     oppCell.shatter();
                     if(opponent.checkCompleteShatter(oppCell)){
                         turnPlayer.rewardCompleteShatter(myCell);
                     }
                     System.out.println("opponent's card is shattered");
-                } else {
+                } else if(myCell.getCard().getAcc().equals(oppCell.getCard().getAcc()) &&
+                        (myCell.getCard().isBreakable() && oppCell.getCard().isBreakable())){
                     myCell.shatter();
                     oppCell.shatter();
                     System.out.println("both cards are shattered");
@@ -272,14 +292,11 @@ public class Play extends Menu {
             }
         }
 
-        /*
-        check for complete shatters
-        // reward for destruction of card
-                        if (random.nextInt(4) == 0) guest.setXP(guest.getXP() + 10);
-                        else if (random.nextInt(4) == 1) guest.setWallet(guest.getWallet() + 20);
-
-                        System.out.println("host's card is destroyed");
-         */
+        // heal: adds 20 HP to the player
+        if(selectedCard.getId().equals(2)){
+            turnPlayer.increaseHP(20);
+            return false;
+        }
 
         turnPlayer.replaceCardInHand(selectedCardIndex);
         return true;

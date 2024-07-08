@@ -105,15 +105,19 @@ public class User implements Cloneable {
         return HP;
     }
 
-    public void decreaseHP(int value){
+    public void decreaseHP(int value) {
         HP -= value;
     }
 
-    public void increaseXP(int value){
+    public void increaseXP(int value) {
         XP += value;
     }
 
-    public void increaseMoney(int value){
+    public void increaseHP(int value){
+        HP += value;
+    }
+
+    public void increaseMoney(int value) {
         wallet += value;
     }
 
