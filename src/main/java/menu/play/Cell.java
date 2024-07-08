@@ -6,6 +6,7 @@ import javafx.util.Pair;
 public class Cell {
     private boolean hollow = false;
     private boolean shattered = false;
+    private int cardInitialIndex;
     //id-card pair
     private Pair<Integer, Card> cardPair = new Pair<>(null, null);
 
@@ -42,5 +43,13 @@ public class Cell {
 
     public Card getCard() {
         return cardPair.getValue();
+    }
+
+    public int getCardInitialIndex() {
+        return cardInitialIndex;
+    }
+
+    public void setCardInitialIndex(int cardInitialIndex) {
+        this.cardInitialIndex = cardInitialIndex;
     }
 }

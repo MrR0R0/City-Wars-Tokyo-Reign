@@ -247,15 +247,22 @@ public class Play extends Menu {
 
         //Check for card destruction
         for (int i = selectedCellIndex; i < selectedCellIndex + selectedCard.getDuration(); i++) {
-            turnPlayer.getDurationLine().get(i).setCardPair(new Pair<>(selectedCard.getId(), selectedCard.clone()));
+            Cell myCell = turnPlayer.getDurationLine().get(i);
+            myCell.setCardInitialIndex(selectedCellIndex);
+            myCell.setCardPair(new Pair<>(selectedCard.getId(), selectedCard.clone()));
             if (!opponent.getDurationLine().get(i).isEmpty()) {
-                Cell myCell = turnPlayer.getDurationLine().get(i);
                 Cell oppCell = opponent.getDurationLine().get(i);
                 if (myCell.getCard().getAcc() < oppCell.getCard().getAcc()) {
                     myCell.shatter();
+                    if(turnPlayer.checkCompleteShatter(myCell)){
+                        opponent.rewardCompleteShatter(myCell);
+                    }
                     System.out.println("your card is shattered");
                 } else if (myCell.getCard().getAcc() > oppCell.getCard().getAcc()) {
                     oppCell.shatter();
+                    if(opponent.checkCompleteShatter(oppCell)){
+                        turnPlayer.rewardCompleteShatter(myCell);
+                    }
                     System.out.println("opponent's card is shattered");
                 } else {
                     myCell.shatter();

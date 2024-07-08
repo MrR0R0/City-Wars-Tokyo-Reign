@@ -208,6 +208,21 @@ public class Player extends User {
         System.out.println(formatCards(hand, "attackOrDefense"));
     }
 
+    public boolean checkCompleteShatter(Cell cell) {
+        for (int i = cell.getCardInitialIndex(); i < cell.getCardInitialIndex() + cell.getCard().getDuration(); i++) {
+            if (!durationLine.get(i).isShattered()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Rewarding players with coins equal to half the ACC of the shattered card
+    public void rewardCompleteShatter(Cell cell){
+        increaseMoney(cell.getCard().getAcc() / 2);
+        System.out.println("Rewarded with coins for shattering!");
+    }
+
     public static String formatCards(List<Card> cards, String attributeType) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < cards.size(); i++) {
