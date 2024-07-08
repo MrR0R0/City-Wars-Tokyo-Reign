@@ -47,10 +47,8 @@ public class Play extends Menu {
             if (matcher.find()) {
                 choosePlayMode(matcher);
             }
-            return;
         } else if (!isInBettingMode && !isInNormalMode) {
             System.out.println("you should choose the play mode first");
-            return;
         } else if (input.matches(Login.loginCommand)) {
             Matcher matcher = getCommandMatcher(input, Login.loginCommand);
             matcher.find();
@@ -64,17 +62,13 @@ public class Play extends Menu {
                 }
                 System.out.println("user logged in successfully");
                 System.out.println("Welcome " + username + "!");
-                return;
             }
-            return;
         } else if (input.matches(Login.forgotPassword)) {
             Matcher matcher = getCommandMatcher(input, Login.forgotPassword);
             if (matcher.find())
                 Login.resetPassword(matcher, scanner);
-            return;
         } else if (guest == null) {
             System.out.println("Second player should log in first. Please log in by typing 'user login -u <Username> -p <Password>'.");
-            return;
         } else if (input.matches(selectCharacter)) {
             Matcher matcher = getCommandMatcher(input, selectCharacter);
             if (matcher.find()) {
@@ -154,7 +148,7 @@ public class Play extends Menu {
         }
         //init first round
         initEachRound();
-        host.getHand().set(0, Card.allCards.get(9));
+        host.getHand().set(0, Card.allCards.get(8));
         roundCounter = gameRounds;
         while (roundCounter > 0) {
             String input = scanner.nextLine();
@@ -211,24 +205,24 @@ public class Play extends Menu {
         int selectedCellIndex = Integer.parseInt(matcher.group("cellNum")) - 1;
         Card selectedCard = turnPlayer.getHand().get(selectedCardIndex);
 
-        if(selectedCardIndex >= turnPlayer.getHand().size() || selectedCardIndex < 0){
+        if (selectedCardIndex >= turnPlayer.getHand().size() || selectedCardIndex < 0) {
             System.out.println("Index out of hand");
             return false;
         }
 
-        if(selectedCellIndex >= durationLineSize || selectedCellIndex < 0){
+        if (selectedCellIndex >= durationLineSize || selectedCellIndex < 0) {
             System.out.println("Index out of duration line");
             return false;
         }
 
         // It will be wasted if used on a duration line without hollow cells
-        if(selectedCard.isHoleChanger()){
+        if (selectedCard.isHoleChanger()) {
             turnPlayer.changeHole();
             turnPlayer.replaceCardInHand(selectedCardIndex);
             return false;
         }
 
-        if(selectedCard.isHoleRepairer()){
+        if (selectedCard.isHoleRepairer()) {
             if (turnPlayer.getDurationLine().get(selectedCellIndex).isHollow()) {
                 turnPlayer.getDurationLine().get(selectedCellIndex).makeSolid();
                 turnPlayer.replaceCardInHand(selectedCardIndex);
@@ -238,7 +232,7 @@ public class Play extends Menu {
             return false;
         }
 
-        if(selectedCard.isRoundReducer()){
+        if (selectedCard.isRoundReducer()) {
             roundCounter = Math.max(roundCounter - 2, 0);
             turnPlayer.replaceCardInHand(selectedCardIndex);
             return false;
@@ -246,12 +240,11 @@ public class Play extends Menu {
 
         // random card buff by 1.2
         // It will be wasted if used on a duration line without cards
-        if(selectedCard.isPowerBooster()){
-            int initialIndex = turnPlayer.getInitialIndexBoostedCard();
-            if(initialIndex == -1){
+        if (selectedCard.isPowerBooster()) {
+            int initialIndex = turnPlayer.getInitialIndexRandomCard();
+            if (initialIndex == -1) {
                 System.out.println("No cards on the track! You have wasted power booster card!");
-            }
-            else {
+            } else {
                 for (int i = initialIndex; i < initialIndex + turnPlayer.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
                     turnPlayer.getDurationLine().get(i).getCard().boostAttackDefense(1.2);
                 }
@@ -260,13 +253,44 @@ public class Play extends Menu {
             return false;
         }
 
-        // copy card
-        if(selectedCard.isCopyCard()){
-            if(selectedCellIndex >= turnPlayer.getHand().size()){
+        if (selectedCard.isCopyCard()) {
+            if (selectedCellIndex >= turnPlayer.getHand().size()) {
                 System.out.println("Invalid command");
                 return false;
             }
             turnPlayer.getHand().set(selectedCardIndex, turnPlayer.getHand().get(selectedCellIndex).clone());
+            return false;
+        }
+
+        if(selectedCard.isCardRemover()){
+            int index = random.nextInt(opponent.getHand().size());
+            turnPlayer.getHand().set(selectedCardIndex, opponent.getHand().get(index));
+            opponent.getHand().remove(index);
+            return false;
+        }
+
+        // random enemy card "attack or defence" nerf by 0.8
+        // random enemy card "ACC" nerf by 0.8
+        if(selectedCard.isCardMitigator()){
+            int initialIndex = opponent.getInitialIndexRandomCard();
+            if (initialIndex == -1) {
+                System.out.println("No cards on the track! You have wasted mitigator card!");
+            } else {
+                for (int i = initialIndex; i < initialIndex + opponent.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
+                    opponent.getDurationLine().get(i).getCard().boostAttackDefense(0.8);
+                }
+            }
+
+            initialIndex = opponent.getInitialIndexRandomCard();
+            if (initialIndex == -1) {
+                System.out.println("No cards on the track! You have wasted mitigator card!");
+            } else {
+                for (int i = initialIndex; i < initialIndex + opponent.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
+                    opponent.getDurationLine().get(i).getCard().boostACC(0.8);
+                    applyCardsDynamic(turnPlayer.getDurationLine().get(i), opponent.getDurationLine().get(i));
+                }
+            }
+            turnPlayer.replaceCardInHand(selectedCardIndex);
             return false;
         }
 
@@ -302,10 +326,8 @@ public class Play extends Menu {
             Cell myCell = turnPlayer.getDurationLine().get(i);
             myCell.setCardInitialIndex(selectedCellIndex);
             myCell.setCardPair(new Pair<>(selectedCard.getId(), selectedCard.clone()));
-            if (!opponent.getDurationLine().get(i).isEmpty()) {
-                Cell oppCell = opponent.getDurationLine().get(i);
-                applyCardsDynamic(myCell, oppCell);
-            }
+            Cell oppCell = opponent.getDurationLine().get(i);
+            applyCardsDynamic(myCell, oppCell);
         }
 
         // heal/heal shield: adds 20 HP to the player
@@ -407,7 +429,10 @@ public class Play extends Menu {
         opponent = tmp;
     }
 
-    public static void applyCardsDynamic(Cell myCell, Cell oppCell){
+    public static void applyCardsDynamic(Cell myCell, Cell oppCell) {
+        if(myCell.isEmpty() || oppCell.isEmpty()){
+            return;
+        }
         boolean myShieldAgainstBreakable = myCell.getCard().isShield() && oppCell.getCard().isBreakable();
         boolean myBreakableAgainstShield = oppCell.getCard().isShield() && myCell.getCard().isBreakable();
         boolean myBreakableLowerAcc = myCell.getCard().getAcc() < oppCell.getCard().getAcc() && myCell.getCard().isBreakable();
@@ -418,6 +443,7 @@ public class Play extends Menu {
         //when my card shatters
         if (myBreakableAgainstShield || myBreakableLowerAcc) {
             myCell.shatter();
+            oppCell.resetShatter();
             if (turnPlayer.checkCompleteShatter(myCell)) {
                 opponent.rewardCompleteShatter(myCell);
             }
@@ -426,6 +452,7 @@ public class Play extends Menu {
         //when opp card shatters
         else if (myShieldAgainstBreakable || myHigherAccAgainstBreakable) {
             oppCell.shatter();
+            myCell.resetShatter();
             if (opponent.checkCompleteShatter(oppCell)) {
                 turnPlayer.rewardCompleteShatter(myCell);
             }

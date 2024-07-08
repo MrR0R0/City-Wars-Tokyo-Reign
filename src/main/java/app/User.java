@@ -111,7 +111,7 @@ public class User implements Cloneable {
         XP += value;
     }
 
-    public void increaseHP(int value){
+    public void increaseHP(int value) {
         HP += value;
     }
 

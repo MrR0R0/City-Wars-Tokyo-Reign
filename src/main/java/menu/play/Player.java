@@ -69,16 +69,22 @@ public class Player extends User {
 
     private void fillHand() {
         HashSet<Integer> repeatedIds = new HashSet<>();
+        int specialCardCounter = 0;
         hand = new ArrayList<>();
         while (hand.size() < handSize) {
             int randomId = getRandomKey(deck);
             if (!repeatedIds.contains(randomId)) {
-                Card card = deck.get(randomId).clone();
-                if (card.getCharacter().equals(character.name())) {
-                    card.boostAttackDefense(1.5);
+                if(specialCardCounter < handSize/2 || deck.get(randomId).getDuration() != 0){
+                    Card card = deck.get(randomId).clone();
+                    if (card.getCharacter().equals(character.name())) {
+                        card.boostAttackDefense(1.5);
+                    }
+                    hand.add(card);
+                    repeatedIds.add(randomId);
+                    if(card.getDuration() == 0){
+                        specialCardCounter++;
+                    }
                 }
-                hand.add(card);
-                repeatedIds.add(randomId);
             }
         }
     }
@@ -92,6 +98,10 @@ public class Player extends User {
     }
 
     public void replaceCardInHand(int index) {
+        if(hand.size() > handSize){
+            hand.remove(index);
+            return;
+        }
         HashSet<Integer> repeatedIds = new HashSet<>();
         int specialCardCounter = 0;
         for (Card card : hand) {
@@ -138,7 +148,12 @@ public class Player extends User {
         System.out.println();
         for (int i = 0; i < durationLineSize; i++) {
             if (checkNullForPrinting(durationLine.get(i))) {
-                System.out.printf(format, durationLine.get(i).getCard().getAcc());
+                if(durationLine.get(i).getCard().isBreakable()) {
+                    System.out.printf(format, durationLine.get(i).getCard().getAcc());
+                }
+                else{
+                    System.out.printf(format, "inf");
+                }
             }
             System.out.print("|");
         }
@@ -262,17 +277,17 @@ public class Player extends User {
         }
     }
 
-    public int getInitialIndexBoostedCard(){
+    public int getInitialIndexRandomCard() {
         ArrayList<Integer> validIndices = new ArrayList<>();
-        for(Cell cell : durationLine){
-            if(!cell.isEmpty()){
+        for (Cell cell : durationLine) {
+            if (!cell.isEmpty() && cell.getCard().isBreakable()) {
                 validIndices.add(durationLine.indexOf(cell));
             }
         }
         Random rand = new Random();
-        if(!validIndices.isEmpty()) {
-            int randomIndex = validIndices.get(rand.nextInt(validIndices.size()));
-            return durationLine.get(validIndices.get(randomIndex)).getCardInitialIndex();
+        if (!validIndices.isEmpty()) {
+            int validIndex = validIndices.get(rand.nextInt(validIndices.size()));
+            return durationLine.get(validIndex).getCardInitialIndex();
         }
         return -1;
     }

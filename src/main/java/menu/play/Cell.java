@@ -25,6 +25,10 @@ public class Cell {
         shattered = true;
     }
 
+    public void resetShatter(){
+        shattered = false;
+    }
+
     public boolean isHollow() {
         return hollow;
     }

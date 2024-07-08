@@ -159,24 +159,32 @@ public class Card implements Cloneable {
         return false;
     }
 
-    public boolean isHoleChanger(){
+    public boolean isHoleChanger() {
         return id == 4;
     }
 
-    public boolean isHoleRepairer(){
+    public boolean isHoleRepairer() {
         return id == 5;
     }
 
-    public boolean isRoundReducer(){
+    public boolean isRoundReducer() {
         return id == 6;
     }
 
-    public boolean isPowerBooster(){
+    public boolean isPowerBooster() {
         return id == 3;
     }
 
-    public boolean isCopyCard(){
+    public boolean isCopyCard() {
         return id == 9;
+    }
+
+    public boolean isCardRemover() {
+        return id == 7;
+    }
+
+    public boolean isCardMitigator() {
+        return id == 8;
     }
 
     public Integer getId() {
@@ -265,6 +273,10 @@ public class Card implements Cloneable {
 
     public void boostAttackDefense(Double multiplier) {
         attackOrDefense = (int) (attackOrDefense * multiplier);
+    }
+
+    public void boostACC(Double multiplier) {
+        acc = (int) (acc * multiplier);
     }
 
     public void addToTable() throws SQLException {
