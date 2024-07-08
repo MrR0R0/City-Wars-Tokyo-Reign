@@ -8,9 +8,11 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Card implements Cloneable{
+public class Card implements Cloneable {
     public static final String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
-    public enum Characters {Character1 , Character2 , Character3 , Character4 , Unity}
+
+    public enum Characters {Character1, Character2, Character3, Character4, Unity}
+
     public enum CardType {shield, spell, common, timeStrike}
 
     private CardType type;
@@ -18,7 +20,9 @@ public class Card implements Cloneable{
     private Integer level, price, damage, duration, upgradeCost, attackOrDefense, specialProperty, acc, id, isBreakable, upgradeLevel;
     public static LinkedHashMap<Integer, Card> allCards = new LinkedHashMap<>();
 
-    public Card(){}
+    public Card() {
+    }
+
     public Card(String name, CardType type, Integer level, Integer price, Integer damage, Integer duration,
                 Integer upgradeCost, Integer attackOrDefense, Integer specialProperty, Integer acc,
                 Integer isBreakable, Integer id, Integer upgradeLevel) {
@@ -36,22 +40,23 @@ public class Card implements Cloneable{
         this.attackOrDefense = attackOrDefense;
         this.upgradeLevel = upgradeLevel;
     }
-    public void showProperties(int pad){
-        System.out.printf("%-"+pad+"s", ("name: " + name));
+
+    public void showProperties(int pad) {
+        System.out.printf("%-" + pad + "s", ("name: " + name));
         System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("type: " + type));
+        System.out.printf("%-" + pad + "s", ("type: " + type));
         System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("duration: " + duration));
+        System.out.printf("%-" + pad + "s", ("duration: " + duration));
         System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("damage: " + damage));
+        System.out.printf("%-" + pad + "s", ("damage: " + damage));
         System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("acc: " + acc));
+        System.out.printf("%-" + pad + "s", ("acc: " + acc));
         System.out.print("|");
-        System.out.printf("%-"+pad+"s", ("Att/Def: " + attackOrDefense));
+        System.out.printf("%-" + pad + "s", ("Att/Def: " + attackOrDefense));
         System.out.println();
     }
 
-    public void showInGameProperties(int pad){
+    public void showInGameProperties(int pad) {
         showProperties(pad);
         System.out.printf("%-" + pad + "s", ("level: " + level));
         System.out.print("|");
@@ -99,44 +104,168 @@ public class Card implements Cloneable{
                 Objects.equals(upgradeLevel, card.upgradeLevel);
     }
 
-    public String getName() {return name;}
-    public CardType getType() {return type;}
-    public Integer getLevel() {return level;}
-    public Integer getPrice() {return price;}
-    public Integer getDamage() {return damage;}
-    public Integer getDuration() {return duration;}
-    public Integer getUpgradeCost() {return upgradeCost;}
-    public Integer getAcc() {return acc;}
+    public String getName() {
+        return name;
+    }
+
+    public CardType getType() {
+        return type;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public Integer getDamage() {
+        return damage;
+    }
+
+    public Integer getDuration() {
+        return duration;
+    }
+
+    public Integer getUpgradeCost() {
+        return upgradeCost;
+    }
+
+    public Integer getAcc() {
+        return acc;
+    }
+
     // 0: unbreakable, 1: breakable
-    public boolean isBreakable() {return isBreakable==1;}
-    public Integer getId() {return id;}
-    public Integer getSpecialProperty() {return specialProperty;}
-    public Integer getAttackOrDefense() {return attackOrDefense;}
-    public String getCharacter() {return character;}
-    public Integer getUpgradeLevel() {return upgradeLevel;}
-    public Integer getGamingDamage() {return damage/duration;}
-    public Integer getGamingAttackOrDefense() {return attackOrDefense/duration;}
-    public void setName(String name) {this.name = name;}
-    public void setType(CardType type) {this.type = type;}
-    public void setLevel(Integer level) {this.level = level;}
-    public void setPrice(Integer price) {this.price = price;}
-    public void setDamage(Integer damage) {this.damage = damage;}
-    public void setDuration(Integer duration) {this.duration = duration;}
-    public void setUpgradeCost(Integer upgradeCost) {this.upgradeCost = upgradeCost;}
-    public void setAcc(Integer acc) {this.acc = acc;}
-    public void setBreakable(Integer isBreakable) {this.isBreakable = isBreakable;}
-    public void setAttackOrDefense(Integer attackOrDefense) {this.attackOrDefense = attackOrDefense;}
-    public void setSpecialProperty(Integer specialProperty) {this.specialProperty = specialProperty;}
-    public void setId(Integer id) {this.id = id;}
-    public void setCharacter(String character) {this.character = character;}
-    public void setUpgradeLevel(Integer upgradeLevel) {this.upgradeLevel = upgradeLevel;}
-    public void boostAttackDefense(Double multiplier){
+    public boolean isBreakable() {
+        return isBreakable == 1;
+    }
+
+    public boolean isShield() {
+        if (id == 19)
+            return true;
+        if (id == 1)
+            return true;
+        if (id == 18)
+            return true;
+        return false;
+    }
+
+    public boolean isHeal() {
+        if (id == 2)
+            return true;
+        if (id == 19)
+            return true;
+        return false;
+    }
+
+    public boolean isHoleChanger(){
+        return id == 4;
+    }
+
+    public boolean isHoleRepairer(){
+        return id == 5;
+    }
+
+    public boolean isRoundReducer(){
+        return id == 6;
+    }
+
+    public boolean isPowerBooster(){
+        return id == 3;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Integer getSpecialProperty() {
+        return specialProperty;
+    }
+
+    public Integer getAttackOrDefense() {
+        return attackOrDefense;
+    }
+
+    public String getCharacter() {
+        return character;
+    }
+
+    public Integer getUpgradeLevel() {
+        return upgradeLevel;
+    }
+
+    public Integer getGamingDamage() {
+        return damage / duration;
+    }
+
+    public Integer getGamingAttackOrDefense() {
+        return attackOrDefense / duration;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setType(CardType type) {
+        this.type = type;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
+    public void setDamage(Integer damage) {
+        this.damage = damage;
+    }
+
+    public void setDuration(Integer duration) {
+        this.duration = duration;
+    }
+
+    public void setUpgradeCost(Integer upgradeCost) {
+        this.upgradeCost = upgradeCost;
+    }
+
+    public void setAcc(Integer acc) {
+        this.acc = acc;
+    }
+
+    public void setBreakable(Integer isBreakable) {
+        this.isBreakable = isBreakable;
+    }
+
+    public void setAttackOrDefense(Integer attackOrDefense) {
+        this.attackOrDefense = attackOrDefense;
+    }
+
+    public void setSpecialProperty(Integer specialProperty) {
+        this.specialProperty = specialProperty;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public void setCharacter(String character) {
+        this.character = character;
+    }
+
+    public void setUpgradeLevel(Integer upgradeLevel) {
+        this.upgradeLevel = upgradeLevel;
+    }
+
+    public void boostAttackDefense(Double multiplier) {
         attackOrDefense = (int) (attackOrDefense * multiplier);
     }
 
     public void addToTable() throws SQLException {
-        Connect.insertCard(this.name, String.valueOf(this.type),this.level,this.price,this.damage,this.duration,this.upgradeCost,
-                this.attackOrDefense,this.upgradeCost,this.specialProperty,this.acc,isBreakable,this.character);
+        Connect.insertCard(this.name, String.valueOf(this.type), this.level, this.price, this.damage, this.duration, this.upgradeCost,
+                this.attackOrDefense, this.upgradeCost, this.specialProperty, this.acc, isBreakable, this.character);
     }
 
     public static void setCardLevelFromUser(User user) {
@@ -144,7 +273,7 @@ public class Card implements Cloneable{
         Pattern pattern = Pattern.compile(CARD_REGEX);
         for (String idAndLevel : idAndLevelOfCards) {
             Matcher matcher = pattern.matcher(idAndLevel);
-            if (matcher.find()){
+            if (matcher.find()) {
                 String id = matcher.group("id");
                 String level = matcher.group("level");
                 user.getCards().get(Integer.parseInt(id)).setLevel(Integer.parseInt(level));
@@ -157,24 +286,24 @@ public class Card implements Cloneable{
         for (Card card : user.getCards().values()) {
             cardSeries.append(card.getId()).append("_").append(card.getLevel()).append(",");
         }
-        cardSeries.delete(cardSeries.length()-1, cardSeries.length());
+        cardSeries.delete(cardSeries.length() - 1, cardSeries.length());
         user.setCardsSeries(cardSeries.toString());
         System.out.println(cardSeries);
     }
 
-    public static Integer levelUpFormula(Integer value, Integer level){
+    public static Integer levelUpFormula(Integer value, Integer level) {
         //double coefficient = Math.exp(-1*Double.valueOf(level)/10) + 1 + Math.exp(-0.1);
         return (int) (value * (Math.log(level) + 1));
     }
 
-    public void updateFieldsByLevel(){
+    public void updateFieldsByLevel() {
         acc = levelUpFormula(acc, level);
         attackOrDefense = levelUpFormula(attackOrDefense, level);
         damage = levelUpFormula(damage, level);
         upgradeCost = price * level;
     }
 
-    public static <T> Card findCardInlist(String property, T value, LinkedHashMap<Integer,Card> linkedHashMap) {
+    public static <T> Card findCardInlist(String property, T value, LinkedHashMap<Integer, Card> linkedHashMap) {
         for (Card card : linkedHashMap.values()) {
             if (property.matches("^(?i)name") && card.getName().equals(value)) {
                 return card;

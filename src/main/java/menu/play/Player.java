@@ -159,6 +159,7 @@ public class Player extends User {
         increaseMoney(obtainedCoins);
         consequence = "XP: +" + obtainedXP + " Coins: +" + obtainedCoins;
         System.out.println("obtained coin: " + obtainedCoins);
+        System.out.println("Total dealt damage: " + totalAttack);
         System.out.println("obtained XP: " + obtainedXP);
         System.out.println("total XP: " + getXP());
         System.out.println("required XP to next level: " + User.nextLevelXP(getLevel()));
@@ -259,5 +260,20 @@ public class Player extends User {
             int randomValidIndex = validCells.get(rand.nextInt(validCells.size()));
             durationLine.get(randomValidIndex).makeHollow();
         }
+    }
+
+    public int getInitialIndexBoostedCard(){
+        ArrayList<Integer> validIndices = new ArrayList<>();
+        for(Cell cell : durationLine){
+            if(!cell.isEmpty()){
+                validIndices.add(durationLine.indexOf(cell));
+            }
+        }
+        Random rand = new Random();
+        if(!validIndices.isEmpty()) {
+            int randomIndex = validIndices.get(rand.nextInt(validIndices.size()));
+            return durationLine.get(validIndices.get(randomIndex)).getCardInitialIndex();
+        }
+        return -1;
     }
 }

@@ -14,8 +14,6 @@ public class User implements Cloneable {
     // should initialize in signup
     private LinkedHashMap<Integer, Card> cards = new LinkedHashMap<>();
 
-    private LinkedHashMap<Integer, Card> deck = new LinkedHashMap<>();
-
     static public LinkedHashMap<Integer, User> signedUpUsers;
 
     public User() {
@@ -123,10 +121,6 @@ public class User implements Cloneable {
 
     public LinkedHashMap<Integer, Card> getCards() {
         return cards;
-    }
-
-    public LinkedHashMap<Integer, Card> getDeck() {
-        return deck;
     }
 
     public void setID(Integer id) {
