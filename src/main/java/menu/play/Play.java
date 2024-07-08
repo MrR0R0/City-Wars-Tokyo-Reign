@@ -154,7 +154,7 @@ public class Play extends Menu {
         }
         //init first round
         initEachRound();
-        host.getHand().set(0, Card.allCards.get(3));
+        host.getHand().set(0, Card.allCards.get(9));
         roundCounter = gameRounds;
         while (roundCounter > 0) {
             String input = scanner.nextLine();
@@ -211,6 +211,16 @@ public class Play extends Menu {
         int selectedCellIndex = Integer.parseInt(matcher.group("cellNum")) - 1;
         Card selectedCard = turnPlayer.getHand().get(selectedCardIndex);
 
+        if(selectedCardIndex >= turnPlayer.getHand().size() || selectedCardIndex < 0){
+            System.out.println("Index out of hand");
+            return false;
+        }
+
+        if(selectedCellIndex >= durationLineSize || selectedCellIndex < 0){
+            System.out.println("Index out of duration line");
+            return false;
+        }
+
         // It will be wasted if used on a duration line without hollow cells
         if(selectedCard.isHoleChanger()){
             turnPlayer.changeHole();
@@ -234,7 +244,6 @@ public class Play extends Menu {
             return false;
         }
 
-
         // random card buff by 1.2
         // It will be wasted if used on a duration line without cards
         if(selectedCard.isPowerBooster()){
@@ -248,6 +257,16 @@ public class Play extends Menu {
                 }
             }
             turnPlayer.replaceCardInHand(selectedCardIndex);
+            return false;
+        }
+
+        // copy card
+        if(selectedCard.isCopyCard()){
+            if(selectedCellIndex >= turnPlayer.getHand().size()){
+                System.out.println("Invalid command");
+                return false;
+            }
+            turnPlayer.getHand().set(selectedCardIndex, turnPlayer.getHand().get(selectedCellIndex).clone());
             return false;
         }
 

@@ -175,6 +175,10 @@ public class Card implements Cloneable {
         return id == 3;
     }
 
+    public boolean isCopyCard(){
+        return id == 9;
+    }
+
     public Integer getId() {
         return id;
     }
