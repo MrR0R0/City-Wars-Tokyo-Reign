@@ -1,0 +1,89 @@
+.signupBox {
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(64, 0, 255, 0.7), rgba(73, 0, 126, 0.7));
+    /*-fx-padding: 10 20;*/
+    -fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, reflect, #00eaff 0.0%, #310085 100.0%);
+    -fx-alignment: center;
+    -fx-border-width: 5;
+    /*-fx-effect: dropshadow(gaussian, rgba(255, 0, 255, 0.75), 10, 0.5, 0, 0);*/
+    -fx-effect: dropshadow(gaussian, rgba(73, 0, 126, 0.5), 10, 0.2, 0, 0);
+    /*-fx-effect: dropshadow(gaussian, rgba(255, 0, 255, 0.56), 10, 0.5, 0, 0); !* Neon glow effect *!*/
+}
+
+
+.backButton {
+    -fx-background-color: linear-gradient(to bottom, rgba(0, 147, 180, 0.6), rgba(0, 86, 112, 0.6));
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-family: Orbitron;
+    -fx-prompt-font-weight: bold;
+    /*-fx-padding: 10 20;*/
+    -fx-border-color:linear-gradient(to bottom, #00eaff, #008eb9);
+    -fx-alignment: center;
+    -fx-border-width: 3;
+    /*-fx-effect: dropshadow(gaussian, rgba(255, 0, 255, 0.75), 10, 0.5, 0, 0);*/
+    -fx-effect: dropshadow(three-pass-box, rgba(71, 0, 255, 0.75), 10, 0.2, 0, 0);
+    /*-fx-effect: dropshadow(gaussian, rgba(255, 0, 255, 0.56), 10, 0.5, 0, 0); !* Neon glow effect *!*/
+}
+.backButton:hover {
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to bottom, #00eaff, #005582);
+    -fx-effect: dropshadow(gaussian, rgb(102, 250, 255), 15, 0.7, 0, 0);
+    -fx-cursor: hand;
+}
+
+.nextButton {
+    -fx-background-color: linear-gradient(to bottom, rgba(180, 0, 180, 0.6), rgba(65, 0, 112, 0.6));
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-family: Orbitron;
+    -fx-prompt-font-weight: bold;
+    /*-fx-padding: 10 20;*/
+    -fx-border-color:linear-gradient(to bottom, #ff00ff, #6900b9);
+    -fx-alignment: center;
+    -fx-border-width: 3;
+    /*-fx-effect: dropshadow(gaussian, rgba(255, 0, 255, 0.75), 10, 0.5, 0, 0);*/
+    -fx-effect: dropshadow(three-pass-box, rgba(71, 0, 255, 0.75), 10, 0.2, 0, 0);
+    /*-fx-effect: dropshadow(gaussian, rgba(255, 0, 255, 0.56), 10, 0.5, 0, 0); !* Neon glow effect *!*/
+}
+
+.nextButton:hover{
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-background-color: linear-gradient(to bottom,#FF00FFFF , #4b0082);
+    -fx-effect: dropshadow(gaussian, rgba(255, 102, 255, 1), 15, 0.7, 0, 0);
+    -fx-cursor: hand;
+}
+.text {
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0, 0, 0);
+}
+
+.text-field {
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(0, 111, 255, 0.7), rgba(73, 0, 126, 0.7));
+    /*-fx-padding: 10 20;*/
+    -fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);
+    -fx-alignment: center;
+    -fx-border-width: 2;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-weight: bold;
+}
+
+.password-field .text-field {
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-family: Orbitron;
+    -fx-prompt-font-weight: bold;
+}
+

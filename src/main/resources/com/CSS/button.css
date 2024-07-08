@@ -1,6 +1,11 @@
 .menuButton {
     -fx-background-color: linear-gradient(to bottom, rgba(180, 0, 180, 0.6), rgba(65, 0, 112, 0.6));
     -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-family: Orbitron;
+    -fx-prompt-font-weight: bold;
     /*-fx-padding: 10 20;*/
     -fx-border-color:linear-gradient(to bottom, #ff00ff, #6900b9);
     -fx-alignment: center;
@@ -11,6 +16,9 @@
 }
 
 .menuButton:hover {
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
     -fx-background-color: linear-gradient(to bottom,#FF00FFFF, #4b0082);
     -fx-effect: dropshadow(gaussian, rgba(255, 102, 255, 1), 15, 0.7, 0, 0);
     -fx-cursor: hand;
@@ -19,6 +27,8 @@
 .profileLabel {
     -fx-background-color: linear-gradient(to bottom, rgba(180, 90, 0, 0.5), rgba(124, 48, 0, 0.5));
     -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
     /*-fx-padding: 10 20;*/
     -fx-border-color:linear-gradient(to bottom, #ff4c00, #b92b00);
     -fx-alignment: center;
@@ -36,6 +46,8 @@
 .backBut {
     -fx-background-color: linear-gradient(to bottom, rgba(180, 0, 0, 0.5), rgba(124, 0, 0, 0.5));
     -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
     /*-fx-padding: 10 20;*/
     -fx-border-color:linear-gradient(to bottom, #ff0000, #b90000);
     -fx-alignment: center;

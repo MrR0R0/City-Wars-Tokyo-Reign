@@ -1,0 +1,83 @@
+.combo-box .list-cell {
+    -fx-text-fill: #a8ffff;
+    -fx-alignment: center;
+    -fx-border-width: 2;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-weight: bold;
+    -fx-font-size: 11;
+    /*-fx-padding: 5;*/
+}
+.combo-box {
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(0, 111, 255, 0.7), rgba(73, 0, 126, 0.7));
+    -fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);
+    -fx-alignment: center;
+    -fx-border-width: 2;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-weight: bold;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgb(18, 0, 70), rgb(28, 0, 49));
+    -fx-alignment: center;
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-family: Orbitron;
+    -fx-prompt-font-weight: bold;
+}
+.combo-box .arrow-button:hover {
+    -fx-background-color: #ff33fb;
+}
+.combo-box .arrow-button:hover .arrow {
+    -fx-background-color: #232124;
+}
+.combo-box .arrow-button .arrow {
+    -fx-background-color: #ff33fb;
+}
+.combo-box .label{
+    -fx-alignment: center;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected,
+.combo-box-popup .list-view .list-cell:filled:selected:hover {
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgb(65, 0, 255), rgb(146, 0, 255));
+    /*-fx-padding: 10 20;*/
+    /*-fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, reflect, #00eaff 0.0%, #310085 100.0%);*/
+    -fx-alignment: center;
+    /*-fx-border-width: 5;*/
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-family: Orbitron;
+    -fx-prompt-font-weight: bold;
+}
+
+/*.combo-box-popup .list-view .list-cell:filled:hover {*/
+/*    -fx-background-color: #1ED760;*/
+/*    -fx-text-fill: black;*/
+/*}*/
+
+/*.combo-box-base:hover {*/
+/*    -fx-background: #00ff00;*/
+/*    -fx-background-color: #2cf52c;*/
+/*    -fx-text-fill: linear-gradient(from 34.4697% 100.0% to 34.8485% 53.7879%, reflect, #bcbcbc 0.0%, #ffffff 100.0%);*/
+/*}*/
+/*.combo-box-base:showing {*/
+/*    -fx-background: #2bff2b;*/
+/*    -fx-background-color: #21ff21;*/
+/*    -fx-text-fill:linear-gradient(from 34.4697% 100.0% to 34.8485% 53.7879%, reflect, #bcbcbc 0.0%, #ffffff 100.0%);*/
+/*}*/
+
+.combo-box-base:focused {
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(0, 111, 255, 0.7), rgba(73, 0, 126, 0.7));
+    /*-fx-padding: 10 20;*/
+    -fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);
+    -fx-alignment: center;
+    -fx-border-width: 2;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-weight: bold;
+}

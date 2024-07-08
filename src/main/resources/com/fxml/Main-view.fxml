@@ -56,7 +56,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" prefWidth="200.0" stylesheets="@button.css" text="START GAME">
+                                <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" prefWidth="200.0" stylesheets="@../CSS/button.css" text="START GAME">
                                     <font>
                                         <Font name="Orbitron-Bold" size="20.0" />
                                     </font>
@@ -71,7 +71,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" prefWidth="200.0" styleClass="neon-button" stylesheets="@button.css" text="HISTORY">
+                                <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" prefWidth="200.0" styleClass="neon-button" stylesheets="@../CSS/button.css" text="HISTORY">
                                     <font>
                                         <Font name="Orbitron-Bold" size="20.0" />
                                     </font>
@@ -86,7 +86,7 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" prefWidth="200.0" styleClass="neon-button" stylesheets="@button.css" text="SHOP">
+                                <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="60.0" prefWidth="200.0" styleClass="neon-button" stylesheets="@../CSS/button.css" text="SHOP">
                                     <font>
                                         <Font name="Orbitron-Bold" size="20.0" />
                                     </font>

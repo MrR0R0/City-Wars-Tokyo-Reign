@@ -1,0 +1,88 @@
+/* Style for the entire TableView */
+.table-view {
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(85, 0, 255, 0.5), rgba(126, 0, 124, 0.5));
+    /*-fx-padding: 10 20;*/
+    /*-fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);*/
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);
+    -fx-alignment: center;
+    -fx-border-width: 2;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-weight: bold;
+}
+
+/* Style for the table header */
+.table-view .column-header-background {
+    -fx-background-color: #0b0028;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: rgba(200, 0, 255, 0.88);
+
+}
+
+/*header*/
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: #0b0028;
+    -fx-border-width: 0 1 0 1;
+    -fx-border-color: rgba(200, 0, 255, 0.88);
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-family: Orbitron;
+    -fx-prompt-font-weight: bold;
+}
+
+/* Style for the table rows */
+.table-row-cell {
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(33, 1, 98, 0.5), rgba(61, 1, 60, 0.5));
+    /*-fx-padding: 10 20;*/
+    /*-fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);*/
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);
+    -fx-alignment: center;
+    -fx-border-width: 2;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-weight: bold;
+}
+
+/*.table-row-cell:odd {*/
+/*    -fx-background-color: #f9f9f9;*/
+/*}*/
+
+/*.table-row-cell:selected {*/
+/*    -fx-background-color: #00a2e8;*/
+/*    -fx-text-fill: #ffffff;*/
+/*}*/
+
+/*.table-row-cell:focused {*/
+/*    -fx-background-color: #e0e0e0;*/
+/*}*/
+
+/* Style for the table cells */
+.table-cell {
+    -fx-padding: 8px;
+    -fx-border-color: #e0e0e0;
+    -fx-border-width: 0 0 1 0;
+    -fx-alignment: center;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-weight: bold;
+}
+
+.table-cell:selected {
+    -fx-background-color: #00a2e8;
+    -fx-text-fill: #ffffff;
+}
+
+ /*Style for column headers */
+ /*   .table-column-header {*/
+ /*       -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(33, 1, 98, 0.5), rgba(61, 1, 60, 0.5));*/
+ /*       !*-fx-padding: 10 20;*!*/
+ /*       !*-fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);*!*/
+ /*       -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);*/
+ /*       -fx-alignment: center;*/
+ /*       -fx-prompt-text-fill: #a8ffff;*/
+ /*       -fx-prompt-font-weight: bold;*/
+ /*       -fx-border-width: 0 1 0 1;*/
+ /*       -fx-border-color: purple;*/
+ /*   }*/
