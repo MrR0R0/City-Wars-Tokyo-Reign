@@ -23,7 +23,7 @@ public class Play extends Menu {
     static private Player guest;
     static private Player turnPlayer;
     static private Player opponent;
-    static private final Integer gameRounds = 4;
+    static private final Integer gameRounds = 8;
     static private int roundCounter;
 
     static private Integer pot = 0;
@@ -203,7 +203,6 @@ public class Play extends Menu {
         matcher.find();
         int selectedCardIndex = Integer.parseInt(matcher.group("cardNum")) - 1;
         int selectedCellIndex = Integer.parseInt(matcher.group("cellNum")) - 1;
-        Card selectedCard = turnPlayer.getHand().get(selectedCardIndex);
 
         if (selectedCardIndex >= turnPlayer.getHand().size() || selectedCardIndex < 0) {
             System.out.println("Index out of hand");
@@ -214,6 +213,8 @@ public class Play extends Menu {
             System.out.println("Index out of duration line");
             return false;
         }
+
+        Card selectedCard = turnPlayer.getHand().get(selectedCardIndex);
 
         // It will be wasted if used on a duration line without hollow cells
         if (selectedCard.isHoleChanger()) {
@@ -330,7 +331,7 @@ public class Play extends Menu {
             applyCardsDynamic(myCell, oppCell);
         }
 
-        // heal/heal shield: adds 20 HP to the player
+        // heal/heal shield
         if (selectedCard.isHeal()) {
             turnPlayer.increaseHP(15 * selectedCard.getLevel());
         }
