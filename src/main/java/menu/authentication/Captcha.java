@@ -1,7 +1,10 @@
 package menu.authentication;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +32,7 @@ public class Captcha {
             } else {
                 System.out.println("Remaining chances: " + counter);
                 randomText = generatePassword(5);
-                System.out.println(Captcha.textToASCII(randomText));
+                System.out.println(textToASCII(randomText));
             }
         }
         return false;
@@ -40,7 +43,7 @@ public class Captcha {
         final String UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         final String LOWER = UPPER.toLowerCase();
         final String DIGITS = "0123456789";
-        final String SPECIAL = "!@#$%^&*()-_=+[]{}|;:,.<>?";
+        final String SPECIAL = "!@#$%^&*()-=+[]{};:,.<>?";
         final String ALL_CHARS = UPPER + LOWER + DIGITS + SPECIAL;
         SecureRandom random = new SecureRandom();
         List<Character> chars = new ArrayList<>();
@@ -124,5 +127,69 @@ public class Captcha {
             row = new StringBuilder();
         }
         return result.toString();
+    }
+
+    public static void stringToImage(String asciiArt){
+        int finalHeight = 350, finalWidth = 550;
+        int fontSize = 12, imageHeight = height * 10, imageWidth = width * 10, margin = 5;
+        BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = image.createGraphics();
+        g2d.setColor(Color.BLACK);
+        g2d.fillRect(0, 0, imageWidth, imageHeight);
+        g2d.setFont(new Font("Monospaced", Font.PLAIN, fontSize));
+        g2d.setColor(Color.WHITE);
+
+        String[] lines = asciiArt.split("\n");
+
+        int y = fontSize + margin;
+        for (String line : lines) {
+            g2d.drawString(line, margin, y);
+            y += fontSize;
+        }
+        g2d.dispose();
+
+        int top = Integer.MAX_VALUE;
+        int left = Integer.MAX_VALUE;
+        int bottom = Integer.MIN_VALUE;
+        int right = Integer.MIN_VALUE;
+
+        for (int i = 0; i < image.getHeight(); i++) {
+            for (int j = 0; j < image.getWidth(); j++) {
+                if (image.getRGB(j, i) != Color.BLACK.getRGB()) {
+                    if (i < top) top = i;
+                    if (j < left) left = j;
+                    if (i > bottom) bottom = i;
+                    if (j > right) right = j;
+                }
+            }
+        }
+
+        int croppedWidth = right - left + 1 + 2 * margin;
+        int croppedHeight = bottom - top + 1 + 2 * margin;
+
+        // Create a new BufferedImage for the cropped region
+        BufferedImage croppedImage = new BufferedImage(croppedWidth, croppedHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2dCropped = croppedImage.createGraphics();
+        g2dCropped.setColor(Color.BLACK);
+        g2dCropped.fillRect(0, 0, croppedWidth, croppedHeight);
+        g2dCropped.drawImage(image, margin, margin, croppedWidth - margin, croppedHeight - margin, left, top, right + 1, bottom + 1, null);
+        g2dCropped.dispose();
+
+
+        BufferedImage finalImage = new BufferedImage(finalWidth, finalHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2dFinal = finalImage.createGraphics();
+        g2dFinal.setColor(Color.BLACK);
+        g2dFinal.fillRect(0, 0, finalWidth, finalHeight);
+
+        int x = (finalWidth - croppedWidth) / 2;
+        int yCenter = (finalHeight - croppedHeight) / 2;
+        g2dFinal.drawImage(croppedImage, x, yCenter, null);
+        g2dFinal.dispose();
+
+        try {
+            ImageIO.write(finalImage, "png", new File("src\\main\\resources\\captcha.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

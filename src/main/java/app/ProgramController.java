@@ -2,6 +2,7 @@ package app;
 
 import database.Connect;
 import menu.*;
+import menu.authentication.Captcha;
 import menu.authentication.Login;
 import menu.authentication.SignUp;
 import menu.play.Play;
@@ -16,7 +17,6 @@ public class ProgramController {
         Card.allCards = Connect.getCards();
         User.signedUpUsers = Connect.getUsers();
         String logoutCommand = "^log out$";
-
         while (true) {
             String command = scanner.nextLine().trim();
             if (checkQuit(command)) {
