@@ -23,15 +23,16 @@ public class Play extends Menu {
     static private Player guest;
     static private Player turnPlayer;
     static private Player opponent;
-    static private final Integer gameRounds = 8;
+    static private final Integer gameRounds = 4;
     static private int roundCounter;
 
     static private Integer pot = 0;
 
     static private final Random random = new Random();
 
-    static private boolean isInBettingMode = false;
-    static private boolean isInNormalMode = false;
+    public enum Mode {Normal, Betting}
+
+    static private Mode playMode = null;
     final static private String playModeCommand = "^select (?<Mode>\\w+) as the play mode$";
     final static private String selectCharacter = "^(?<Character>\\w+)$";
     final static String selectCardCommand = "^select card number (?<number>\\d+) player (?<player>\\S+)$";
@@ -46,9 +47,11 @@ public class Play extends Menu {
             Matcher matcher = getCommandMatcher(input, playModeCommand);
             matcher.find();
             choosePlayMode(matcher);
-        } else if (!isInBettingMode && !isInNormalMode) {
+        }
+        else if (playMode == null) {
             System.out.println("you should choose the play mode first");
-        } else if (input.matches(Login.loginCommand)) {
+        }
+        else if (input.matches(Login.loginCommand)) {
             Matcher matcher = getCommandMatcher(input, Login.loginCommand);
             matcher.find();
             if (Login.checkLogIn(matcher, scanner)) {
@@ -62,29 +65,33 @@ public class Play extends Menu {
                 System.out.println("user logged in successfully");
                 System.out.println("Welcome " + username + "!");
             }
-        } else if (input.matches(Login.forgotPassword)) {
+        }
+        else if (input.matches(Login.forgotPassword)) {
             Matcher matcher = getCommandMatcher(input, Login.forgotPassword);
             if (matcher.find())
                 Login.resetPassword(matcher, scanner);
-        } else if (guest == null) {
+        }
+        else if (guest == null) {
             System.out.println("Second player should log in first. Please log in by typing 'user login -u <Username> -p <Password>'.");
-        } else if (input.matches(selectCharacter)) {
+        }
+        else if (input.matches(selectCharacter)) {
             Matcher matcher = getCommandMatcher(input, selectCharacter);
             if (matcher.find()) {
                 selectCharacter(matcher);
             }
-        } else if (guest.getCharacter() != null && host.getCharacter() != null) {
-            if (isInNormalMode)
-                playing(scanner);
-            if (isInBettingMode) {
-                betting(scanner);
-                if(pot!=0)
-                    playing(scanner);
+        }
+        else if (guest.getCharacter() != null && host.getCharacter() != null) {
+            switch (playMode){
+                case Normal -> playing(scanner);
+                case Betting -> {
+                    betting(scanner);
+                    if(pot!=0)
+                        playing(scanner);
+                }
             }
         } else {
             System.out.println("you should choose your Characters first");
         }
-
     }
 
     private static void betting(Scanner scanner) {
@@ -94,8 +101,8 @@ public class Play extends Menu {
         int hostBet = scanner.nextInt();
 
         if (guestBet <= guest.getWallet() && hostBet <= host.getWallet()) {
-            guest.setWallet(guest.getWallet() - guestBet);
-            host.setWallet(host.getWallet() - hostBet);
+            guest.reduceWallet(guestBet);
+            host.reduceWallet(hostBet);
             pot = guestBet + hostBet;
             System.out.println("The total pot is: " + pot);
         } else {
@@ -106,13 +113,11 @@ public class Play extends Menu {
 
     static public void choosePlayMode(Matcher matcher) {
         if (matcher.group("Mode").equals("Normal")) {
-            isInNormalMode = true;
-            isInBettingMode = false;
+            playMode = Mode.Normal;
             System.out.println("Normal mode is selected");
             System.out.println("Second player should now log in!");
         } else if (matcher.group("Mode").equals("Betting")) {
-            isInNormalMode = false;
-            isInBettingMode = true;
+            playMode = Mode.Betting;
             System.out.println("Betting mode is selected");
             System.out.println("Second player should now log in!");
         } else {
@@ -372,11 +377,14 @@ public class Play extends Menu {
                 System.out.println("guest HP: " + guest.getHP());
                 System.out.println("guest total damage: " + host.getRoundAttack());
             }
-
             if (isGameOver() != null) {
+                host.updateTotalAttack();
+                guest.updateTotalAttack();
                 return;
             }
         }
+        host.updateTotalAttack();
+        guest.updateTotalAttack();
     }
 
     //Returns the winner
@@ -389,17 +397,17 @@ public class Play extends Menu {
     }
 
     private static void result(Player winner) {
-        Player loser = opponent;
+        Player loser = winner==host ? guest : host;
         String result = winner.getNickname() + " won!";
 
         System.out.println("Winner: " + winner.getNickname());
-        winner.applyPostMatchUpdates();
+        winner.applyPostMatchUpdates(playMode, true, pot);
         System.out.println();
         System.out.println("Loser: " + loser.getNickname());
-        loser.applyPostMatchUpdates();
+        loser.applyPostMatchUpdates(playMode, false, pot);
         winner.checkForLevelUpgrade();
         loser.checkForLevelUpgrade();
-
+        pot = 0;
         String hostCons = winner == host ? winner.getConsequence() : loser.getConsequence();
         String guestCons = winner == guest ? winner.getConsequence() : loser.getConsequence();
 

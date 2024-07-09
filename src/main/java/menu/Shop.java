@@ -22,7 +22,6 @@ public class Shop extends Menu {
     static private ArrayList<Card> upgradableCards;  // filled with user's original cards
     static private ArrayList<Card> purchasableCards; // filled with clones
 
-
     public static void handleInput(String input, Scanner scanner) {
         if (input.matches(backCommand)) {
             if (!Error.loginFirst()) {

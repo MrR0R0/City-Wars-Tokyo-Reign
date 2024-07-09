@@ -12,7 +12,7 @@ public class Player extends User {
     private ArrayList<Cell> durationLine;
     private ArrayList<Card> hand;
     private final LinkedHashMap<Integer, Card> deck;
-    private Integer roundAttack, totalAttack;
+    private Integer roundAttack, totalAttack, obtainedCoins = 0;
     private final Integer durationLineSize, handSize;
     private String consequence;
 
@@ -39,9 +39,7 @@ public class Player extends User {
             durationLine.add(new Cell());
         }
 
-        //A new attacking score
         roundAttack = 0;
-        totalAttack += roundAttack;
 
         //A new hand
         fillHand();
@@ -167,8 +165,15 @@ public class Player extends User {
         System.out.println();
     }
 
-    public void applyPostMatchUpdates() {
-        int obtainedCoins = (int) (max(0.1 * getHP(), 0) + totalAttack * 0.1);
+    public void updateTotalAttack(){
+        totalAttack += roundAttack;
+    }
+
+    public void applyPostMatchUpdates(Play.Mode mode, boolean isWinner, int pot) {
+        switch (mode){
+            case Normal -> obtainedCoins += (int) (max(0.1 * getHP(), 0) + totalAttack * 0.1);
+            case Betting -> obtainedCoins += isWinner ? pot : 0;
+        }
         int obtainedXP = (int) (max(0.2 * getHP(), 0) + totalAttack * 0.2);
         increaseXP(obtainedXP);
         increaseMoney(obtainedCoins);
@@ -185,7 +190,7 @@ public class Player extends User {
     }
 
     public void checkForLevelUpgrade() {
-        if (User.nextLevelXP(getLevel()) < getXP()) {
+        while (User.nextLevelXP(getLevel()) < getXP()) {
             setLevel(getLevel() + 1);
             System.out.println(getNickname() + "'s level is upgraded to " + getLevel());
         }
@@ -235,7 +240,7 @@ public class Player extends User {
 
     // Rewarding players with coins equal to half the ACC of the shattered card
     public void rewardCompleteShatter(Cell cell) {
-        increaseMoney(cell.getCard().getAcc() / 2);
+        obtainedCoins += cell.getCard().getAcc() / 2;
         System.out.println("Rewarded with coins for shattering!");
     }
 
