@@ -19,8 +19,8 @@ public class Shop extends Menu {
     final static String showUpgradeableCards = "^(?i)show upgradable cards$";
     final static String showPurchasableCards = "^(?i)show purchasable cards$";
     final static String showCardProperties = "^(?i)show properties of card number (?<cardNum>\\d+)$";
-    static private ArrayList<Card> upgradableCards;
-    static private ArrayList<Card> purchasableCards;
+    static private ArrayList<Card> upgradableCards;  // filled with user's original cards
+    static private ArrayList<Card> purchasableCards; // filled with clones
 
 
     public static void handleInput(String input, Scanner scanner) {
@@ -40,6 +40,11 @@ public class Shop extends Menu {
         }
         else if (input.matches(showPurchasableCards)){
             showPurchasable();
+        }
+        else if (input.matches(buyCommand)){
+            Matcher matcher = getCommandMatcher(input, buyCommand);
+            matcher.find();
+            buyCard(matcher);
         }
     }
 
@@ -81,9 +86,12 @@ public class Shop extends Menu {
     }
 
     private static void showPurchasable(){
+        int index = 1;
         updatePurchasableCards();
         for(Card card: purchasableCards){
+            System.out.print(index + "- ");
             card.showProperties(PROP_PAD);
+            index++;
         }
     }
 
@@ -125,6 +133,29 @@ public class Shop extends Menu {
         selectedCard.upgrade();
         loggedInUser.updateCardSeriesByCards();
         System.out.println("Upgraded Card \"" + selectedCard.getName() + "\" to level " + selectedCard.getLevel());
+    }
+
+    static private void buyCard(Matcher matcher){
+        String input = matcher.group("cardNum");
+        if(!input.matches("^\\d+$")){
+            System.out.println("Invalid card number");
+            return;
+        }
+        int cardNumber = Integer.parseInt(input) - 1;
+        updatePurchasableCards();
+        if(cardNumber >= purchasableCards.size()){
+            System.out.println("Out of bound index!");
+            return;
+        }
+        Card selectedCard = purchasableCards.get(cardNumber);
+        if (selectedCard.getPrice() > loggedInUser.getWallet()) {
+            System.out.println("You don't have enough money!");
+            return;
+        }
+        loggedInUser.reduceWallet(selectedCard.getPrice());
+        loggedInUser.getCards().put(selectedCard.getId(), selectedCard);
+        loggedInUser.updateCardSeriesByCards();
+        System.out.println("Purchased Card \"" + selectedCard.getName() + "\"");
     }
 
     static private void updateUpgradableCards() {
