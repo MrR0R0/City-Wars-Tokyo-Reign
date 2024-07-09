@@ -49,8 +49,6 @@ public class Card implements Cloneable {
         System.out.print("|");
         System.out.printf("%-" + pad + "s", ("duration: " + duration));
         System.out.print("|");
-        System.out.printf("%-" + pad + "s", ("damage: " + damage));
-        System.out.print("|");
         System.out.printf("%-" + pad + "s", ("acc: " + acc));
         System.out.print("|");
         System.out.printf("%-" + pad + "s", ("Att/Def: " + attackOrDefense));
@@ -75,7 +73,7 @@ public class Card implements Cloneable {
         System.out.println();
     }
 
-    public void showShopProperties(int index, int NAME_PAD, int COST_PAD, int DETAILS_PAD){
+    public void showUpgradeProperties(int index, int NAME_PAD, int COST_PAD, int DETAILS_PAD){
         String cardName = String.format("%-" + NAME_PAD + "s", index + "- " + name + " (" + level + "->" + (level+1) + ")");
         String cardCost = String.format("%-" + COST_PAD + "s", upgradeCost);
         String firstDetail = getFirstDetail();

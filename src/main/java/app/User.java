@@ -51,7 +51,6 @@ public class User implements Cloneable {
     public void showCards() {
         for (Card card : cards.values()) {
             card.showProperties(25);
-            System.out.println();
         }
     }
 
