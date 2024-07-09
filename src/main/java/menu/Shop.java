@@ -87,9 +87,9 @@ public class Shop extends Menu {
     private static void showPurchasable(){
         int index = 1;
         updatePurchasableCards();
+        showTopBar();
         for(Card card: purchasableCards){
-            System.out.print(index + "- ");
-            card.showProperties(PROP_PAD);
+            card.showPurchaseProperties(index, NAME_PAD, COST_PAD, DETAILS_PAD);
             index++;
         }
     }

@@ -76,13 +76,21 @@ public class Card implements Cloneable {
     public void showUpgradeProperties(int index, int NAME_PAD, int COST_PAD, int DETAILS_PAD){
         String cardName = String.format("%-" + NAME_PAD + "s", index + "- " + name + " (" + level + "->" + (level+1) + ")");
         String cardCost = String.format("%-" + COST_PAD + "s", upgradeCost);
-        String firstDetail = getFirstDetail();
-        String secondDetail = getSecondDetail();
+        String firstDetail = getUpgradeFirstDetail();
+        String secondDetail = getUpgradeSecondDetail();
         String details = String.format("%-" + DETAILS_PAD + "s", firstDetail + secondDetail);
         System.out.println(cardName + "|" + cardCost + "|" + details);
     }
 
-    private String getFirstDetail() {
+    public void showPurchaseProperties(int index, int NAME_PAD, int COST_PAD, int DETAILS_PAD){
+        String cardName = String.format("%-" + NAME_PAD + "s", index + "- " + name + " (" + level + ")");
+        String cardCost = String.format("%-" + COST_PAD + "s", upgradeCost);
+        String firstDetail = getPurchaseFirstDetail();
+        String secondDetail = getPurchaseSecondDetail();
+        String details = String.format("%-" + DETAILS_PAD + "s", firstDetail + secondDetail);
+        System.out.println(cardName + "|" + cardCost + "|" + details);
+    }
+    private String getUpgradeFirstDetail() {
         String detail = "";
         if(isBreakable())
             detail = "ACC: " + acc + "->" + levelUpFormula(acc, level+1);
@@ -104,10 +112,32 @@ public class Card implements Cloneable {
         return detail;
     }
 
-    private String getSecondDetail(){
+    private String getUpgradeSecondDetail(){
         String detail = "";
         if(isBreakable())
             detail = ", Att_Def: " + attackOrDefense + "->" + levelUpFormula(attackOrDefense, level+1);
+        return detail;
+    }
+
+    private String getPurchaseFirstDetail(){
+        String detail = "";
+        if(isBreakable())
+            detail = "ACC: " + acc;
+        else if(isHeal())
+            detail = "added HP: " + level * healByLevel;
+        else if(isPowerBooster()) {
+            detail = "Multiplier: " + String.format("%.2f", getPowerBoostMultiplier());
+        }
+        else if(isCardMitigator()){
+            detail = "Multiplier: " + String.format("%.2f", getMitigatorMultiplier());
+        }
+        return detail;
+    }
+
+    private String getPurchaseSecondDetail(){
+        String detail = "";
+        if(isBreakable())
+            detail = ", Att_Def: " + attackOrDefense;
         return detail;
     }
 
