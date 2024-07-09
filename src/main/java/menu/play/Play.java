@@ -412,7 +412,7 @@ public class Play extends Menu {
         String guestCons = winner == guest ? winner.getConsequence() : loser.getConsequence();
 
         Connect.insertHistory(guest.getUsername(), guest.getLevel(), guestCons,
-                host.getUsername(), guest.getLevel(), hostCons,
+                host.getUsername(), host.getLevel(), hostCons,
                 result,
                 LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
                 host.getId(), guest.getId());
