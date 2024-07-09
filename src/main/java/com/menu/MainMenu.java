@@ -23,7 +23,6 @@ public class MainMenu extends Menu {
     final static private String logoutCommand = "^log out$";
     final static private String sortCommand = "^sort by (?<Field>\\d+) (?<Type>\\d+)$";
 
-
     static public void handleInput(String input, Scanner scanner) throws SQLException {
 
         if(input.matches(logoutCommand)){
@@ -46,14 +45,13 @@ public class MainMenu extends Menu {
 
     static private void showHistory(Scanner scanner) throws SQLException {
         history = Connect.getUserHistory(String.valueOf(Menu.loggedInUser.getId()));
-        int len = history.size();
-        int numberOfPages = Math.ceilDiv(len, LINES_ON_PAGE);
+        int numberOfPages = Math.ceilDiv(history.size(), LINES_ON_PAGE);
         int currentPage = 1;
         System.out.println("History:");
         System.out.println("You can also sort your match history by (1-date 2-opp's name 3-opp's level 4-result) (1-asc 2-des)");
         System.out.println("Using the following command: sort by #field_name #asc_des");
         System.out.println("for instance \"sort by 1 1\" will sort by date in ascending order");
-        showPage(1, numberOfPages);
+        showPage(currentPage, numberOfPages);
         while (true) {
             System.out.println("For viewing other pages enter the page's number;");
             System.out.println("You can also sort here");
@@ -70,7 +68,7 @@ public class MainMenu extends Menu {
                     String type = matcher.group("Type");
                     sortHistory(field, type);
                 }
-            } else if (command.matches("\\d+")) {
+            } else if (command.matches("^\\d+$")) {
                 if (Integer.parseInt(command) > numberOfPages) {
                     System.out.println("Please enter a number between 1 & " + numberOfPages);
                 } else {
@@ -83,16 +81,16 @@ public class MainMenu extends Menu {
         }
     }
 
-    static private void showPage(int page, int pages) {
+    static private void showPage(int page, int numberOfPages) {
         int start = LINES_ON_PAGE * (page - 1);
         int end = LINES_ON_PAGE * (page);
-        showTopBar(NAME_PAD, CONS_PAD, NUM_PAD);
+        showTopBar();
         IntStream.range(start, Math.min(end, history.size()))
                 .forEach(i -> history.get(i).show(NAME_PAD, CONS_PAD, NUM_PAD));
-        showPageBar(pages, page);
+        showBottomBar(numberOfPages, page);
     }
 
-    static private void showPageBar(int pages, int page) {
+    static void showBottomBar(int pages, int page) {
         System.out.print("Pages: ");
         if (page - 2 > 1) {
             System.out.print("...");
@@ -106,10 +104,10 @@ public class MainMenu extends Menu {
         System.out.println();
     }
 
-    static private void showTopBar(int namePad, int consPad, int numPad) {
-        String index = String.format("%-" + numPad + "s", "NO.");
-        String host = String.format("%-" + namePad + "s", "You");
-        String guest = String.format("%-" + namePad + "s", "Opponent");
+    static private void showTopBar() {
+        String index = String.format("%-" + MainMenu.NUM_PAD + "s", "NO.");
+        String host = String.format("%-" + MainMenu.NAME_PAD + "s", "You");
+        String guest = String.format("%-" + MainMenu.NAME_PAD + "s", "Opponent");
         System.out.println(index + "|" + host + "|" + guest);
     }
 
@@ -129,4 +127,5 @@ public class MainMenu extends Menu {
             Collections.reverse(history);
         }
     }
+
 }

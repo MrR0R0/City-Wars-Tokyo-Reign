@@ -1,16 +1,13 @@
 package com.menu.authentication;
 
-import com.app.Card;
+import com.app.*;
 import com.app.Error;
-import com.app.User;
 import com.menu.Menu;
 import java.util.*;
 import java.util.regex.Matcher;
 
 public class SignUp extends Menu {
-    static private String username, pass, passConf, email, nickname, recoveryAns, recoveryQ;
-    static private Integer HP, XP;
-    static private User tmpUser;
+    static private String username, pass, email, nickname, recoveryAns, recoveryQ;
 
     static final private Integer initialMoney = 100;
 
@@ -20,9 +17,9 @@ public class SignUp extends Menu {
 
     public static void handleInput(String input, Scanner scanner) {
         String createUserCommand = "^(?i)user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
-                                    " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
+                " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
         String createUserRandomCommand = "^user create -u (?<Username>\\S+) -p random" +
-                                    " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
+                " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
 
         if (input.matches(createUserCommand)) {
             if(Error.alreadyLoggedIn())
@@ -118,7 +115,7 @@ public class SignUp extends Menu {
                 String qNumber = matcher.group("QNumber");
                 String ans = matcher.group("Ans");
                 String ansConf = matcher.group("Confirm");
-                if (!qNumber.matches("\\d+")) {
+                if (!qNumber.matches("^\\d+$")) {
                     System.out.println("You should pick a number");
                 } else if (Integer.parseInt(qNumber) < 1 || Integer.parseInt(qNumber) > 3) {
                     System.out.println("You should pick a number between 1 & 3");
@@ -180,10 +177,10 @@ public class SignUp extends Menu {
     static private boolean twoStepVerification(Scanner scanner) {
         if (securityQuestion(scanner)) {
             if (Captcha.checkCaptcha(scanner)) {
-                tmpUser = new User(username, pass, nickname, email, recoveryAns,
-                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size()+1,XP,HP);
+                User tmpUser = new User(username, pass, nickname, email, recoveryAns,
+                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size() + 1, 0, 0);
                 tmpUser.giveRandomCard();
-                Card.updateUserCards(tmpUser);
+                tmpUser.updateCardSeriesByCards();
                 User.signedUpUsers.put(User.signedUpUsers.size()+1, tmpUser);
                 return true;
             }

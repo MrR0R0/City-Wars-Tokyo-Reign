@@ -1,152 +1,227 @@
 package com.menu;
 
-import com.app.Card;
+import com.app.*;
 import com.app.Error;
+import com.menu.Menu;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Scanner;
 import java.util.regex.Matcher;
+import java.util.stream.IntStream;
 
-public class Shop extends Menu{
-    final static String upgradeCommand = "^(?i)upgrade\\s*$";
-    final static String buyCommand = "^(?i)buy\\s*$";
-    final static String showUpgradeableCards = "^(?i)show\\s+upgradable\\s+card$";
-    final static String showAvailableCards = "^(?i)show\\s+available\\s+card$";
-    final static String chooseCardCommand = "^(?i)\\s*(<cardName>\\w+)$";
+public class Shop extends Menu {
+    final static private int CARDS_ON_PAGE = 10, NAME_PAD = 27, DETAILS_PAD = 35, COST_PAD = 5, PROP_PAD = 23;
+    final static private int purchasableAmount = 6, purchasableShieldOrSpell = 1, purchasableCommon = 3, purchasableTimeStrike = 2;
+    final static String upgradeCardCommand = "(?i)upgrade card number (?<cardNum>\\d+)";
+    final static String showWalletCommand = "(?i)show wallet";
+    final static String buyCommand = "^(?i)buy card number (?<cardNum>\\d+)$";
+    final static String showUpgradeableCards = "^(?i)show upgradable cards$";
+    final static String showPurchasableCards = "^(?i)show purchasable cards$";
+    final static String showCardProperties = "^(?i)show properties of card number (?<cardNum>\\d+)$";
+    static private ArrayList<Card> upgradableCards;  // filled with user's original cards
+    static private ArrayList<Card> purchasableCards; // filled with clones
 
-
-    public static void handleInput(String input, Scanner scanner){
-        {
-            if (input.matches(backCommand)){
-                if (Error.loginFirst())
-                    return;
+    public static void handleInput(String input, Scanner scanner) {
+        if (input.matches(backCommand)) {
+            if (!Error.loginFirst()) {
                 currentMenu = MenuType.Main;
                 showCurrentMenu();
             }
-            if (input.matches(showUpgradeableCards)){
-                Matcher matcher = getCommandMatcher(input, showUpgradeableCards);
-                if (matcher.find())
-                    showUpgradeable(matcher,scanner);
-            }
+        } else if (input.matches(showWalletCommand)) {
+            System.out.println("Balance: " + loggedInUser.getWallet());
+        } else if (input.matches(showUpgradeableCards)) {
+            showUpgradeable(scanner);
+        } else if (input.matches(upgradeCardCommand)) {
+            Matcher matcher = getCommandMatcher(input, upgradeCardCommand);
+            matcher.find();
+            upgradeCard(matcher);
         }
-
+        else if (input.matches(showPurchasableCards)){
+            showPurchasable();
+        }
+        else if (input.matches(buyCommand)){
+            Matcher matcher = getCommandMatcher(input, buyCommand);
+            matcher.find();
+            buyCard(matcher);
+        }
     }
-    private static void showUpgradeable(Matcher matcher, Scanner scanner){
-        LinkedHashMap<Integer, Card> upgradeableCards = new LinkedHashMap<>();
-        int i = 0;
-        for (Map.Entry<Integer, Card> entry : loggedInUser.getDeckOfCards().entrySet()) {
-            i++;
-            Card card = entry.getValue();
-            if (loggedInUser.getLevel() >= card.getLevel()) {
-                upgradeableCards.put(card.getId(), card);
-                System.out.print(card.getName() + " | ");
-                if (i == 6)
-                    System.out.println();
-            }
-        }
+
+    private static void showUpgradeable(Scanner scanner) {
+        updateUpgradableCards();
+
+        int numberOfPages = Math.ceilDiv(upgradableCards.size(), CARDS_ON_PAGE);
+        int currentPage = 1;
 
         System.out.println("Please choose a card to upgrade or back to shop");
-        String input = scanner.nextLine();
-        if (input.matches(backCommand)){
+        System.out.println("You can also select other pages");
+        showPage(currentPage, numberOfPages);
+
+        while (true) {
+            System.out.println("For viewing other pages enter the page's number;");
+            System.out.println("to return to the shop menu, enter 'back'");
+            String command = scanner.nextLine().trim().replaceAll(" +", " ");
+            if (command.toLowerCase().matches("back")) {
+                System.out.println("You will be directed to Shop menu");
+                return;
+            }
+            else if(command.matches(showCardProperties)){
+                Matcher matcher = getCommandMatcher(command, showCardProperties);
+                matcher.find();
+                String input = matcher.group("cardNum");
+                showCardProperties(input, upgradableCards);
+            }
+            else if (command.matches("^\\d+$")) {
+                if (Integer.parseInt(command) > numberOfPages) {
+                    System.out.println("Please enter a number between 1 & " + numberOfPages);
+                } else {
+                    currentPage = Integer.parseInt(command);
+                    showPage(currentPage, numberOfPages);
+                }
+            } else {
+                System.out.println("Invalid input!");
+            }
+        }
+    }
+
+    private static void showPurchasable(){
+        int index = 1;
+        updatePurchasableCards();
+        showTopBar();
+        for(Card card: purchasableCards){
+            card.showPurchaseProperties(index, NAME_PAD, COST_PAD, DETAILS_PAD);
+            index++;
+        }
+    }
+
+    static private void showPage(int page, int numberOfPages) {
+        int start = CARDS_ON_PAGE * (page - 1);
+        int end = CARDS_ON_PAGE * (page);
+        showTopBar();
+        IntStream.range(start, Math.min(end, upgradableCards.size()))
+                .forEach(i -> upgradableCards.get(i).showUpgradeProperties(i + 1, NAME_PAD, COST_PAD, DETAILS_PAD));
+        MainMenu.showBottomBar(numberOfPages, page);
+    }
+
+    static private void showTopBar() {
+        String name = String.format("%-" + Shop.NAME_PAD + "s", "Name");
+        String cost = String.format("%-" + Shop.COST_PAD + "s", "Cost");
+        String details = String.format("%-" + Shop.DETAILS_PAD + "s", "Details");
+        System.out.println(name + "|" + cost + "|" + details);
+    }
+
+    static private void upgradeCard(Matcher matcher) {
+        String input = matcher.group("cardNum");
+        if (!input.matches("^\\d+$")) {
+            System.out.println("Card index should be a number");
             return;
         }
-        if (input.matches(chooseCardCommand)) {
-            matcher = getCommandMatcher(input, chooseCardCommand);
-            if (matcher.find() && Card.findCardInlist("name",matcher.group("cardName"),upgradeableCards) != null) {
-                if (upgradeableCards.containsKey(Card.findCardInlist("name",matcher.group("cardName"),upgradeableCards).getId()))
-                    chooseCardToUpgrade(matcher, scanner,upgradeableCards.get(Card.findCardInlist("name",matcher.group("cardName"),upgradeableCards).getId()));
-                else
-                    System.out.println("Please choose an upgradable card");
-            }
-        }
-    }
-    public static void showAvailable(Matcher matcher, Scanner scanner){
-        LinkedHashMap<Integer, Card> availableCards = new LinkedHashMap<>();
-        int i = 0;
-        Random random = new Random();
-        while (i < 6){
-            Integer cardId = random.nextInt(Card.allCards.size());
-            if (!loggedInUser.getDeckOfCards().containsKey(cardId)){
-                availableCards.put(cardId, Card.allCards.get(cardId));
-                System.out.print(Card.allCards.get(cardId).getName() + " | ");
-                if (i == 4)
-                    System.out.println();
-                else
-                    System.out.println(" | ");
-                i++;
-            }
-        }
-        System.out.println("Please choose a card to buy or back to shop");
-        String input = scanner.nextLine();
-        if (input.matches(backCommand)){
+        int cardNumber = Integer.parseInt(input) - 1;
+        updateUpgradableCards();
+        if (cardNumber >= upgradableCards.size()) {
+            System.out.println("Out of bound index!");
             return;
         }
-        if (input.matches(showAvailableCards)){
-            matcher = getCommandMatcher(input, chooseCardCommand);
-            if (matcher.find() && Card.findCardInlist("name",matcher.group("cardName"),availableCards) != null) {
-                if (availableCards.containsKey(Card.findCardInlist("name",matcher.group("cardName"),availableCards).getId()))
-                    chooseCardToBuy(matcher, scanner,availableCards.get(Card.findCardInlist("name",matcher.group("cardName"),availableCards).getId()));
-                else
-                    System.out.println("Please choose an available card");
-            }
-        }
-    }
-    private static void chooseCardToBuy(Matcher matcher, Scanner scanner, Card card){
-        card.showProperties(25,false);
-        System.out.println();
-        System.out.println("buy " + card.getName() + " or back");
-
-        String input = scanner.nextLine();
-        if (input.matches(backCommand)){
-            showAvailable(matcher,scanner);
-        }
-        if (input.matches(buyCommand)){
-            matcher = getCommandMatcher(input, buyCommand);
-            if (matcher.find()) {
-                if (card.getPrice() <= loggedInUser.getWallet()) {
-                    loggedInUser.addToDeck(card.getId(),card);
-                    loggedInUser.setCardsSeries(loggedInUser.getCardsSeries() + "," + card.getId() + "_" + card.getLevel());
-                }
-                else {
-                    System.out.println("You don't have enough coins for buying " + card.getName());
-                    showAvailable(matcher, scanner);
-                }
-            }
+        Card selectedCard = upgradableCards.get(cardNumber);
+        if (selectedCard.getUpgradeCost() > loggedInUser.getWallet()) {
+            System.out.println("You don't have enough money!");
+            return;
         }
 
+        loggedInUser.reduceWallet(selectedCard.getUpgradeCost());
+        selectedCard.upgrade();
+        loggedInUser.updateCardSeriesByCards();
+        System.out.println("Upgraded Card \"" + selectedCard.getName() + "\" to level " + selectedCard.getLevel());
     }
 
-    private static void chooseCardToUpgrade(Matcher matcher, Scanner scanner, Card card){
-        //padding
-        String format = "%-15s : %s%n";
-        System.out.printf(format, "Name", card.getName());
-        System.out.printf(format, "Level", card.getLevel() + " --> " + (card.getLevel() + 1));
-        System.out.printf(format, "ACC", card.getAcc() + " --> " + Card.levelUpFormula(card.getAcc(), card.getLevel()));
-        System.out.printf(format, "Attack/Defense", card.getAttackOrDefense() + " --> " + Card.levelUpFormula(card.getAttackOrDefense(), card.getLevel()));
-        System.out.printf(format, "Damage", card.getDamage() + " --> " + Card.levelUpFormula(card.getDamage(), card.getLevel()));
-        System.out.printf(format, "Upgrade cost", card.getUpgradeCost());
-        System.out.println();
-        System.out.println("Upgrade " + card.getName() + " or back");
-        String input = scanner.nextLine();
-        if (input.matches(backCommand)){
-            showUpgradeable(matcher,scanner);
+    static private void buyCard(Matcher matcher){
+        String input = matcher.group("cardNum");
+        if(!input.matches("^\\d+$")){
+            System.out.println("Invalid card number");
+            return;
         }
-        if (input.matches(upgradeCommand)){
-            matcher = getCommandMatcher(input, upgradeCommand);
-            if (matcher.find()) {
-                if (card.getUpgradeCost() <= loggedInUser.getWallet()) {
-                    card.setAcc(Card.levelUpFormula(card.getAcc(), card.getLevel()));
-                    card.setAttackOrDefense(Card.levelUpFormula(card.getAttackOrDefense(), card.getLevel()));
-                    card.setDamage(Card.levelUpFormula(card.getDamage(), card.getLevel()));
-                    card.setUpgradeCost(Card.levelUpFormula(card.getUpgradeCost(), card.getLevel()));
-                    card.setLevel(card.getLevel() + 1);
-                    System.out.println(card.getName() + " level has been upgraded to " + card.getLevel());
-                }
-                else {
-                    System.out.println("You don't have enough coins for upgrading " + card.getName());
-                    showUpgradeable(matcher, scanner);
-                }
+        int cardNumber = Integer.parseInt(input) - 1;
+        updatePurchasableCards();
+        if(cardNumber >= purchasableCards.size()){
+            System.out.println("Out of bound index!");
+            return;
+        }
+        Card selectedCard = purchasableCards.get(cardNumber);
+        if (selectedCard.getPrice() > loggedInUser.getWallet()) {
+            System.out.println("You don't have enough money!");
+            return;
+        }
+        loggedInUser.reduceWallet(selectedCard.getPrice());
+        loggedInUser.getCards().put(selectedCard.getId(), selectedCard);
+        loggedInUser.updateCardSeriesByCards();
+        System.out.println("Purchased Card \"" + selectedCard.getName() + "\"");
+    }
+
+    static private void updateUpgradableCards() {
+        upgradableCards = new ArrayList<>();
+        for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
+            Card card = entry.getValue();
+            if (loggedInUser.getLevel() > card.getLevel() && card.isUpgradable()) {
+                upgradableCards.add(entry.getValue());
             }
         }
     }
 
+    static private void updatePurchasableCards() {
+        purchasableCards = new ArrayList<>();
+        HashSet<Integer> repeatedIds = new HashSet<>();
+        int shieldOrSpellCounter = 0;
+        int timeStrikeCounter = 0;
+        int commonCounter = 0;
+        for (Card card : Card.allCards.values()) {
+            if (!loggedInUser.getCards().containsKey(card.getId())) {
+                switch (card.getType()) {
+                    case spell, shield -> {
+                        if (shieldOrSpellCounter < purchasableShieldOrSpell) {
+                            shieldOrSpellCounter++;
+                            purchasableCards.add(card.clone());
+                            repeatedIds.add(card.getId());
+                        }
+                    }
+                    case common -> {
+                        if (commonCounter < purchasableCommon) {
+                            commonCounter++;
+                            purchasableCards.add(card.clone());
+                            repeatedIds.add(card.getId());
+                        }
+                    }
+                    case timeStrike -> {
+                        if (timeStrikeCounter < purchasableTimeStrike) {
+                            timeStrikeCounter++;
+                            purchasableCards.add(card.clone());
+                            repeatedIds.add(card.getId());
+                        }
+                    }
+                }
+            }
+        }
+
+        // If available cards are less than purchasableCards with the given conditions
+        // then it will be filled randomly
+        for (Card card : Card.allCards.values()) {
+            boolean hasRepeated = loggedInUser.getCards().containsKey(card.getId()) || repeatedIds.contains(card.getId());
+            if (!hasRepeated && purchasableCards.size() < purchasableAmount) {
+                purchasableCards.add(card.clone());
+            }
+        }
+    }
+
+    static private void showCardProperties(String input, ArrayList<Card> list){
+        if(!input.matches("^\\d+$")){
+            System.out.println("Card index should be a number!");
+            return;
+        }
+        int index = Integer.parseInt(input) - 1;
+        if(index >= list.size()){
+            System.out.println("Out of bound index!");
+            return;
+        }
+        list.get(index).showProperties(PROP_PAD);
+    }
 }

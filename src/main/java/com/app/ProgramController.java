@@ -1,8 +1,10 @@
 package com.app;
 
-import com.database.*;
+import com.database.Connect;
 import com.menu.*;
 import com.menu.authentication.*;
+import com.menu.play.Play;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -13,8 +15,6 @@ public class ProgramController {
         Card.allCards = Connect.getCards();
         User.signedUpUsers = Connect.getUsers();
         String logoutCommand = "^log out$";
-
-
         while (true) {
             String command = scanner.nextLine().trim();
             if (checkQuit(command)) {

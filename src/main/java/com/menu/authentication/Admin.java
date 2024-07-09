@@ -1,10 +1,8 @@
-package com.menu;
+package com.menu.authentication;
 
-import com.app.Card;
-import com.app.ProgramController;
-import com.app.Error;
-import com.app.User;
+import com.app.*;
 import com.database.Connect;
+import com.menu.Menu;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -16,10 +14,9 @@ public class Admin extends Menu {
 
     public static void handleInput(String input, Scanner scanner) throws SQLException {
         if (input.matches(backCommand)){
-            if (Error.loginFirst())
-                return;
-            currentMenu = MenuType.Main;
+            currentMenu = MenuType.Authentication;
             showCurrentMenu();
+            return;
         }
         if (input.matches(addCardCommand)) {
             addCard(scanner);
@@ -34,8 +31,8 @@ public class Admin extends Menu {
 
     private static void showUsers(int namePad, int levelPad, int walletPad){
         System.out.println(String.format("%-" + namePad + "s", "username") + "|" +
-                            String.format("%-" + levelPad + "s", "lvl") + "|" +
-                            String.format("%-" + walletPad + "s", "wallet"));
+                String.format("%-" + levelPad + "s", "lvl") + "|" +
+                String.format("%-" + walletPad + "s", "wallet"));
         System.out.println("-".repeat(namePad + levelPad + walletPad + 2));
         for(User user: User.signedUpUsers.values()){
             String username = String.format("%-" + namePad + "s", user.getUsername());
@@ -93,9 +90,10 @@ public class Admin extends Menu {
             return;
         }
 
-        Connect.insertCard(name, type, 1, price, damage, duration, upgradeCost, attack_defence, -1,
-                0, ACC, isBreakable, String.valueOf(getEnumValueByIndex(Card.Characters.class, characterIndex)));
+        Connect.insertCard(name, type, 1, price, damage, duration, upgradeCost, attack_defence, "",
+                ACC, isBreakable, String.valueOf(getEnumValueByIndex(Card.Characters.class, characterIndex)));
 
+        Card.allCards = Connect.getCards();
         System.out.println("Card created successfully!");
     }
 
@@ -120,8 +118,8 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(attack_def)){
             return -2;
         }
-        if (!attack_def.matches("\\d+")) {
-            System.out.println("Attack/Def should be a number!");
+        if (!attack_def.matches("^\\d+$")) {
+            System.out.println("Attack/Def should be a positive number!");
             return -1;
         }
         if (Integer.parseInt(attack_def) < 10 || Integer.parseInt(attack_def) > 100) {
@@ -137,7 +135,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(duration)){
             return -2;
         }
-        if (!duration.matches("\\d+")) {
+        if (!duration.matches("^\\d+$")) {
             System.out.println("Duration should be a number!");
             return -1;
         }
@@ -154,7 +152,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(damage)){
             return -2;
         }
-        if (!damage.matches("\\d+")) {
+        if (!damage.matches("^\\d+$")) {
             System.out.println("Damage should be a number!");
             return -1;
         }
@@ -171,7 +169,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(upgradeCost)){
             return -2;
         }
-        if (!upgradeCost.matches("\\d+")) {
+        if (!upgradeCost.matches("^\\d+$")) {
             System.out.println("Upgrade cost should be a number!");
             return -1;
         }
@@ -199,7 +197,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(price)){
             return -2;
         }
-        if (!price.matches("\\d+")) {
+        if (!price.matches("^\\d+$")) {
             System.out.println("Price should be a number!");
             return -1;
         }
@@ -212,7 +210,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(ACC)){
             return -2;
         }
-        if (!ACC.matches("\\d+")) {
+        if (!ACC.matches("^\\d+$")) {
             System.out.println("ACC should be a number!");
             return -1;
         }
@@ -238,7 +236,7 @@ public class Admin extends Menu {
         if(ProgramController.checkQuit(character)){
             return -2;
         }
-        if (!character.matches("\\d+")) {
+        if (!character.matches("^\\d+$")) {
             System.out.println("Character should be a number");
             return -1;
         }
@@ -290,7 +288,7 @@ public class Admin extends Menu {
 
         while(true){
             showTopBar(pad);
-            Card.allCards.get(id).showProperties(pad,false);
+            Card.allCards.get(id).showProperties(pad);
             editField(id, scanner);
             System.out.print("Do you wish to continue editing? (yes/no)");
             String ans = scanner.nextLine().trim();

@@ -1,12 +1,10 @@
 package com.menu.authentication;
 
-import com.app.Error;
-import com.app.ProgramController;
-import com.app.User;
+import com.app.*;
 import com.menu.Menu;
+import com.app.Error;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -22,7 +20,7 @@ public class Login extends Menu {
     final static public String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";
     final static public String adminLogin = "^login admin (?<Pass>\\S+)$";
 
-    public static void handleInput(String input, Scanner scanner) throws IOException, SQLException {
+    public static void handleInput(String input, Scanner scanner) throws IOException{
         if(input.matches(loginCommand)){
             if(Error.alreadyLoggedIn())
                 return;
@@ -44,11 +42,12 @@ public class Login extends Menu {
             matcher.find();
             resetPassword(matcher, scanner);
         }
-        if(input.matches(adminLogin) && Menu.currentMenu == MenuType.Main){
+        if(input.matches(adminLogin)){
             Matcher matcher = getCommandMatcher(input, adminLogin);
             matcher.find();
             String pass = matcher.group("Pass");
             if(pass.equals(adminPass)){
+                System.out.println("Welcome Admin!");
                 Menu.currentMenu = Menu.MenuType.Admin;
             }
             else{
@@ -125,7 +124,7 @@ public class Login extends Menu {
                 command = scanner.nextLine().trim();
                 while(true){
                     if(ProgramController.checkQuit(command)){
-                        System.out.println("You will be directed to the main com.menu");
+                        System.out.println("You will be directed to the main menu");
                         return;
                     }
                     if(SignUp.isValidPasswordFormat(command)){

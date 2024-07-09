@@ -27,7 +27,7 @@ public class Connect {
 
     public static void insertUser(User user) throws SQLException {
         String sql = "INSERT INTO user(user_level, user_username, user_cards, user_password, user_nickname, user_email, "
-                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet) VALUES(?,?,?,?,?,?,?,?,?)";
+                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet, user_XP) VALUES(?,?,?,?,?,?,?,?,?,?)";
         try {
             connectToDatabase();
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -40,8 +40,9 @@ public class Connect {
             pstmt.setInt(7, user.getRecoveryQ());
             pstmt.setString(8, user.getRecoveryAns());
             pstmt.setInt(9, user.getWallet());
+            pstmt.setInt(10, user.getXP());
             pstmt.executeUpdate();
-            //System.out.println("user has been added to the com.database.");
+            //System.out.println("user has been added to the database.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
@@ -68,7 +69,8 @@ public class Connect {
                 user.setRecoveryAns(rs.getString("user_recoveryAnswer"));
                 user.setWallet(rs.getInt("user_wallet"));
                 user.setID(rs.getInt("user_id"));
-                user.getCardsFromTable();
+                user.setXP(rs.getInt("user_XP"));
+                user.updateCardsByCardSeries();
                 userMap.put(rs.getInt("user_id"), user);
             }
             //System.out.println("Users has been retrieved and added to the LinkedHashMap.");
@@ -101,7 +103,7 @@ public class Connect {
                 card.setType(Card.CardType.valueOf(rs.getString("card_type")));
                 card.setId(rs.getInt("card_id"));
                 card.setAttackOrDefense(rs.getInt("card_attackOrDefense"));
-                card.setSpecialProperty(rs.getInt("card_specialProperty"));
+                card.setRarity(rs.getString("rarity"));
                 card.setCharacter(String.valueOf(convertCharacterType(rs.getInt("card_character"))));
 
                 cardMap.put(rs.getInt("card_id"), card);
@@ -117,11 +119,11 @@ public class Connect {
     }
 
     public static void insertCard(String name, String type, Integer level, Integer price, Integer damage, Integer duration,
-                                  Integer upgradeCost, Integer attackOrDefense, Integer user_id, Integer specialProperty,
+                                  Integer upgradeCost, Integer attackOrDefense, String rarity,
                                   Integer Acc, Integer isBreakable, String character) throws SQLException {
         connectToDatabase();
-        String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, user_id, card_specialProperty, card_Acc, card_isBreakable, card_character) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, rarity, card_Acc, card_isBreakable, card_character) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, name);
@@ -132,14 +134,13 @@ public class Connect {
             pstmt.setInt(6, duration);
             pstmt.setInt(7, upgradeCost);
             pstmt.setInt(8, attackOrDefense);
-            pstmt.setInt(9, user_id);
-            pstmt.setInt(10, specialProperty);
-            pstmt.setInt(11, Acc);
-            pstmt.setInt(12, isBreakable);
-            pstmt.setInt(13, Integer.parseInt(convertCharacterType(character)));
+            pstmt.setString(9, rarity);
+            pstmt.setInt(10, Acc);
+            pstmt.setInt(11, isBreakable);
+            pstmt.setInt(12, Integer.parseInt(convertCharacterType(character)));
 
             pstmt.executeUpdate();
-//            System.out.println("card has been added to the com.database.");
+//            System.out.println("card has been added to the database.");
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         } finally {
