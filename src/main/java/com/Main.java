@@ -7,29 +7,20 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Objects;
+
 
 public class Main extends javafx.application.Application{
-    static public Parent root;
-    static public Scene scene;
-    static public Stage stage;
-
-    public static void main(String[] args) throws SQLException, IOException {
-        launch(args);
-        ProgramController controller = new ProgramController();
-        controller.run();
-    }
-
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        stage = primaryStage;
-        stage.setResizable(false);
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("Main-view.fxml")));
-        root = loader.load();
-        scene = new Scene(root, 400, 400);
-        stage.setTitle("Just a test!");
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage stage) throws IOException {
+        {
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/SignUp-view.fxml"));
+            Scene scene = new Scene(fxmlLoader.load(), 1050, 700);
+            stage.setTitle("War city");
+            stage.setScene(scene);
+            stage.show();
+        }
+    }
+    public static void main(String[] args) {
+        launch();
     }
 }

@@ -81,12 +81,12 @@
                                   <RowConstraints minHeight="10.0" percentHeight="22.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <TextField focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="USERNAME OR EMAIL" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <TextField fx:id="username_label" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="USERNAME OR EMAIL" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <font>
                                           <Font name="Orbitron-Bold" size="13.0" />
                                        </font>
                                     </TextField>
-                                    <Label alignment="CENTER" prefHeight="3.0" prefWidth="50.0" style="-fx-text-fill: red;" styleClass="text" text="ERROR" textAlignment="CENTER" textFill="RED" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP" />
+                                    <Label fx:id="erroe_label" alignment="CENTER" prefHeight="3.0" prefWidth="50.0" style="-fx-text-fill: red;" styleClass="text" text="ERROR" textAlignment="CENTER" textFill="RED" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP" />
                                  </children>
                               </GridPane>
                               <GridPane GridPane.rowIndex="1">
@@ -101,7 +101,7 @@
                                     <RowConstraints minHeight="10.0" percentHeight="35.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <PasswordField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="PASSWORD" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <PasswordField fx:id="password_label" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="PASSWORD" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <font>
                                           <Font name="Orbitron-Bold" size="14.0" />
                                        </font>
@@ -124,12 +124,12 @@
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Label styleClass="text" text="You didn't sign up yet?" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="signUp_label" styleClass="text" text="You didn't sign up yet?" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
                                     </Label>
-                                    <Label styleClass="text" text="Forgot password?" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="forgot_label" styleClass="text" text="Forgot password?" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -149,7 +149,6 @@
             </GridPane>
          </children>
       </GridPane>
-      <Label text="Label" />
    </children>
    <opaqueInsets>
       <Insets />

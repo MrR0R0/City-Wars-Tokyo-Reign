@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1050.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1050.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.SignUpController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
@@ -26,7 +26,7 @@
     <children>
         <ImageView blendMode="DARKEN" cache="true" cacheHint="QUALITY" fitHeight="900.0" fitWidth="1575.0" nodeOrientation="INHERIT" pickOnBounds="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
             <image>
-                <Image url="@../../images/Designer_(3)-transformed.png" />
+                <Image url="@../images/Designer_(3)-transformed.png" />
             </image>
             <GridPane.margin>
                 <Insets />
@@ -44,7 +44,7 @@
                 <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <GridPane visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -85,7 +85,7 @@
                                                 <RowConstraints minHeight="10.0" percentHeight="27.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <TextField focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="USERNAME" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                <TextField fx:id="username_label" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="USERNAME" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                     <font>
                                                         <Font name="Orbitron-Bold" size="18.0" />
                                                     </font>
@@ -104,7 +104,7 @@
                                                 <RowConstraints minHeight="10.0" percentHeight="27.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <TextField focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="EMAIL" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                <TextField fx:id="email_label" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="EMAIL" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                     <font>
                                                         <Font name="Orbitron-Bold" size="18.0" />
                                                     </font>
@@ -123,7 +123,7 @@
                                                 <RowConstraints minHeight="10.0" percentHeight="27.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                    <PasswordField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="PASSWORD" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <PasswordField fx:id="password_label" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="PASSWORD" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -131,14 +131,14 @@
                                           <String fx:value="text" />
                                           <String fx:value="password-field" />
                                        </styleClass></PasswordField>
-                                                <ImageView fitHeight="35.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+                                                <ImageView fx:id="pinkDie_image" fitHeight="35.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                                     <image>
-                                                        <Image url="@../../images/design-1720427905886.png" />
+                                                        <Image url="@../images/Remove-bg.ai_1720428861454.png" />
                                                     </image>
                                                 </ImageView>
-                                                <ImageView fitHeight="35.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                                <ImageView fx:id="blueDie_image" fitHeight="35.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                                     <image>
-                                                        <Image url="@../../images/Remove-bg.ai_1720428861454.png" />
+                                                        <Image url="@../images/design-1720427905886.png" />
                                                     </image>
                                                 </ImageView>
                                             </children>
@@ -155,7 +155,7 @@
                                                 <RowConstraints minHeight="10.0" percentHeight="27.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                  <children>
-                                    <PasswordField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="CONFIRM PASSWORD" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <PasswordField fx:id="confirmPass_label" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="CONFIRM PASSWORD" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
@@ -180,7 +180,7 @@
                                   <RowConstraints minHeight="10.0" percentHeight="40.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="NEXT" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                    <Button fx:id="firstNext_but" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="NEXT" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                        <styleClass>
                                           <String fx:value="text" />
                                           <String fx:value="menuButton" />
@@ -198,7 +198,7 @@
                                         <Font name="Orbitron-Bold" size="34.0" />
                                     </font>
                                 </Label>
-                        <Label style="-fx-text-fill: #ff4747;" styleClass="text" text="Label" textFill="#ff4747" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                        <Label fx:id="firstError_label" style="-fx-text-fill: #ff4747;" styleClass="text" text="Label" textFill="#ff4747" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                            <font>
                               <Font size="13.0" />
                            </font>
@@ -207,7 +207,7 @@
                         </GridPane>
                     </children>
                 </GridPane>
-            <GridPane visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
@@ -248,7 +248,7 @@
                                     <RowConstraints minHeight="10.0" percentHeight="27.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <TextField focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="NICKNAME" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <TextField fx:id="nickname_label" focusTraversable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="NICKNAME" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <font>
                                           <Font name="Orbitron-Bold" size="18.0" />
                                        </font>
@@ -279,7 +279,7 @@
                                     <RowConstraints minHeight="10.0" percentHeight="27.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <TextField maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="ANSWER" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="answer_label" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="ANSWER" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                  </children>
                               </GridPane>
                               <GridPane GridPane.rowIndex="4">
@@ -296,7 +296,7 @@
                                     <RowConstraints minHeight="10.0" percentHeight="40.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="NEXT" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                    <Button fx:id="secondNext_but" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="NEXT" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                        <styleClass>
                                           <String fx:value="text" />
                                           <String fx:value="nextButton" />
@@ -305,7 +305,7 @@
                                           <Font name="Orbitron-Medium" size="12.0" />
                                        </font>
                                     </Button>
-                                    <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="BACK" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                    <Button fx:id="back_but" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="BACK" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                        <styleClass>
                                           <String fx:value="text" />
                                           <String fx:value="backButton" />
@@ -328,7 +328,7 @@
                                     <RowConstraints minHeight="10.0" percentHeight="27.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <ComboBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="SECURITY QUESTION" stylesheets="@../CSS/comboBox.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <ComboBox fx:id="question_comboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="SECURITY QUESTION" stylesheets="@../CSS/comboBox.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                  </children>
                               </GridPane>
                            </children>
@@ -338,7 +338,7 @@
                               <Font name="Orbitron-Bold" size="34.0" />
                            </font>
                         </Label>
-                        <Label style="-fx-text-fill: #ff4747;" styleClass="text" text="Label" textFill="#ff4747" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                        <Label fx:id="secondError_label" style="-fx-text-fill: #ff4747;" styleClass="text" text="Label" textFill="#ff4747" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                            <font>
                               <Font size="13.0" />
                            </font>

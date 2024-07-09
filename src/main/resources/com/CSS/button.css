@@ -9,7 +9,7 @@
     /*-fx-padding: 10 20;*/
     -fx-border-color:linear-gradient(to bottom, #ff00ff, #6900b9);
     -fx-alignment: center;
-    -fx-border-width: 3;
+    -fx-border-width: 3 0 3 3;
     /*-fx-effect: dropshadow(gaussian, rgba(255, 0, 255, 0.75), 10, 0.5, 0, 0);*/
     -fx-effect: dropshadow(three-pass-box, rgba(71, 0, 255, 0.75), 10, 0.2, 0, 0);
     /*-fx-effect: dropshadow(gaussian, rgba(255, 0, 255, 0.56), 10, 0.5, 0, 0); !* Neon glow effect *!*/

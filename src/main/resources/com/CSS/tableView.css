@@ -86,3 +86,31 @@
  /*       -fx-border-width: 0 1 0 1;*/
  /*       -fx-border-color: purple;*/
  /*   }*/
+
+
+.table-view .increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.table-view .scroll-bar:horizontal .track,
+.table-view .scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.table-view .scroll-bar:horizontal .thumb,
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: #2e0040;
+    -fx-background-radius: 5em;
+}
+.table-view .scroll-bar:vertical .corner{
+    -fx-background-color: transparent;
+}
+.table-view .scroll-bar:horizontal .corner{
+    -fx-background-color: transparent;
+}
+.table-view .scroll-pane > .corner {
+    -fx-background-color: transparent;
+}

@@ -36,7 +36,7 @@ public class Shop extends Menu{
         for (Map.Entry<Integer, Card> entry : loggedInUser.getDeckOfCards().entrySet()) {
             i++;
             Card card = entry.getValue();
-            if (loggedInUser.getLevel() >= card.getUpgradeLevel()) {
+            if (loggedInUser.getLevel() >= card.getLevel()) {
                 upgradeableCards.put(card.getId(), card);
                 System.out.print(card.getName() + " | ");
                 if (i == 6)

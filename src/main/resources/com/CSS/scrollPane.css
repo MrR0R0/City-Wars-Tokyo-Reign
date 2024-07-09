@@ -1,0 +1,49 @@
+.scroll-bar:horizontal, .scroll-bar:vertical{
+    -fx-background-color: transparent;
+    -fx-background-radius: 5;
+}
+
+.scroll-bar:hover{
+    -fx-effect: dropshadow(two-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+}
+
+.increment-button, .decrement-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #2e0040;
+    -fx-background-radius: 5em;
+}
+.scroll-bar:vertical .corner{
+    -fx-background-color: transparent;
+}
+.scroll-bar:horizontal .corner{
+    -fx-background-color: transparent;
+}
+.scroll-pane > .corner {
+    -fx-background-color: transparent;
+}
+.scroll-pane {
+    -fx-background: transparent;
+
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(255, 89, 0, 0.5), rgba(126, 0, 120, 0.7));
+    /*-fx-padding: 10 20;*/
+    -fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, reflect, #4a009d 0.0%, #ff24f3 100.0%);
+    /*-fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);*/
+    -fx-alignment: center;
+    -fx-border-width: 3 3 3 3;
+    -fx-prompt-text-fill: #a8ffff;
+    -fx-prompt-font-weight: bold;
+}
+
+
