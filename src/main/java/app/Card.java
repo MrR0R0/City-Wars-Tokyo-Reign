@@ -1,13 +1,10 @@
 package app;
 
 import database.Connect;
-import menu.Shop;
 
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Card implements Cloneable {
     public static final String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
@@ -258,10 +255,6 @@ public class Card implements Cloneable {
         return id;
     }
 
-    public String getRarity() {
-        return rarity;
-    }
-
     public Integer getAttackOrDefense() {
         return attackOrDefense;
     }
@@ -344,24 +337,6 @@ public class Card implements Cloneable {
 
     public void boostACC(Double multiplier) {
         acc = (int) (acc * multiplier);
-    }
-
-    public void addToTable() throws SQLException {
-        Connect.insertCard(this.name, String.valueOf(this.type), this.level, this.price, this.damage, this.duration, this.upgradeCost,
-                this.attackOrDefense, this.upgradeCost, this.rarity, this.acc, isBreakable, this.character);
-    }
-
-    public static void setCardLevelFromUser(User user) {
-        String[] idAndLevelOfCards = user.getCardsSeries().split(",");
-        Pattern pattern = Pattern.compile(CARD_REGEX);
-        for (String idAndLevel : idAndLevelOfCards) {
-            Matcher matcher = pattern.matcher(idAndLevel);
-            if (matcher.find()) {
-                String id = matcher.group("id");
-                String level = matcher.group("level");
-                user.getCards().get(Integer.parseInt(id)).setLevel(Integer.parseInt(level));
-            }
-        }
     }
 
     public static Integer levelUpFormula(Integer value, Integer level) {

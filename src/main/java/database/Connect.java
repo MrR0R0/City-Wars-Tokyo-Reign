@@ -119,11 +119,11 @@ public class Connect {
     }
 
     public static void insertCard(String name, String type, Integer level, Integer price, Integer damage, Integer duration,
-                                  Integer upgradeCost, Integer attackOrDefense, Integer user_id, String rarity,
+                                  Integer upgradeCost, Integer attackOrDefense, String rarity,
                                   Integer Acc, Integer isBreakable, String character) throws SQLException {
         connectToDatabase();
-        String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, user_id, rarity, card_Acc, card_isBreakable, card_character) "
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO card(card_name, card_type, card_level, card_price, card_damage, card_duration, card_upgradeCost, card_attackOrDefense, rarity, card_Acc, card_isBreakable, card_character) "
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             PreparedStatement pstmt = connection.prepareStatement(sql);
             pstmt.setString(1, name);
@@ -134,11 +134,10 @@ public class Connect {
             pstmt.setInt(6, duration);
             pstmt.setInt(7, upgradeCost);
             pstmt.setInt(8, attackOrDefense);
-            pstmt.setInt(9, user_id);
-            pstmt.setString(10, rarity);
-            pstmt.setInt(11, Acc);
-            pstmt.setInt(12, isBreakable);
-            pstmt.setInt(13, Integer.parseInt(convertCharacterType(character)));
+            pstmt.setString(9, rarity);
+            pstmt.setInt(10, Acc);
+            pstmt.setInt(11, isBreakable);
+            pstmt.setInt(12, Integer.parseInt(convertCharacterType(character)));
 
             pstmt.executeUpdate();
 //            System.out.println("card has been added to the database.");

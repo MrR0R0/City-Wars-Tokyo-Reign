@@ -16,10 +16,9 @@ public class Admin extends Menu {
 
     public static void handleInput(String input, Scanner scanner) throws SQLException {
         if (input.matches(backCommand)){
-            if (Error.loginFirst())
-                return;
-            currentMenu = MenuType.Main;
+            currentMenu = MenuType.Authentication;
             showCurrentMenu();
+            return;
         }
         if (input.matches(addCardCommand)) {
             addCard(scanner);
@@ -93,9 +92,10 @@ public class Admin extends Menu {
             return;
         }
 
-        Connect.insertCard(name, type, 1, price, damage, duration, upgradeCost, attack_defence, -1,
-                "", ACC, isBreakable, String.valueOf(getEnumValueByIndex(Card.Characters.class, characterIndex)));
+        Connect.insertCard(name, type, 1, price, damage, duration, upgradeCost, attack_defence, "",
+                ACC, isBreakable, String.valueOf(getEnumValueByIndex(Card.Characters.class, characterIndex)));
 
+        Card.allCards = Connect.getCards();
         System.out.println("Card created successfully!");
     }
 

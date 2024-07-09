@@ -43,11 +43,12 @@ public class Login extends Menu {
             matcher.find();
             resetPassword(matcher, scanner);
         }
-        if(input.matches(adminLogin) && Menu.currentMenu == MenuType.Main){
+        if(input.matches(adminLogin)){
             Matcher matcher = getCommandMatcher(input, adminLogin);
             matcher.find();
             String pass = matcher.group("Pass");
             if(pass.equals(adminPass)){
+                System.out.println("Welcome Admin!");
                 Menu.currentMenu = Menu.MenuType.Admin;
             }
             else{
