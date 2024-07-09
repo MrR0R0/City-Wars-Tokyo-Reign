@@ -70,7 +70,7 @@ public class Connect {
                 user.setWallet(rs.getInt("user_wallet"));
                 user.setID(rs.getInt("user_id"));
                 user.setXP(rs.getInt("user_XP"));
-                user.getCardsFromTable();
+                user.updateCardsByCardSeries();
                 userMap.put(rs.getInt("user_id"), user);
             }
             //System.out.println("Users has been retrieved and added to the LinkedHashMap.");

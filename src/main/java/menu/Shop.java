@@ -3,14 +3,16 @@ package menu;
 import app.Card;
 import app.Error;
 import app.ProgramController;
+import app.User;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.stream.IntStream;
 
-public class Shop extends Menu{
-    final static private int CARDS_ON_PAGE = 10, NAME_PAD = 25, DETAILS_PAD = 35, COST_PAD = 5;
+public class Shop extends Menu {
+    final static private int CARDS_ON_PAGE = 10, NAME_PAD = 27, DETAILS_PAD = 35, COST_PAD = 5;
     final static String upgradeCardCommand = "(?i)upgrade card number (?<cardNum>\\d+)";
+    final static String showWalletCommand = "(?i)show wallet";
     final static String buyCommand = "^(?i)buy\\s*$";
     final static String showUpgradeableCards = "^(?i)show\\s+upgradable\\s+card$";
     final static String showAvailableCards = "^(?i)show\\s+available\\s+card$";
@@ -25,6 +27,9 @@ public class Shop extends Menu{
                 showCurrentMenu();
             }
         }
+        else if(input.matches(showWalletCommand)){
+            System.out.println("Balance: " + loggedInUser.getWallet());
+        }
         else if (input.matches(showUpgradeableCards)){
             showUpgradeable(scanner);
         }
@@ -35,13 +40,7 @@ public class Shop extends Menu{
         }
     }
     private static void showUpgradeable(Scanner scanner){
-        upgradableCards = new ArrayList<>();
-        for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
-            Card card = entry.getValue();
-            if (loggedInUser.getLevel() > card.getLevel() && card.isUpgradable()) {
-                upgradableCards.add(entry.getValue());
-            }
-        }
+        updateUpgradableCards();
 
         int numberOfPages = Math.ceilDiv(upgradableCards.size(), CARDS_ON_PAGE);
         int currentPage = 1;
@@ -52,9 +51,9 @@ public class Shop extends Menu{
 
         while (true) {
             System.out.println("For viewing other pages enter the page's number;");
-            System.out.println("to return to the shop menu, enter 'quit'");
+            System.out.println("to return to the shop menu, enter 'back'");
             String command = scanner.nextLine().trim().replaceAll(" +", " ");
-            if (ProgramController.checkQuit(command)) {
+            if (command.toLowerCase().matches("back")) {
                 System.out.println("You will be directed to Shop menu");
                 return;
             } else if (command.matches("^\\d+$")) {
@@ -85,11 +84,39 @@ public class Shop extends Menu{
     }
 
     static private void upgradeCard(Matcher matcher){
-        String cardNumber = matcher.group("cardNum");
-        if(!cardNumber.matches("^\\d+$")){
+        String input = matcher.group("cardNum");
+        if(!input.matches("^\\d+$")){
             System.out.println("Card index should be a number");
+            return;
+        }
+        int cardNumber = Integer.parseInt(input) - 1;
+        updateUpgradableCards();
+        if(cardNumber >= upgradableCards.size()){
+            System.out.println("Out of bound index!");
+            return;
+        }
+        Card selectedCard = upgradableCards.get(cardNumber);
+        if(selectedCard.getUpgradeCost() > loggedInUser.getWallet()){
+            System.out.println("You don't have enough money!");
+            return;
+        }
+
+        loggedInUser.reduceWallet(selectedCard.getUpgradeCost());
+        selectedCard.upgrade();
+        loggedInUser.updateCardSeriesByCards();
+        System.out.println("Upgraded Card \"" + selectedCard.getName() + "\" to level " + selectedCard.getLevel());
+    }
+
+    static private void updateUpgradableCards(){
+        upgradableCards = new ArrayList<>();
+        for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
+            Card card = entry.getValue();
+            if (loggedInUser.getLevel() > card.getLevel() && card.isUpgradable()) {
+                upgradableCards.add(entry.getValue());
+            }
         }
     }
+
 
     /*
     public static void showAvailable(Scanner scanner){

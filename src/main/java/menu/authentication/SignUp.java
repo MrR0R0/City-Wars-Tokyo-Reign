@@ -181,7 +181,7 @@ public class SignUp extends Menu {
                 User tmpUser = new User(username, pass, nickname, email, recoveryAns,
                         recoveryQ, "", initialMoney, 1, User.signedUpUsers.size() + 1, 0, 0);
                 tmpUser.giveRandomCard();
-                Card.updateUserCards(tmpUser);
+                tmpUser.updateCardSeriesByCards();
                 User.signedUpUsers.put(User.signedUpUsers.size()+1, tmpUser);
                 return true;
             }

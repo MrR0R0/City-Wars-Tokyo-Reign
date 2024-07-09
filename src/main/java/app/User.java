@@ -171,6 +171,10 @@ public class User implements Cloneable {
         this.id = id;
     }
 
+    public void reduceWallet(Integer value){
+        wallet -= value;
+    }
+
     public void setXP(Integer XP) {
         this.XP = XP;
     }
@@ -278,7 +282,7 @@ public class User implements Cloneable {
         return copy.subList(0, Math.min(subsetSize, copy.size()));
     }
 
-    public void getCardsFromTable() {
+    public void updateCardsByCardSeries() {
         String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
         String[] series = cardsSeries.split(",");
         Pattern pattern = Pattern.compile(CARD_REGEX);
@@ -291,6 +295,15 @@ public class User implements Cloneable {
             cards.get(id).setLevel(level);
             cards.get(id).updateFieldsByLevel();
         }
+    }
+
+    public void updateCardSeriesByCards() {
+        StringBuilder tmpCardSeries = new StringBuilder();
+        for (Card card : cards.values()) {
+            tmpCardSeries.append(card.getId()).append("_").append(card.getLevel()).append(",");
+        }
+        tmpCardSeries.delete(tmpCardSeries.length() - 1, tmpCardSeries.length());
+        cardsSeries = tmpCardSeries.toString();
     }
 
     public static Integer getIdByUsername(String username) {

@@ -76,7 +76,7 @@ public class Card implements Cloneable {
     }
 
     public void showShopProperties(int index, int NAME_PAD, int COST_PAD, int DETAILS_PAD){
-        String cardName = String.format("%-" + NAME_PAD + "s", index + "- " + name);
+        String cardName = String.format("%-" + NAME_PAD + "s", index + "- " + name + " (" + level + "->" + (level+1) + ")");
         String cardCost = String.format("%-" + COST_PAD + "s", upgradeCost);
         String firstDetail = getFirstDetail();
         String secondDetail = getSecondDetail();
@@ -336,16 +336,6 @@ public class Card implements Cloneable {
         }
     }
 
-    public static void updateUserCards(User user) {
-        StringBuilder cardSeries = new StringBuilder();
-        for (Card card : user.getCards().values()) {
-            cardSeries.append(card.getId()).append("_").append(card.getLevel()).append(",");
-        }
-        cardSeries.delete(cardSeries.length() - 1, cardSeries.length());
-        user.setCardsSeries(cardSeries.toString());
-        System.out.println(cardSeries);
-    }
-
     public static Integer levelUpFormula(Integer value, Integer level) {
         //double coefficient = Math.exp(-1*Double.valueOf(level)/10) + 1 + Math.exp(-0.1);
         return (int) (value * (Math.log(level) + 1));
@@ -366,10 +356,14 @@ public class Card implements Cloneable {
         return 1/getPowerBoostMultiplierByLevel(level);
     }
     public void updateFieldsByLevel() {
-        acc = levelUpFormula(acc, level);
-        attackOrDefense = levelUpFormula(attackOrDefense, level);
-        damage = levelUpFormula(damage, level);
+        acc = acc == 0 ? 0 : levelUpFormula(acc, level);
+        attackOrDefense = attackOrDefense == 0 ? 0 :levelUpFormula(attackOrDefense, level);
         upgradeCost = price * level;
+    }
+
+    public void upgrade(){
+        level++;
+        updateFieldsByLevel();
     }
 
     public boolean isUpgradable(){
