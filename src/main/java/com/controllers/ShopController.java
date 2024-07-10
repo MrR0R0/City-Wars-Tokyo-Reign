@@ -88,14 +88,14 @@ public class ShopController extends Shop implements Initializable {
     public GridPane buy_pane;
     public GridPane shop_basePane;
     public GridPane cards_pane;
+    public GridPane base_cards_pane;
     public ImageView allCards_image;
     public ImageView deck_image;
     public Label result_label;
     public Label wallet_label;
     public Button back_but;
-    // temp
-    static public ArrayList<Image> cardImages = new ArrayList<>();
 
+    private int page = 1;
 
     // temp
     @Override
@@ -121,45 +121,58 @@ public class ShopController extends Shop implements Initializable {
 //        image = new Image(getClass().getResource("/com/images/card/9.png").toExternalForm());
 //        cardImages.add(image);
 //         temp
-
-        showUpgradableCards();
-        showPurchasableCards();
         updateWalletLabel();
         result_label.setText("");
-
+        showFirstPage();
         allCards_image.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                page = 2;
                 shop_basePane.setVisible(false);
-                cards_pane.setVisible(true);
+                base_cards_pane.setVisible(true);
                 showAllCard();
             }
         });
         deck_image.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                page = 2;
                 shop_basePane.setVisible(false);
-                cards_pane.setVisible(true);
+                base_cards_pane.setVisible(true);
                 showUserDeck();
             }
         });
         back_but.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
-                try {
-                    Main.loadMainMenu();
-                } catch (IOException e) {
-                    System.out.println(e);
+                if(page == 1) {
+                    try {
+                        Main.loadMainMenu();
+                    } catch (IOException e) {
+                        System.out.println(e);
+                    }
+                }
+                if(page == 2){
+                    page = 1;
+                    showFirstPage();
                 }
             }
         });
     }
 
 
+    private void showFirstPage(){
+        shop_basePane.setVisible(true);
+        base_cards_pane.setVisible(false);
+        showPurchasableCards();
+        showUpgradableCards();
+    }
+
     private void showUpgradableCards() {
         int index = 0;
         updateUpgradableCards();
+        upgrade_pane.getChildren().clear();
         for (Card card : upgradableCards) {
             CardPane cardPane = new CardPane();
             cardPane.card = card;
-            cardPane.cardImage.setImage(Card.cardImages.get(card.getId()));
+            cardPane.cardImage.setImage(Card.allCardImages.get(card.getId()));
             cardPane.setCardImage(120, 90, 0, 0, 50, 0);
             cardPane.setCardName(40, 0, 0, 0, 11);
             cardPane.setCardPrice(95, 0, 0, 0, 11, card.getUpgradeCost());
@@ -264,10 +277,11 @@ public class ShopController extends Shop implements Initializable {
     private void showPurchasableCards() {
         int index = 0;
         updatePurchasableCards();
+        buy_pane.getChildren().clear();
         for (Card card : purchasableCards) {
             CardPane cardPane = new CardPane();
             cardPane.card = card;
-            cardPane.cardImage.setImage(Card.cardImages.get(card.getId()));
+            cardPane.cardImage.setImage(Card.allCardImages.get(card.getId()));
             cardPane.setCardImage(120, 90, 0, 0, 50, 0);
             cardPane.setCardName(40, 0, 0, 0, 11);
             cardPane.setCardPrice(95, 0, 0, 0, 11, card.getPrice());
@@ -292,8 +306,8 @@ public class ShopController extends Shop implements Initializable {
             GridPane.setMargin(buyButton, new Insets(160, 0, 0, 0));
 
             //update pane
-            upgrade_pane.add(cardPane, index, 0);
-            upgrade_pane.add(buyButton, index, 0);
+            buy_pane.add(cardPane, index, 0);
+            buy_pane.add(buyButton, index, 0);
 
             //add handlers
             buyButton.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
@@ -305,9 +319,9 @@ public class ShopController extends Shop implements Initializable {
         }
     }
 
-
     private void upgradeCard(CardPane cardPane) {
         Card selectedCard = cardPane.card;
+        upgrade_pane.getChildren().clear();
         if (selectedCard.getUpgradeCost() > loggedInUser.getWallet()) {
             // show error...
             result_label.setStyle("-fx-text-fill: red");
@@ -334,7 +348,7 @@ public class ShopController extends Shop implements Initializable {
 
     private void buyCard(CardPane cardPane) {
         updatePurchasableCards();
-
+        upgrade_pane.getChildren().clear();
         Card selectedCard = cardPane.card;
         if (selectedCard.getPrice() > loggedInUser.getWallet()) {
             result_label.setStyle("-fx-text-fill: red");
@@ -361,7 +375,7 @@ public class ShopController extends Shop implements Initializable {
             Card card = entry.getValue();
             CardPane cardPane = new CardPane();
             cardPane.card = card;
-            cardPane.cardImage.setImage(cardImages.get(index));
+            cardPane.cardImage.setImage(Card.allCardImages.get(index));
             cardPane.setCardImage(120, 90, 0, 0, 50, 0);
             cardPane.setCardName(40, 0, 0, 0, 11);
             cardPane.setCardPrice(95, 0, 0, 0, 11, card.getPrice());
@@ -391,7 +405,7 @@ public class ShopController extends Shop implements Initializable {
             Card card = entry.getValue();
             CardPane cardPane = new CardPane();
             cardPane.card = card;
-            cardPane.cardImage.setImage(cardImages.get(index));
+            cardPane.cardImage.setImage(Card.allCardImages.get(index));
             cardPane.setCardImage(120, 90, 0, 0, 50, 0);
             cardPane.setCardName(40, 0, 0, 0, 11);
             cardPane.setCardLevel(0, 40, 50, 0, 12);
@@ -413,52 +427,6 @@ public class ShopController extends Shop implements Initializable {
             cards_pane.add(cardPane, rowIndex, columnIndex);
 
             index++;
-        }
-    }
-
-    private void updatePurchasableCards() {
-        purchasableCards = new ArrayList<>();
-        //repeatedIds ??
-        HashSet<Integer> repeatedIds = new HashSet<>();
-        int shieldOrSpellCounter = 0;
-        int timeStrikeCounter = 0;
-        int commonCounter = 0;
-        for (Card card : Card.allCards.values()) {
-            if (!loggedInUser.getCards().containsKey(card.getId())) {
-                switch (card.getType()) {
-                    case spell, shield -> {
-                        if (shieldOrSpellCounter < purchasableShieldOrSpell) {
-                            shieldOrSpellCounter++;
-                            purchasableCards.add(card.clone());
-                            repeatedIds.add(card.getId());
-                        }
-                    }
-                    case common -> {
-                        if (commonCounter < purchasableCommon) {
-                            commonCounter++;
-                            purchasableCards.add(card.clone());
-                            repeatedIds.add(card.getId());
-                        }
-                    }
-                    case timeStrike -> {
-                        if (timeStrikeCounter < purchasableTimeStrike) {
-                            timeStrikeCounter++;
-                            purchasableCards.add(card.clone());
-                            repeatedIds.add(card.getId());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private void updateUpgradableCards() {
-        upgradableCards = new ArrayList<>();
-        for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
-            Card card = entry.getValue();
-            if (loggedInUser.getLevel() > card.getLevel() && card.isUpgradable()) {
-                upgradableCards.add(entry.getValue());
-            }
         }
     }
 

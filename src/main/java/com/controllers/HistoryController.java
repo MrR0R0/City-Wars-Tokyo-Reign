@@ -32,7 +32,6 @@ public class HistoryController extends Menu implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loggedInUser = User.signedUpUsers.get(1);
         ArrayList<HistoryModel> history = new ArrayList<>();
         try {
             history = Connect.getHistory(String.valueOf(loggedInUser.getId()));
