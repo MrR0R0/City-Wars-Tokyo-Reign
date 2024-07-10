@@ -1,11 +1,15 @@
 package com.app;
 
+import javafx.scene.image.Image;
+
+import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
 public class Card implements Cloneable {
     public static final String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
     public static final int healByLevel = 15;
+
 
     public enum Characters {Character1, Character2, Character3, Character4, Unity}
 
@@ -15,6 +19,7 @@ public class Card implements Cloneable {
     private String name, character, rarity;
     private Integer level, price, damage, duration, upgradeCost, attackOrDefense, acc, id, isBreakable, upgradeLevel;
     public static LinkedHashMap<Integer, Card> allCards = new LinkedHashMap<>();
+    public static LinkedHashMap<Integer, Image> cardImages = new LinkedHashMap<>();
 
     public Card() {
     }

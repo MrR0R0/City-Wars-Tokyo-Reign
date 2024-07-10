@@ -2,7 +2,7 @@ package com.controllers;
 
 import com.Main;
 import com.app.User;
-import com.menu.Menu;
+import com.menu.authentication.Login;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
@@ -20,9 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static com.menu.authentication.Login.matchingPassword;
-
-public class LoginController implements Initializable {
+public class LoginController extends Login implements Initializable {
 
     public TextField username_field;
     public TextField password_field;
@@ -60,7 +58,7 @@ public class LoginController implements Initializable {
 
     private void handleLogin(ActionEvent actionEvent) {
         if(checkLogIn()){
-            Menu.loggedInUser = User.signedUpUsers.get(User.getIdByUsername(username));
+           loggedInUser = User.signedUpUsers.get(User.getIdByUsername(username));
             System.out.println("welcome");
         }
     }
@@ -81,7 +79,7 @@ public class LoginController implements Initializable {
             error_label.setText("Incorrect password :(");
             wrongPasswordCounter++;
         }
-        if(wrongPasswordCounter >= 2){
+        if(wrongPasswordCounter >= maxTry-1){
             wrongPasswordCounter = 0;
             password_field.clear();
             username_field.clear();

@@ -13,10 +13,7 @@ import javafx.scene.layout.GridPane;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static com.menu.authentication.SignUp.EMAIL_REGEX;
-import static com.menu.authentication.SignUp.USERNAME_REGEX;
-
-public class SignUpController implements Initializable {
+public class SignUpController extends SignUp implements Initializable {
     public TextField username_field;
     public PasswordField password_field;
     public TextField showPassword_field;
@@ -38,7 +35,7 @@ public class SignUpController implements Initializable {
     public GridPane secondGrid;
 
     private boolean blueDicBoolean = true;
-    private String username, email, password, nickname, recoveryAns, recoveryQ, captchaText;
+    public String captchaText;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -94,7 +91,7 @@ public class SignUpController implements Initializable {
     private void handleSecondNext(ActionEvent actionEvent) {
         if (checkSecondPageInputs()) {
             recoveryQToIndex();
-            User tmpUser = new User(username, password, nickname, email, recoveryAns,
+            User tmpUser = new User(username, pass, nickname, email, recoveryAns,
                     recoveryQ, "", SignUp.initialMoney, 1, User.signedUpUsers.size() + 1, 0);
             tmpUser.giveRandomCard();
             tmpUser.updateCardSeriesByCards();
@@ -108,7 +105,7 @@ public class SignUpController implements Initializable {
 
     private boolean checkFirstPageInputs() {
         username = username_field.getText();
-        password = password_field.getText();
+        pass = password_field.getText();
         email = email_field.getText();
         String passConf = confirmPass_field.getText();
         firstError_label.setText("");
@@ -117,7 +114,7 @@ public class SignUpController implements Initializable {
             firstError_label.setText("Blank username field");
             return false;
         }
-        if (password.isBlank()) {
+        if (pass.isBlank()) {
             firstError_label.setText("Blank password field");
             return false;
         }
@@ -145,7 +142,7 @@ public class SignUpController implements Initializable {
             firstError_label.setText("A user with the same username exists");
             return false;
         }
-        if (!password.equals(passConf)) {
+        if (!pass.equals(passConf)) {
             firstError_label.setText("Password confirmation doesn't match!");
             return false;
         }

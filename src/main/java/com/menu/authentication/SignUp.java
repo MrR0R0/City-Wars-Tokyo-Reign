@@ -7,9 +7,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 
 public class SignUp extends Menu {
-    static private String username, pass, email, nickname, recoveryAns, recoveryQ;
+    static protected String username, pass, email, nickname, recoveryAns, recoveryQ;
 
-    static final public Integer initialMoney = 100;
+    static protected Integer initialMoney = 100;
 
     static public final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     static public final String USERNAME_REGEX = "[a-zA-Z0-9_]+";

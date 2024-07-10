@@ -13,15 +13,15 @@ import java.util.stream.IntStream;
 
 public class Shop extends Menu {
     final static private int CARDS_ON_PAGE = 10, NAME_PAD = 27, DETAILS_PAD = 35, COST_PAD = 5, PROP_PAD = 23;
-    final static private int purchasableAmount = 6, purchasableShieldOrSpell = 1, purchasableCommon = 3, purchasableTimeStrike = 2;
+    final static protected int purchasableAmount = 6, purchasableShieldOrSpell = 1, purchasableCommon = 3, purchasableTimeStrike = 2;
     final static String upgradeCardCommand = "(?i)upgrade card number (?<cardNum>\\d+)";
     final static String showWalletCommand = "(?i)show wallet";
     final static String buyCommand = "^(?i)buy card number (?<cardNum>\\d+)$";
     final static String showUpgradeableCards = "^(?i)show upgradable cards$";
     final static String showPurchasableCards = "^(?i)show purchasable cards$";
     final static String showCardProperties = "^(?i)show properties of card number (?<cardNum>\\d+)$";
-    static private ArrayList<Card> upgradableCards;  // filled with user's original cards
-    static private ArrayList<Card> purchasableCards; // filled with clones
+    static protected ArrayList<Card> upgradableCards;  // filled with user's original cards
+    static protected ArrayList<Card> purchasableCards; // filled with clones
 
     public static void handleInput(String input, Scanner scanner) {
         if (input.matches(backCommand)) {

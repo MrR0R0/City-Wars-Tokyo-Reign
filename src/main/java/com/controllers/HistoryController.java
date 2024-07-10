@@ -1,22 +1,24 @@
 package com.controllers;
 
+
+import com.Main;
 import com.app.User;
 import com.database.Connect;
-import com.database.History;
 import com.menu.Menu;
-import javafx.css.Match;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class HistoryController implements Initializable {
+public class HistoryController extends Menu implements Initializable {
     @FXML
     public TableView<HistoryModel> history_table;
     public TableColumn<HistoryModel, String> hostResult_col;
@@ -26,16 +28,16 @@ public class HistoryController implements Initializable {
     public TableColumn<HistoryModel, String> guestName_col;
     public TableColumn<HistoryModel, String> guestLevel_col;
     public TableColumn<HistoryModel, String> guestResult_col;
+    public Button back_but;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Menu.loggedInUser = User.signedUpUsers.get(1);
+        loggedInUser = User.signedUpUsers.get(1);
         ArrayList<HistoryModel> history = new ArrayList<>();
         try {
-            history = Connect.getHistory(String.valueOf(Menu.loggedInUser.getId()));
-        } catch (SQLException ignored) {
+            history = Connect.getHistory(String.valueOf(loggedInUser.getId()));
+        } catch (SQLException ignored){
         }
-
         hostResult_col.setCellValueFactory(cellData -> cellData.getValue().hostResultProperty());
         hostLevel_col.setCellValueFactory(cellData -> cellData.getValue().hostLevelProperty());
         hostName_col.setCellValueFactory(cellData -> cellData.getValue().hostNameProperty());
@@ -47,5 +49,14 @@ public class HistoryController implements Initializable {
         for(HistoryModel historyModel : history){
             history_table.getItems().add(historyModel);
         }
+
+        back_but.setOnMouseClicked(mouseEvent -> {
+            try {
+                Main.loadMainMenu();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        });
+
     }
 }
