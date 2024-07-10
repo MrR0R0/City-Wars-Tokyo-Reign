@@ -20,7 +20,7 @@ public class User implements Cloneable {
     }
 
     public User(String username, String password, String nickname, String email, String recoveryAns,
-                String recoveryQ, String cardsSeries, Integer wallet, Integer level, Integer id, Integer XP, Integer HP) {
+                String recoveryQ, String cardsSeries, Integer wallet, Integer level, Integer id, Integer XP) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
@@ -32,7 +32,6 @@ public class User implements Cloneable {
         this.level = level;
         this.id = id;
         this.XP = XP;
-        this.HP = HP;
     }
 
     public void showProperties() {

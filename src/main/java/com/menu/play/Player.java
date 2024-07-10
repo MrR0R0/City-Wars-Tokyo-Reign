@@ -17,18 +17,17 @@ public class Player extends User {
     private String consequence;
 
     Player(User user, int durationLineSize, int handSize) {
-        super(user.getUsername(), "", user.getNickname(), "", "", "", "", user.getWallet(), user.getLevel(), user.getId(), user.getXP(), user.getHP());
+        super(user.getUsername(), "", user.getNickname(), "", "", "", "", user.getWallet(), user.getLevel(), user.getId(), user.getXP());
         hand = new ArrayList<>();
         this.durationLineSize = durationLineSize;
         this.handSize = handSize;
         setXP(user.getXP());
         roundAttack = 0;
         totalAttack = 0;
-        //1 * (90 + 10 * getLevel())
+
+        //setHP(4 * (90 + 10 * getLevel()));
         setHP(50);
 
-        //Just for now
-        //deck = user.getDeck();
         deck = user.getCards();
     }
 

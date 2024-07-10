@@ -2,6 +2,8 @@
 
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -9,8 +11,9 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1050.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1050.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.ShopController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
@@ -19,9 +22,9 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <ImageView blendMode="DARKEN" cache="true" cacheHint="QUALITY" fitHeight="900.0" fitWidth="1575.0" nodeOrientation="INHERIT" pickOnBounds="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+        <ImageView blendMode="DARKEN" cache="true" cacheHint="QUALITY" fitHeight="900.0" fitWidth="1575.0" nodeOrientation="INHERIT" pickOnBounds="true" styleClass="text" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
             <image>
-                <Image url="@../../images/Designer%20(15)%20(1)2.png" />
+                <Image url="@../images/Designer%20(15)%20(2)_Nero%20AI_Photo.jpeg" />
             </image>
             <GridPane.margin>
                 <Insets />
@@ -34,12 +37,12 @@
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" percentHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" percentHeight="25.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
          <children>
-            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane fx:id="shop_basePane" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
@@ -48,7 +51,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <GridPane>
+                  <GridPane fx:id="upgrade_basePane">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -62,17 +65,9 @@
                      <children>
                         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="221.0" prefWidth="710.0" stylesheets="@../CSS/scrollPane.css" vbarPolicy="NEVER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP">
                           <content>
-                            <AnchorPane fx:id="upgrade_basePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                  <children>
-                                    <GridPane fx:id="upgrade_pane" maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                      <columnConstraints>
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                      </columnConstraints>
+                                    <GridPane fx:id="upgrade_pane" maxHeight="1.7976931348623157E308" prefHeight="200.0" prefWidth="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <rowConstraints>
                                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                       </rowConstraints>
@@ -83,7 +78,7 @@
                         </ScrollPane>
                      </children>
                   </GridPane>
-                  <GridPane GridPane.rowIndex="1">
+                  <GridPane fx:id="buy_basePane" GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="2.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -95,29 +90,181 @@
                         <RowConstraints minHeight="10.0" percentHeight="5.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="221.0" prefWidth="710.0" stylesheets="@../CSS/scrollPane.css" vbarPolicy="NEVER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                           <content>
-                              <AnchorPane fx:id="buy_basePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                                 <children>
-                                    <GridPane fx:id="buy_pane" maxHeight="1.7976931348623157E308" prefHeight="197.6" prefWidth="698.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                       <columnConstraints>
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                       </columnConstraints>
-                                       <rowConstraints>
-                                          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                       </rowConstraints>
-                                    </GridPane>
-                                 </children>
-                              </AnchorPane>
-                           </content>
-                        </ScrollPane>
+                        <GridPane fx:id="buy_pane" maxHeight="1.7976931348623157E308" prefHeight="197.6" prefWidth="698.4" styleClass="scroll-pane" stylesheets="@../CSS/scrollPane.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                           </rowConstraints>
+                        </GridPane>
                      </children>
                   </GridPane>
+               </children>
+            </GridPane>
+            <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
+              <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <GridPane prefHeight="156.0" prefWidth="8.0">
+                    <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" percentHeight="35.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" percentHeight="20.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <GridPane style="-fx-border-color: transparent;" styleClass="scroll-pane" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <ImageView fx:id="deck_image" fitHeight="140.0" fitWidth="110.0" pickOnBounds="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                 <image>
+                                    <Image url="@../images/Remove-bg.ai_1720559027642.png" />
+                                 </image>
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </ImageView>
+                           </children>
+                        </GridPane>
+                        <GridPane style="-fx-border-color: transparent;" styleClass="scroll-pane" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <ImageView fx:id="allCards_image" fitHeight="146.0" fitWidth="120.0" pickOnBounds="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                 <image>
+                                    <Image url="@../images/Remove-bg.ai_1720559431200.png" />
+                                 </image>
+                                 <GridPane.margin>
+                                    <Insets right="5.0" />
+                                 </GridPane.margin>
+                              </ImageView>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </GridPane>
+               </children>
+            </GridPane>
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" styleClass="s" stylesheets="@../CSS/scrollPane.css">
+                    <content>
+                      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                           <children>
+                              <GridPane fx:id="cards_pane" prefHeight="0.0" prefWidth="727.2" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <columnConstraints>
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                </columnConstraints>
+                              </GridPane>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </ScrollPane>
+               </children>
+            </GridPane>
+            <Label fx:id="result_label" alignment="CENTER" style="-fx-font-size: 15;" styleClass="text" text="Label" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets top="40.0" />
+               </GridPane.margin>
+            </Label>
+            <GridPane GridPane.rowIndex="1">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="15.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <GridPane style="-fx-border-width: 0;" styleClass="scroll-pane" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="35.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Label fx:id="wallet_label" style="-fx-text-fill: gold;" styleClass="text" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                              <ImageView fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                 <image>
+                                    <Image url="@../images/gold-japanese-yen-coin-18571-resize.png" />
+                                 </image>
+                                 <GridPane.margin>
+                                    <Insets left="10.0" />
+                                 </GridPane.margin>
+                              </ImageView>
+                           </children>
+                        </GridPane>
+                     </children>
+                  </GridPane>
+               </children>
+            </GridPane>
+            <GridPane GridPane.rowIndex="2">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="37.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" percentHeight="40.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Button fx:id="back_but" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="backBut" text="BACK" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="Orbitron-Bold" size="14.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Button>
                </children>
             </GridPane>
          </children>
@@ -129,5 +276,6 @@
     <stylesheets>
         <URL value="@../CSS/button.css" />
         <URL value="@../CSS/box.css" />
+      <URL value="@../CSS/scrollPane.css" />
     </stylesheets>
 </GridPane>

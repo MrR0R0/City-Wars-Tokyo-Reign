@@ -13,7 +13,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 public class Login extends Menu {
-    private static final int maxTry = 3;
+    public static final int maxTry = 3;
     private static final String adminPass = "sonic";
 
     final static public String loginCommand = "^user login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";

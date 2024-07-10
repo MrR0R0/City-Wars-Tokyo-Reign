@@ -16,6 +16,7 @@ public class ProfileMenu extends Menu {
     final static private String changeEmailCommand = "^(?i)Profile change -e (?<Email>\\S+)$";
 
 
+
     static public void handleInput(String input, Scanner scanner) {
         Matcher matcher;
 
