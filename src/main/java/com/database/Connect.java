@@ -2,6 +2,7 @@ package com.database;
 
 import com.app.Card;
 import com.app.User;
+import com.controllers.HistoryModel;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -178,6 +179,39 @@ public class Connect {
                 );
                 historyArray.add(tmpHist);
                 counter++;
+            }
+        } catch (SQLException e) {
+            System.out.println("Something went wrong when writing in SQL table");
+            e.printStackTrace();
+        } finally {
+            connection.close();
+            Collections.reverse(historyArray);
+        }
+        return historyArray;
+    }
+
+    public static ArrayList<HistoryModel> getHistory(String userID) throws SQLException {
+        String query = "SELECT * FROM history WHERE host_id = ? OR guest_id = ?";
+        ArrayList<HistoryModel> historyArray = new ArrayList<>();
+        try {
+            connectToDatabase();
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, userID);
+            pstmt.setString(2, userID);
+            ResultSet resultSet = pstmt.executeQuery();
+            int hostId = resultSet.getInt("host_id");
+            int guestId = resultSet.getInt("guest_id");
+            while (resultSet.next()) {
+                HistoryModel tmpHist = new HistoryModel(
+                        resultSet.getString("host_cons"),
+                        String.valueOf(resultSet.getInt("host_level")),
+                        User.signedUpUsers.get(hostId).getUsername(),
+                        resultSet.getString("time"),
+                        resultSet.getString("guest_cons"),
+                        String.valueOf(resultSet.getInt("guest_level")),
+                        User.signedUpUsers.get(guestId).getUsername()
+                );
+                historyArray.add(tmpHist);
             }
         } catch (SQLException e) {
             System.out.println("Something went wrong when writing in SQL table");

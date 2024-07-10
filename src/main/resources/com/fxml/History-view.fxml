@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1050.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1050.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.HistoryController">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
    </columnConstraints>
@@ -21,7 +21,7 @@
    <children>
       <ImageView blendMode="DARKEN" cache="true" cacheHint="QUALITY" fitHeight="900.0" fitWidth="1575.0" nodeOrientation="INHERIT" pickOnBounds="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
          <image>
-            <Image url="@../../images/Designer_(14)-transformed2.png" />
+            <Image url="@../images/Designer_(14)-transformed2.png" />
          </image>
          <GridPane.margin>
             <Insets />
@@ -41,13 +41,13 @@
          <children>
             <TableView fx:id="history_table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" styleClass="text" stylesheets="@../CSS/tableView.css" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
               <columns>
-                <TableColumn fx:id="hostResult_column" editable="false" prefWidth="75.0" text="RESULT" />
-                <TableColumn fx:id="hostLevel_column" editable="false" prefWidth="75.0" text="LEVEL" />
-                  <TableColumn fx:id="hostName_column" editable="false" prefWidth="75.0" text="HOST" />
-                  <TableColumn fx:id="dateAndTime_column" editable="false" prefWidth="100.0" text="DATE &amp; TIME" />
-                  <TableColumn fx:id="guestName_column" editable="false" prefWidth="75.0" text="GUEST" />
-                  <TableColumn fx:id="guestLevel_column" editable="false" prefWidth="75.0" text="LEVEL" />
-                  <TableColumn fx:id="guestResult_column" editable="false" prefWidth="75.0" text="RESULT" />
+                <TableColumn fx:id="hostResult_col" editable="false" prefWidth="75.0" text="RESULT" />
+                <TableColumn fx:id="hostLevel_col" editable="false" prefWidth="75.0" text="LEVEL" />
+                  <TableColumn fx:id="hostName_col" editable="false" prefWidth="75.0" text="HOST" />
+                  <TableColumn fx:id="date_col" editable="false" prefWidth="100.0" text="DATE &amp; TIME" />
+                  <TableColumn fx:id="guestName_col" editable="false" prefWidth="75.0" text="GUEST" />
+                  <TableColumn fx:id="guestLevel_col" editable="false" prefWidth="75.0" text="LEVEL" />
+                  <TableColumn fx:id="guestResult_col" editable="false" prefWidth="75.0" text="RESULT" />
               </columns>
                <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

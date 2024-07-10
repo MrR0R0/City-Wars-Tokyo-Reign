@@ -30,8 +30,8 @@ public class LoginController implements Initializable {
     public Button login_but;
 
     private int wrongPasswordCounter;
-    private String username, password;
-    
+    private String username;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         login_but.setOnAction(this::handleLogin);
@@ -57,7 +57,7 @@ public class LoginController implements Initializable {
 
     private boolean checkLogIn() {
         username = username_field.getText();
-        password = password_field.getText();
+        String password = password_field.getText();
         Integer id = User.getIdByUsername(username);
         error_label.setText("");
         if(!User.signedUpUsers.containsKey(User.getIdByUsername(username))){
