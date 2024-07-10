@@ -1,5 +1,6 @@
 package com.controllers;
 
+import com.Main;
 import com.app.User;
 import com.menu.Menu;
 import javafx.application.Platform;
@@ -9,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+
+import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.Instant;
@@ -36,13 +39,20 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         login_but.setOnAction(this::handleLogin);
         forgot_label.setOnMouseClicked(this::forgotPassword);
-        signUp_label.setOnMouseClicked(this::handleSignup);
+        signUp_label.setOnMouseClicked(event -> {
+            try {
+                handleSignup();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         countdown_label.setText("");
         error_label.setText("");
         wrongPasswordCounter = 0;
     }
 
-    private void handleSignup(MouseEvent mouseEvent) {
+    private void handleSignup() throws IOException {
+        Main.loadSignup();
     }
 
     private void forgotPassword(MouseEvent mouseEvent) {
