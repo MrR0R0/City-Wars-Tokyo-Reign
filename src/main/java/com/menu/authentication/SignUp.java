@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 public class SignUp extends Menu {
     static private String username, pass, email, nickname, recoveryAns, recoveryQ;
 
-    static final private Integer initialMoney = 100;
+    static final public Integer initialMoney = 100;
 
     static public final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
     static public final String USERNAME_REGEX = "[a-zA-Z0-9_]+";
@@ -178,7 +178,7 @@ public class SignUp extends Menu {
         if (securityQuestion(scanner)) {
             if (Captcha.checkCaptcha(scanner)) {
                 User tmpUser = new User(username, pass, nickname, email, recoveryAns,
-                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size() + 1, 0, 0);
+                        recoveryQ, "", initialMoney, 1, User.signedUpUsers.size() + 1, 0);
                 tmpUser.giveRandomCard();
                 tmpUser.updateCardSeriesByCards();
                 User.signedUpUsers.put(User.signedUpUsers.size()+1, tmpUser);

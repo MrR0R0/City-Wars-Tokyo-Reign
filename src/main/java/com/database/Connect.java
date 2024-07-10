@@ -148,23 +148,6 @@ public class Connect {
         }
     }
 
-    public static void updateUserPassword(String username, String newPass) throws SQLException {
-        String updateSQL = "UPDATE user SET user_password = ? WHERE user_username = ?";
-        try {
-            connectToDatabase();
-            PreparedStatement pstmt = connection.prepareStatement(updateSQL);
-            pstmt.setString(1, newPass);
-            pstmt.setString(2, username);
-            // Execute the update
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println("Something went wrong when writing in SQL table");
-            e.printStackTrace();
-        } finally {
-            connection.close();
-        }
-    }
-
     //Getting user's match history
     public static ArrayList<History> getUserHistory(String userID) throws SQLException {
         String query = "SELECT * FROM history WHERE host_id = ? OR guest_id = ?";

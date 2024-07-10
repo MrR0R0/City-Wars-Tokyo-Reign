@@ -1,10 +1,10 @@
 package com.menu.authentication;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.image.WritableImage;
+
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -129,14 +129,14 @@ public class Captcha {
         return result.toString();
     }
 
-    public static void stringToImage(String asciiArt){
+    public static WritableImage stringToImage(String asciiArt){
         int finalHeight = 350, finalWidth = 550;
-        int fontSize = 12, imageHeight = height * 10, imageWidth = width * 10, margin = 5;
+        int fontSize = 70, imageHeight = height * 10, imageWidth = width * 10, margin = 5;
         BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
         g2d.setColor(Color.BLACK);
         g2d.fillRect(0, 0, imageWidth, imageHeight);
-        g2d.setFont(new Font("Monospaced", Font.PLAIN, fontSize));
+        g2d.setFont(new Font("Monospaced", Font.BOLD, fontSize));
         g2d.setColor(Color.WHITE);
 
         String[] lines = asciiArt.split("\n");
@@ -186,10 +186,7 @@ public class Captcha {
         g2dFinal.drawImage(croppedImage, x, yCenter, null);
         g2dFinal.dispose();
 
-        try {
-            ImageIO.write(finalImage, "png", new File("src\\main\\resources\\captcha.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        return SwingFXUtils.toFXImage(finalImage, null);
+
     }
 }
