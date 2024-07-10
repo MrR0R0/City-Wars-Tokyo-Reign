@@ -20,7 +20,7 @@ public class Main extends javafx.application.Application{
         stage = primaryStage;
         Card.allCards = Connect.getCards();
         User.signedUpUsers = Connect.getUsers();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/User-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setTitle("War city");
         stage.setScene(scene);
