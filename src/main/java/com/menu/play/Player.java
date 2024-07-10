@@ -16,11 +16,11 @@ public class Player extends User {
     private final Integer durationLineSize, handSize;
     private String consequence;
 
-    Player(User user, int durationLineSize, int handSize) {
+    public Player(User user) {
         super(user.getUsername(), "", user.getNickname(), "", "", "", "", user.getWallet(), user.getLevel(), user.getId(), user.getXP());
         hand = new ArrayList<>();
-        this.durationLineSize = durationLineSize;
-        this.handSize = handSize;
+        this.durationLineSize = Play.durationLineSize;
+        this.handSize = Play.handSize;
         setXP(user.getXP());
         roundAttack = 0;
         totalAttack = 0;

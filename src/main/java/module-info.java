@@ -8,6 +8,8 @@ module City.Wars.Tokyo.Reign {
 
     exports com.controllers to javafx.fxml;
     exports com.app;
+    exports com.controllers.play to javafx.fxml;
+    exports com.menu.play;
     opens com to javafx.fxml;
     exports com;
 }

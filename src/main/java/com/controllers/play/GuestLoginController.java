@@ -1,12 +1,16 @@
-package com.controllers;
+package com.controllers.play;
 
 import com.Main;
 import com.app.User;
+import com.menu.Menu;
 import com.menu.authentication.Login;
+import com.menu.play.Play;
+import com.menu.play.Player;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
@@ -20,12 +24,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class LoginController extends Login implements Initializable {
+public class GuestLoginController extends Login implements Initializable {
 
+    @FXML
     public TextField username_field;
     public TextField password_field;
     public Label forgot_label;
-    public Label signUp_label;
     public Label error_label;
     public Label countdown_label;
     public Button login_but;
@@ -33,8 +37,12 @@ public class LoginController extends Login implements Initializable {
     private int wrongPasswordCounter;
     private String username;
 
+    protected static Player hostPlayer;
+    protected static Player guestPlayer;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        hostPlayer = new Player(loggedInUser);
         login_but.setOnAction(event -> {
             try {
                 handleLogin();
@@ -43,20 +51,9 @@ public class LoginController extends Login implements Initializable {
             }
         });
         forgot_label.setOnMouseClicked(this::forgotPassword);
-        signUp_label.setOnMouseClicked(event -> {
-            try {
-                handleSignup();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
         countdown_label.setText("");
         error_label.setText("");
         wrongPasswordCounter = 0;
-    }
-
-    private void handleSignup() throws IOException {
-        Main.loadSignup();
     }
 
     private void forgotPassword(MouseEvent mouseEvent) {
@@ -64,11 +61,12 @@ public class LoginController extends Login implements Initializable {
 
     private void handleLogin() throws IOException {
         if(checkLogIn()){
-            loggedInUser = User.signedUpUsers.get(User.getIdByUsername(username));
-            Main.loadMainMenu();
+            guestPlayer = new Player(User.signedUpUsers.get(User.getIdByUsername(username)));
+            Main.loadPreparePlay();
         }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     private boolean checkLogIn() {
         username = username_field.getText();
         String password = password_field.getText();
@@ -76,6 +74,11 @@ public class LoginController extends Login implements Initializable {
         error_label.setText("");
         if(!User.signedUpUsers.containsKey(User.getIdByUsername(username))){
             error_label.setText("Username \"" + username + "\" does not exist!");
+            return false;
+        }
+        if (guestPlayer.getId().equals(loggedInUser.getId())) {
+            guestPlayer = null;
+            System.out.println("Invalid action: You cannot battle yourself.");
             return false;
         }
         if(matchingPassword(id, password)){
@@ -111,5 +114,4 @@ public class LoginController extends Login implements Initializable {
         }
         return false;
     }
-
 }

@@ -24,7 +24,7 @@ public class Main extends javafx.application.Application{
         User.signedUpUsers = Connect.getUsers();
         fillAllCardImages();
         //Menu.loggedInUser = User.signedUpUsers.get(2);
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Shop-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/GuestLogin-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setTitle("War city");
         stage.setScene(scene);
@@ -55,7 +55,7 @@ public class Main extends javafx.application.Application{
         stage.setScene(scene);
     }
     public static void loadLogin() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/GuestLogin-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }
@@ -66,6 +66,16 @@ public class Main extends javafx.application.Application{
     }
     public static void loadUser() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/User-view.fxml"));
+        scene = new Scene(fxmlLoader.load(), 1050, 700);
+        stage.setScene(scene);
+    }
+    public static void loadGuestLogin() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Login-view.fxml"));
+        scene = new Scene(fxmlLoader.load(), 1050, 700);
+        stage.setScene(scene);
+    }
+    public static void loadPreparePlay() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/PreparePlay-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }

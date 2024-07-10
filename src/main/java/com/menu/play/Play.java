@@ -19,7 +19,7 @@ public class Play extends Menu {
     static final Integer durationLineSize = 21;
     static final Integer handSize = 5;
 
-    static private final Player host = new Player(Menu.loggedInUser, durationLineSize, handSize);
+    static private final Player host = new Player(Menu.loggedInUser);
     static private Player guest;
     static private Player turnPlayer;
     static private Player opponent;
@@ -56,7 +56,7 @@ public class Play extends Menu {
             matcher.find();
             if (Login.checkLogIn(matcher, scanner)) {
                 String username = matcher.group("Username");
-                guest = new Player(User.signedUpUsers.get(User.getIdByUsername(username)), durationLineSize, handSize);
+                guest = new Player(User.signedUpUsers.get(User.getIdByUsername(username)));
                 if (guest.getId().equals(host.getId())) {
                     guest = null;
                     System.out.println("Invalid action: You cannot battle yourself.");
