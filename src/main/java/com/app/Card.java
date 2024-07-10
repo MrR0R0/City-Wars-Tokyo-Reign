@@ -89,54 +89,57 @@ public class Card implements Cloneable {
         String details = String.format("%-" + DETAILS_PAD + "s", firstDetail + secondDetail);
         System.out.println(cardName + "|" + cardCost + "|" + details);
     }
-    private String getUpgradeFirstDetail() {
+    public String getUpgradeFirstDetail() {
         String detail = "";
         if(isBreakable())
             detail = "ACC: " + acc + "->" + levelUpFormula(acc, level+1);
         else if(isHeal())
-            detail = "added HP: " + level * healByLevel + "->" + (level+1) * healByLevel;
+            detail = "+HP: " + level * healByLevel + "->" + (level+1) * healByLevel;
         else if(isPowerBooster()) {
-            detail = "Multiplier: "
+            detail = "ratio: "
                     + String.format("%.2f", getPowerBoostMultiplier())
-                    + " -> "
+                    + "->"
                     + String.format("%.2f", getPowerBoostMultiplierByLevel(level + 1));
 
         }
         else if(isCardMitigator()){
-            detail = "Multiplier: "
+            detail = "ratio: "
                     + String.format("%.2f", getMitigatorMultiplier())
-                    + " -> "
+                    + "->"
                     + String.format("%.2f", getMitigatorMultiplierByLevel(level + 1));
         }
         return detail;
     }
 
-    private String getUpgradeSecondDetail(){
+    public String getUpgradeSecondDetail(){
         String detail = "";
         if(isBreakable())
-            detail = ", Att_Def: " + attackOrDefense + "->" + levelUpFormula(attackOrDefense, level+1);
+            detail = " A/D: " + attackOrDefense + "->" + levelUpFormula(attackOrDefense, level+1);
         return detail;
     }
 
-    private String getPurchaseFirstDetail(){
+    public String getPurchaseFirstDetail(){
         String detail = "";
         if(isBreakable())
             detail = "ACC: " + acc;
         else if(isHeal())
-            detail = "added HP: " + level * healByLevel;
+            detail = "+HP: " + level * healByLevel;
         else if(isPowerBooster()) {
-            detail = "Multiplier: " + String.format("%.2f", getPowerBoostMultiplier());
+            detail = "ratio: " + String.format("%.2f", getPowerBoostMultiplier());
         }
         else if(isCardMitigator()){
-            detail = "Multiplier: " + String.format("%.2f", getMitigatorMultiplier());
+            detail = "ratio: " + String.format("%.2f", getMitigatorMultiplier());
+        }
+        else if(isShield()){
+            detail = "ACC: inf";
         }
         return detail;
     }
 
-    private String getPurchaseSecondDetail(){
+    public String getPurchaseSecondDetail(){
         String detail = "";
         if(isBreakable())
-            detail = ", Att_Def: " + attackOrDefense;
+            detail = " A/D: " + attackOrDefense;
         return detail;
     }
 

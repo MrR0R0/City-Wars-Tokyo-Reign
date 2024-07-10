@@ -80,6 +80,7 @@
                                 <rowConstraints>
                                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                                    <RowConstraints />
                                 </rowConstraints>
                                  <children>
                                     <Label fx:id="countdown_label" alignment="CENTER" prefHeight="23.0" prefWidth="218.0" style="-fx-text-fill: red;" styleClass="text" text="Countdown" textAlignment="CENTER" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -153,6 +154,9 @@
                                        <font>
                                           <Font size="13.0" />
                                        </font>
+                                       <GridPane.margin>
+                                          <Insets left="10.0" />
+                                       </GridPane.margin>
                                     </Label>
                                     <Label fx:id="forgot_label" prefHeight="19.0" prefWidth="110.0" styleClass="text" text="Forgot password?" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>

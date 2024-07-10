@@ -44,6 +44,13 @@ public class LoginController extends Login implements Initializable {
                 e.printStackTrace();
             }
         });
+        signUp_label.setOnMouseClicked(event -> {
+            try {
+                handleSignup();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         countdown_label.setText("");
         error_label.setText("");
         wrongPasswordCounter = 0;
@@ -59,7 +66,11 @@ public class LoginController extends Login implements Initializable {
     private void handleLogin(ActionEvent actionEvent) {
         if(checkLogIn()){
            loggedInUser = User.signedUpUsers.get(User.getIdByUsername(username));
-            System.out.println("welcome");
+            try {
+                Main.loadMainMenu();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
