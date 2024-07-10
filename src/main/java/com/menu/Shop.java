@@ -209,6 +209,9 @@ public class Shop extends Menu {
             if (!hasRepeated && purchasableCards.size() < purchasableAmount) {
                 purchasableCards.add(card.clone());
             }
+            if(purchasableCards.size() >= purchasableAmount){
+                break;
+            }
         }
     }
 
