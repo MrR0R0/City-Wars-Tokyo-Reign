@@ -29,7 +29,6 @@ public class ProfileController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Menu.loggedInUser = User.signedUpUsers.get(3);
         error_label.setText("");
         save_but.setOnMouseClicked(event -> {
             try {
