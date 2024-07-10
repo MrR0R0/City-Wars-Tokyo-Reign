@@ -2,10 +2,12 @@ package com;
 
 import com.app.*;
 import com.database.Connect;
+import com.menu.Menu;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,7 +22,9 @@ public class Main extends javafx.application.Application{
         stage = primaryStage;
         Card.allCards = Connect.getCards();
         User.signedUpUsers = Connect.getUsers();
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/MainMenu-view.fxml"));
+        fillAllCardImages();
+        //Menu.loggedInUser = User.signedUpUsers.get(2);
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Shop-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setTitle("War city");
         stage.setScene(scene);
@@ -32,11 +36,9 @@ public class Main extends javafx.application.Application{
         });
         stage.show();
     }
-
     public static void main(String[] args) {
         launch();
     }
-
     public static void loadMainMenu() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/MainMenu-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
@@ -66,5 +68,10 @@ public class Main extends javafx.application.Application{
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/User-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
+    }
+    private static void fillAllCardImages(){
+        for(int i=1; i<=Card.allCards.size(); i++){
+            Card.allCardImages.put(i, new Image("file:src\\main\\resources\\com\\images\\card\\" + i + ".png"));
+        }
     }
 }

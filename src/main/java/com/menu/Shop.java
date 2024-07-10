@@ -158,7 +158,7 @@ public class Shop extends Menu {
         System.out.println("Purchased Card \"" + selectedCard.getName() + "\"");
     }
 
-    static private void updateUpgradableCards() {
+    protected static void updateUpgradableCards() {
         upgradableCards = new ArrayList<>();
         for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
             Card card = entry.getValue();
@@ -168,7 +168,7 @@ public class Shop extends Menu {
         }
     }
 
-    static private void updatePurchasableCards() {
+    protected static void updatePurchasableCards() {
         purchasableCards = new ArrayList<>();
         HashSet<Integer> repeatedIds = new HashSet<>();
         int shieldOrSpellCounter = 0;
@@ -208,6 +208,9 @@ public class Shop extends Menu {
             boolean hasRepeated = loggedInUser.getCards().containsKey(card.getId()) || repeatedIds.contains(card.getId());
             if (!hasRepeated && purchasableCards.size() < purchasableAmount) {
                 purchasableCards.add(card.clone());
+            }
+            if(purchasableCards.size() >= purchasableAmount){
+                break;
             }
         }
     }

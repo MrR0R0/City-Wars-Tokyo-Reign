@@ -7,7 +7,7 @@ module City.Wars.Tokyo.Reign {
     requires javafx.swing;
 
     exports com.controllers to javafx.fxml;
-
+    exports com.app;
     opens com to javafx.fxml;
     exports com;
 }
