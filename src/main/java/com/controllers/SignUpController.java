@@ -40,6 +40,7 @@ public class SignUpController implements Initializable {
     private boolean blueDicBoolean = true;
     private String username, email, password, nickname, recoveryAns, recoveryQ, captchaText;
 
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
         showPage(1);
 
