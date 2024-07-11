@@ -44,8 +44,9 @@ public class Connect {
             pstmt.setString(8, user.getRecoveryAns());
             pstmt.setInt(9, user.getWallet());
             pstmt.setInt(10, user.getXP());
-            if (user.getProfile()!= null)
-                pstmt.setString(11,user.getProfile().getUrl());
+            if(user.getProfile()!=null) {
+                pstmt.setString(11, user.getProfile().getUrl());
+            }
             pstmt.executeUpdate();
             //System.out.println("user has been added to the database.");
         } catch (SQLException e) {
@@ -217,7 +218,6 @@ public class Connect {
                         User.signedUpUsers.get(hostId).getUsername(),
                         resultSet.getString("time"),
                         resultSet.getString("guest_cons"),
-//                        resultSet.getString("result"),
                         String.valueOf(resultSet.getInt("guest_level")),
                         User.signedUpUsers.get(guestId).getUsername(),
                         resultSet.getInt("winner_id"),

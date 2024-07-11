@@ -39,7 +39,7 @@ public class HistoryController extends Menu implements Initializable {
         ArrayList<HistoryModel> history = new ArrayList<>();
         try {
             history = Connect.getHistory(String.valueOf(loggedInUser.getId()));
-        } catch (SQLException ignored){
+        } catch (SQLException ignored) {
         }
         hostResult_col.setCellValueFactory(cellData -> cellData.getValue().hostResultProperty());
         hostLevel_col.setCellValueFactory(cellData -> cellData.getValue().hostLevelProperty());
@@ -57,17 +57,70 @@ public class HistoryController extends Menu implements Initializable {
                 if (!isEmpty()) {
                     HistoryModel historyModel = getTableView().getItems().get(getIndex());
                     if (historyModel.getWinnerId().equals(loggedInUser.getId())) {
-                        setStyle("-fx-background-color: green; -fx-font-weight: bold;");
+                        setStyle("-fx-text-fill: #00ff00; -fx-font-weight: bold;");
                     } else {
-                        setTextFill(Color.RED); // Default color if no condition matches
+                        setStyle("-fx-text-fill: #ff0000; -fx-font-weight: bold;");
+                        ; // Default color if no condition matches
                     }
+                }
+            }
+        });
+        hostResult_col.setCellFactory(column -> new TextFieldTableCell<>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!isEmpty()) {
+                    HistoryModel historyModel = getTableView().getItems().get(getIndex());
+                    setStyle("-fx-text-fill: #00d9ff; -fx-font-weight: bold;");
+                }
+            }
+        });
+        hostLevel_col.setCellFactory(column -> new TextFieldTableCell<>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!isEmpty()) {
+                    HistoryModel historyModel = getTableView().getItems().get(getIndex());
+                    setStyle("-fx-text-fill: #00d9ff; -fx-font-weight: bold;");
+                }
+            }
+        });
+
+        guestName_col.setCellFactory(column -> new TextFieldTableCell<>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!isEmpty()) {
+                    HistoryModel historyModel = getTableView().getItems().get(getIndex());
+                    if (historyModel.getWinnerId().equals(loggedInUser.getId())) {
+                        setStyle("-fx-text-fill: #ff0000; -fx-font-weight: bold;");
+                    } else {
+                        setStyle("-fx-text-fill: #00ff00; -fx-font-weight: bold;");
+                    }
+                }
+            }
+        });
+        guestLevel_col.setCellFactory(column -> new TextFieldTableCell<>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!isEmpty()) {
+                    setStyle("-fx-text-fill: #eb4fff; -fx-font-weight: bold;");
+                }
+            }
+        });
+        guestResult_col.setCellFactory(column -> new TextFieldTableCell<>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!isEmpty()) {
+                    setStyle("-fx-text-fill: #eb4fff; -fx-font-weight: bold;");
                 }
             }
         });
 
 
-
-        for(HistoryModel historyModel : history){
+        for (HistoryModel historyModel : history) {
             history_table.getItems().add(historyModel);
         }
 

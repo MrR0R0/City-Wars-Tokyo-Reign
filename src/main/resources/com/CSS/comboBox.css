@@ -5,6 +5,7 @@
     -fx-prompt-text-fill: #a8ffff;
     -fx-prompt-font-weight: bold;
     -fx-font-size: 11;
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(0, 111, 255, 0.7), rgba(73, 0, 126, 0.7));
     /*-fx-padding: 5;*/
 }
 .combo-box {
@@ -55,21 +56,21 @@
     -fx-prompt-font-weight: bold;
 }
 
-/*.combo-box-popup .list-view .list-cell:filled:hover {*/
-/*    -fx-background-color: #1ED760;*/
-/*    -fx-text-fill: black;*/
-/*}*/
+.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color: #e000ff;
+    -fx-text-fill: black;
+}
 
-/*.combo-box-base:hover {*/
-/*    -fx-background: #00ff00;*/
-/*    -fx-background-color: #2cf52c;*/
-/*    -fx-text-fill: linear-gradient(from 34.4697% 100.0% to 34.8485% 53.7879%, reflect, #bcbcbc 0.0%, #ffffff 100.0%);*/
-/*}*/
-/*.combo-box-base:showing {*/
-/*    -fx-background: #2bff2b;*/
-/*    -fx-background-color: #21ff21;*/
-/*    -fx-text-fill:linear-gradient(from 34.4697% 100.0% to 34.8485% 53.7879%, reflect, #bcbcbc 0.0%, #ffffff 100.0%);*/
-/*}*/
+.combo-box-base:hover {
+    -fx-background: #e000ff;
+    -fx-background-color: #e000ff;
+    -fx-text-fill: black;
+}
+.combo-box-base:showing {
+    -fx-background: #e000ff;
+    -fx-background-color: #e000ff;
+    -fx-text-fill:black;
+}
 
 .combo-box-base:focused {
     -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(0, 111, 255, 0.7), rgba(73, 0, 126, 0.7));

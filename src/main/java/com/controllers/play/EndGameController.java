@@ -48,7 +48,7 @@ public class EndGameController implements Initializable {
         loserDamage_label.setText("Damage: +" + loser.getTotalAttack());
         loserXP_total_label.setText("Total XP: +" + loser.getXP());
         loserXP_required_label.setText("Required XP for next level: " + User.nextLevelXP(loser.getLevel()));
-        
+
         back_but.setOnAction(event -> {
             try {
                 Main.loadMainMenu();

@@ -3,11 +3,12 @@
     -fx-background: transparent ;
 }
 .slider .thumb {
-    -fx-background-color: #10ab10;
+    -fx-background-color: #00f7ff;
 }
 .slider .thumb:hover{
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0)
 }
+
 
 .progress-bar {
     -fx-accent: #1ad01a;
@@ -22,7 +23,30 @@
 .progress-bar > .track {
     -fx-border-radius: 0;
     -fx-background-radius: 0;
-    -fx-text-box-border: transparent;
-    -fx-control-inner-background: transparent;
-    -fx-background-color: rgba(0, 0, 0, 1);
+    -fx-text-box-border:  rgba(27, 0, 82, 0.8);
+    -fx-control-inner-background:  rgba(27, 0, 82, 0.8);
+    -fx-effect: dropshadow(three-pass-box,  rgba(27, 0, 82, 0.8), 10, 0, 0, 0)
+}
+
+.hpProgress-bar {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+    -fx-border-width: 2;
+    -fx-background-radius: 10;
+    -fx-border-color: #690088;
+    -fx-accent: #c700ff;
+}
+
+.hpProgress-bar .bar {
+    -fx-padding: 10px;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+}
+
+.hpProgress-bar > .track {
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+    -fx-text-box-border:  rgba(27, 0, 82, 0.8);
+    -fx-control-inner-background:  rgba(27, 0, 82, 0.8);
+    /*-fx-effect: dropshadow(three-pass-box, rgba(27, 0, 82, 0.8), 10, 0, 0, 0)*/
 }

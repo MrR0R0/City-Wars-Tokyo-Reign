@@ -20,6 +20,7 @@ public class Card implements Cloneable {
     private Integer level, price, damage, duration, upgradeCost, attackOrDefense, acc, id, isBreakable, upgradeLevel;
     public static LinkedHashMap<Integer, Card> allCards = new LinkedHashMap<>();
     public static LinkedHashMap<Integer, Image> allCardImages = new LinkedHashMap<>();
+    public static LinkedHashMap<Characters,Image> charactersImage = new LinkedHashMap<>();
 
     public Card() {
     }
