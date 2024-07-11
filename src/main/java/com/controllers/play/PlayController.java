@@ -6,15 +6,23 @@ import com.menu.Menu;
 import com.menu.play.Cell;
 import com.menu.play.Play;
 import com.menu.play.Player;
+import javafx.application.Platform;
+import javafx.animation.KeyFrame;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
 import javafx.util.Pair;
+import javafx.util.Duration;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.scene.control.Label;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.Objects;
@@ -371,6 +379,7 @@ public class PlayController implements Initializable {
                 hostPlayer.increaseRoundAttack(hostCell.getCard().getGamingAttackOrDefense());
                 guestPlayer.decreaseHP(hostCell.getCard().getGamingAttackOrDefense());
             }
+
             if (isGameOver() != null) {
                 hostPlayer.updateTotalAttack();
                 guestPlayer.updateTotalAttack();
@@ -379,6 +388,7 @@ public class PlayController implements Initializable {
                 updateHPBar();
                 return;
             }
+
         }
         hostRoundAttack_label.setText(String.valueOf(hostPlayer.getRoundAttack()));
         guestRoundAttack_label.setText(String.valueOf(guestPlayer.getRoundAttack()));
