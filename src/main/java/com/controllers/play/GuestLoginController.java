@@ -42,7 +42,7 @@ public class GuestLoginController extends Login implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        hostPlayer = new Player(loggedInUser);
+        hostPlayer = new Player(loggedInUser.clone());
         login_but.setOnAction(event -> {
             try {
                 handleLogin();
@@ -61,7 +61,7 @@ public class GuestLoginController extends Login implements Initializable {
 
     private void handleLogin() throws IOException {
         if(checkLogIn()){
-            guestPlayer = new Player(User.signedUpUsers.get(User.getIdByUsername(username)));
+            guestPlayer = new Player(User.signedUpUsers.get(User.getIdByUsername(username)).clone());
             Main.loadPreparePlay();
         }
     }
