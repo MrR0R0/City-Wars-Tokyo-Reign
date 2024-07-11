@@ -23,7 +23,7 @@ public class Play extends Menu {
     static private Player guest;
     static private Player turnPlayer;
     static private Player opponent;
-    static private final Integer gameRounds = 4;
+    static public final Integer gameRounds = 4;
     static private int roundCounter;
 
     static private Integer pot = 0;
