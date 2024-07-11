@@ -3,7 +3,8 @@ package com.controllers.play;
 import com.Main;
 import com.app.Card;
 import com.menu.play.Play;
-import javafx.animation.PauseTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -22,6 +23,7 @@ import static com.controllers.play.GuestLoginController.guestPlayer;
 import static com.controllers.play.GuestLoginController.hostPlayer;
 import static com.menu.Menu.loggedInUser;
 
+@SuppressWarnings("DuplicatedCode")
 public class PreparePlayController implements Initializable {
     public GridPane mode_pane;
     public GridPane character_pane;
@@ -37,7 +39,7 @@ public class PreparePlayController implements Initializable {
     public Pagination guest_pagination;
     private int page = 1;
     protected static Play.Mode playMode;
-    private PauseTransition pause;
+    private Timeline timeline;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -95,7 +97,6 @@ public class PreparePlayController implements Initializable {
             }
         });
 
-
         host_pagination.setPageFactory(pageIndex -> {
             ImageView imageView = new ImageView(Card.charactersImage.get(Card.Characters.valueOf("Character" + (pageIndex + 1))));
             imageView.setFitWidth(100);
@@ -112,16 +113,20 @@ public class PreparePlayController implements Initializable {
         host_pagination.setCurrentPageIndex(0);
         guest_pagination.setCurrentPageIndex(0);
 
-        pause = new PauseTransition(Duration.seconds(3));
-        pause.setOnFinished(event -> {
-            error_label.setTextFill(Color.GREEN);
-            error_label.setText("Starting...");
-            try {
-                Main.loadPlayMenu();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, event -> {
+                    error_label.setTextFill(Color.GREEN);
+                    error_label.setText("Starting...");
+                }),
+                new KeyFrame(Duration.seconds(3), event -> {
+                    try {
+                        Main.loadPlayMenu();
+                        timeline.stop();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+        );
 
         showFirstPage();
     }
@@ -131,13 +136,13 @@ public class PreparePlayController implements Initializable {
             if(checkBet()){
                 playMode = Play.Mode.Betting;
                 setCharacters();
-                pause.play();
+                timeline.play();
             }
         }
         if(mode_comboBox.getValue().equals(Play.Mode.Normal)){
             playMode = Play.Mode.Normal;
             setCharacters();
-            pause.play();
+            timeline.play();
         }
     }
 

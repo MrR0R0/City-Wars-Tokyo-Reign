@@ -50,6 +50,8 @@ public class PlayController implements Initializable {
     public Label hostRoundAttack_label;
     public GridPane guestField_pane;
     public GridPane hostField_pane;
+    public Label round_label;
+    public Label turn_label;
 
     private final Color lineColor = Color.rgb(192, 0, 211,0.7);
     static private Player turnPlayer, opponent, selectedCellOwner, selectedCardOwner;
@@ -65,14 +67,11 @@ public class PlayController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        hostPlayer = new Player(User.signedUpUsers.get(2));
-//        hostPlayer.setCharacter(Card.Characters.Character1);
-//        guestPlayer = new Player(User.signedUpUsers.get(1));
-//        guestPlayer.setCharacter(Card.Characters.Character2);
         guestName_label.setText(guestPlayer.getNickname());
         hostName_label.setText(hostPlayer.getNickname());
         hostCardPanesList = new ArrayList<>();
         guestCardPanesList = new ArrayList<>();
+        error_label.setText("");
         updateHPBar();
         initEachRound();
         displayHand(hostPlayer);
@@ -85,12 +84,12 @@ public class PlayController implements Initializable {
     }
 
     private void placeCard() {
-        error_label.setText("");
         if (selectedCellOwner == selectedCardOwner && selectedCardOwner == turnPlayer) {
             if (checkPlacement()) {
                 changeTurn();
                 roundCounter--;
             }
+            updateHPBar();
             displayHand(guestPlayer);
             displayHand(hostPlayer);
             updateDurationLine(hostPlayer);
@@ -100,6 +99,9 @@ public class PlayController implements Initializable {
             selectedCardIndex = -1;
             selectedCellIndex = -1;
         }
+        error_label.setText("");
+        round_label.setText("Rounds: " + roundCounter);
+        turn_label.setText(turnPlayer.getNickname() + "'s turn");
         if (roundCounter == 0) {
             movingTimeLine();
             timeline.statusProperty().addListener((obs, oldStatus, newStatus) -> {
@@ -150,6 +152,12 @@ public class PlayController implements Initializable {
                 error_label.setText("No cards on the track! You have wasted power booster card!");
             } else {
                 for (int i = initialIndex; i < initialIndex + turnPlayer.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
+                    if(turnPlayer == hostPlayer){
+                        hostCardPanesList.get(i).setBooster();
+                    }
+                    else{
+                        guestCardPanesList.get(i).setBooster();
+                    }
                     turnPlayer.getDurationLine().get(i).getCard().boostAttackDefense(selectedCard.getPowerBoostMultiplier());
                 }
             }
@@ -276,7 +284,6 @@ public class PlayController implements Initializable {
             });
             index++;
         }
-
     }
 
     private void updateDurationLine(Player player) {
@@ -347,13 +354,11 @@ public class PlayController implements Initializable {
         int randomPlayer = random.nextInt(2);
         turnPlayer = randomPlayer == 0 ? hostPlayer : guestPlayer;
         opponent = randomPlayer == 0 ? guestPlayer : hostPlayer;
-        if (randomPlayer == 0) {
-            error_label.setText("Host starts");
-        } else {
-            error_label.setText("guest starts");
-        }
         roundCounter = gameRounds;
-
+        round_label.setText("Rounds: " + roundCounter);
+        turn_label.setText(turnPlayer.getNickname() + "'s turn");
+        hostRoundAttack_label.setText("0");
+        guestRoundAttack_label.setText("0");
     }
 
     private static void changeTurn() {
@@ -405,6 +410,9 @@ public class PlayController implements Initializable {
     }
 
     private void movingTimeLine() {
+        error_label.setText("");
+        round_label.setText("");
+        turn_label.setText("");
         timeline.stop();
         checkStop = false;
         timeline.getKeyFrames().clear();
@@ -416,7 +424,7 @@ public class PlayController implements Initializable {
                 Cell guestCell = guestPlayer.getDurationLine().get(index[0]);
 
                 if (guestCell.getCard() != null) {
-                    hostPlayer.increaseRoundAttack(guestCell.getCard().getGamingAttackOrDefense());
+                    guestPlayer.increaseRoundAttack(guestCell.getCard().getGamingAttackOrDefense());
                     hostPlayer.decreaseHP(guestCell.getCard().getGamingAttackOrDefense());
                 }
 
@@ -452,6 +460,8 @@ public class PlayController implements Initializable {
 
                     hostPlayer.applyResults(Menu.loggedInUser);
                     guestPlayer.applyResults(User.signedUpUsers.get(guestPlayer.getId()));
+                    EndGameController.winner = winner;
+                    EndGameController.loser = loser;
                     try {
                         Main.loadEndGame();
                     } catch (IOException e) {

@@ -173,6 +173,7 @@ public class Player extends User {
             case Normal -> obtainedCoins += (int) (max(0.1 * getHP(), 0) + totalAttack * 0.1);
             case Betting -> obtainedCoins += isWinner ? pot : 0;
         }
+        obtainedCoins = max(0, obtainedCoins);
         obtainedXP = (int) (max(0.2 * getHP(), 0) + totalAttack * 0.2);
         increaseXP(obtainedXP);
         increaseMoney(obtainedCoins);
