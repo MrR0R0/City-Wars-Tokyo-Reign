@@ -5,6 +5,7 @@ module City.Wars.Tokyo.Reign {
     requires javafx.media;
     requires java.desktop;
     requires javafx.swing;
+    requires jdk.compiler;
 
     exports com.controllers to javafx.fxml;
     exports com.app;

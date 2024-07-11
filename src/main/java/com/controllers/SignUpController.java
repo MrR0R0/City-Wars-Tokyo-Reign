@@ -1,8 +1,10 @@
 package com.controllers;
 
+import com.Main;
 import com.app.User;
 import com.menu.authentication.Captcha;
 import com.menu.authentication.SignUp;
+import com.sun.source.tree.ArrayAccessTree;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -10,7 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class SignUpController extends SignUp implements Initializable {
@@ -96,6 +100,12 @@ public class SignUpController extends SignUp implements Initializable {
             tmpUser.giveRandomCard();
             tmpUser.updateCardSeriesByCards();
             User.signedUpUsers.put(User.signedUpUsers.size()+1, tmpUser);
+            loggedInUser = tmpUser;
+            try {
+                Main.loadMainMenu();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
