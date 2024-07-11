@@ -1,6 +1,7 @@
 package com.app;
 
 import com.database.Connect;
+import javafx.scene.image.Image;
 
 import java.sql.SQLException;
 import java.util.*;
@@ -9,6 +10,7 @@ import java.util.regex.Pattern;
 
 public class User implements Cloneable {
     private String username, password, nickname, email, recoveryAns, recoveryQ, cardsSeries;
+    private Image profile;
     private Integer wallet, level, id, XP, HP;
 
     // should initialize in signup
@@ -314,5 +316,13 @@ public class User implements Cloneable {
 
     public static Integer nextLevelXP(Integer level) {
         return (int) (Math.exp((level + 27.7) / 5) - Math.exp(5.5) + 20);
+    }
+
+    public Image getProfile() {
+        return profile;
+    }
+
+    public void setProfile(Image profile) {
+        this.profile = profile;
     }
 }

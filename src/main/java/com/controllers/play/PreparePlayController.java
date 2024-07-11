@@ -151,7 +151,6 @@ public class PreparePlayController implements Initializable {
         }
         loggedInUser.reduceWallet(hostBetInt);
         guestPlayer.reduceWallet(guestBetInt);
-        PlayController.pot = hostBetInt + guestBetInt;
         pot_field.setText(String.valueOf(hostBetInt + guestBetInt));
         return true;
     }
