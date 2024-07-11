@@ -159,7 +159,7 @@ public class Shop extends Menu {
     }
 
     protected static void updateUpgradableCards() {
-        upgradableCards = new ArrayList<>();
+        upgradableCards.clear();
         for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
             Card card = entry.getValue();
             if (loggedInUser.getLevel() > card.getLevel() && card.isUpgradable()) {
@@ -169,7 +169,7 @@ public class Shop extends Menu {
     }
 
     protected static void updatePurchasableCards() {
-        purchasableCards = new ArrayList<>();
+        purchasableCards.clear();
         HashSet<Integer> repeatedIds = new HashSet<>();
         int shieldOrSpellCounter = 0;
         int timeStrikeCounter = 0;
@@ -210,7 +210,7 @@ public class Shop extends Menu {
                 purchasableCards.add(card.clone());
             }
             if(purchasableCards.size() >= purchasableAmount){
-                break;
+                return;
             }
         }
     }

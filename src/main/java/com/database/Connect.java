@@ -209,9 +209,9 @@ public class Connect {
             pstmt.setString(1, userID);
             pstmt.setString(2, userID);
             ResultSet resultSet = pstmt.executeQuery();
-            int hostId = resultSet.getInt("host_id");
-            int guestId = resultSet.getInt("guest_id");
             while (resultSet.next()) {
+                int hostId = resultSet.getInt("host_id");
+                int guestId = resultSet.getInt("guest_id");
                 HistoryModel tmpHist = new HistoryModel(
                         resultSet.getString("host_cons"),
                         String.valueOf(resultSet.getInt("host_level")),

@@ -70,6 +70,7 @@ public class ShopController extends Shop implements Initializable {
         });
         back_but.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                result_label.setText("");
                 if (page == 1) {
                     try {
                         Main.loadMainMenu();
@@ -84,7 +85,6 @@ public class ShopController extends Shop implements Initializable {
             }
         });
     }
-
 
     private void showFirstPage() {
         shop_basePane.setVisible(true);
@@ -249,6 +249,7 @@ public class ShopController extends Shop implements Initializable {
     }
 
     private void showAllCard() {
+        result_label.setText("");
         cards_pane.getChildren().clear();
         int index = 0;
         for (Map.Entry<Integer, Card> entry : Card.allCards.entrySet()) {
@@ -290,6 +291,7 @@ public class ShopController extends Shop implements Initializable {
 
     private void showUserDeck() {
         cards_pane.getChildren().clear();
+        result_label.setText("");
         int index = 0;
         for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
             Card card = entry.getValue();
