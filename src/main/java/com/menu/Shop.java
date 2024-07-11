@@ -20,8 +20,8 @@ public class Shop extends Menu {
     final static String showUpgradeableCards = "^(?i)show upgradable cards$";
     final static String showPurchasableCards = "^(?i)show purchasable cards$";
     final static String showCardProperties = "^(?i)show properties of card number (?<cardNum>\\d+)$";
-    static protected ArrayList<Card> upgradableCards;  // filled with user's original cards
-    static protected ArrayList<Card> purchasableCards; // filled with clones
+    static protected ArrayList<Card> upgradableCards = new ArrayList<>();  // filled with user's original cards
+    static protected ArrayList<Card> purchasableCards = new ArrayList<>(); // filled with clones
 
     public static void handleInput(String input, Scanner scanner) {
         if (input.matches(backCommand)) {
@@ -159,7 +159,7 @@ public class Shop extends Menu {
     }
 
     protected static void updateUpgradableCards() {
-        upgradableCards = new ArrayList<>();
+        upgradableCards.clear();
         for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
             Card card = entry.getValue();
             if (loggedInUser.getLevel() > card.getLevel() && card.isUpgradable()) {
@@ -169,7 +169,7 @@ public class Shop extends Menu {
     }
 
     protected static void updatePurchasableCards() {
-        purchasableCards = new ArrayList<>();
+        purchasableCards.clear();
         HashSet<Integer> repeatedIds = new HashSet<>();
         int shieldOrSpellCounter = 0;
         int timeStrikeCounter = 0;
@@ -210,7 +210,7 @@ public class Shop extends Menu {
                 purchasableCards.add(card.clone());
             }
             if(purchasableCards.size() >= purchasableAmount){
-                break;
+                return;
             }
         }
     }

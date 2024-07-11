@@ -3,6 +3,7 @@
 <?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -182,7 +183,10 @@
                                                 <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <Pagination fx:id="host_pagination" maxHeight="1.7976931348623157E308" maxPageIndicatorCount="4" maxWidth="1.7976931348623157E308" pageCount="4" prefHeight="200.0" prefWidth="200.0" styleClass="text" stylesheets="@../CSS/pagination.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Pagination fx:id="host_pagination" maxHeight="1.7976931348623157E308" maxPageIndicatorCount="4" maxWidth="1.7976931348623157E308" pageCount="4" prefHeight="200.0" prefWidth="200.0" styleClass="text" stylesheets="@../CSS/pagination.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor></Pagination>
                                             </children>
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -197,7 +201,10 @@
                                                 <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <Pagination fx:id="guest_pagination" maxPageIndicatorCount="4" pageCount="4" prefHeight="200.0" prefWidth="200.0" styleClass="text" stylesheets="@../CSS/pagination.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Pagination fx:id="guest_pagination" maxPageIndicatorCount="4" pageCount="4" prefHeight="200.0" prefWidth="200.0" styleClass="text" stylesheets="@../CSS/pagination.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor></Pagination>
                                             </children>
                                         </GridPane>
                                     </children>
@@ -227,7 +234,7 @@
                                                 <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <TextField fx:id="pot_field" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="Pot" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                <TextField fx:id="pot_field" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="POT" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                                     <GridPane.margin>
                                                         <Insets top="5.0" />
                                                     </GridPane.margin>
@@ -249,7 +256,10 @@
                                                 <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <TextField fx:id="hostBet_field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <TextField fx:id="hostBet_field" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor></TextField>
                                             </children>
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -264,7 +274,10 @@
                                                 <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                             </rowConstraints>
                                             <children>
-                                                <TextField fx:id="guestBet_field" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <TextField fx:id="guestBet_field" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor></TextField>
                                             </children>
                                         </GridPane>
                                         <GridPane GridPane.columnIndex="1" GridPane.rowIndex="3">

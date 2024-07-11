@@ -25,8 +25,7 @@ public class Main extends javafx.application.Application{
         fillAllCardImages();
         fillCharacterImages();
 
-        Menu.loggedInUser = User.signedUpUsers.get(1);
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/MainMenu-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Login-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setTitle("War city");
         stage.setScene(scene);
@@ -57,7 +56,7 @@ public class Main extends javafx.application.Application{
         stage.setScene(scene);
     }
     public static void loadLogin() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/GuestLogin-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Login-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }
@@ -72,7 +71,7 @@ public class Main extends javafx.application.Application{
         stage.setScene(scene);
     }
     public static void loadGuestLogin() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/GuestLogin-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }
@@ -83,6 +82,16 @@ public class Main extends javafx.application.Application{
     }
     public static void loadEndGame() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/EndGame-view.fxml"));
+        scene = new Scene(fxmlLoader.load(), 1050, 700);
+        stage.setScene(scene);
+    }
+    public static void loadPlayMenu() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Play-view.fxml"));
+        scene = new Scene(fxmlLoader.load(), 1050, 700);
+        stage.setScene(scene);
+    }
+    public static void loadForgotPasswordMenu() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/ForgotPassword-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }

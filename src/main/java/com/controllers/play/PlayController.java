@@ -74,10 +74,10 @@ public class PlayController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        hostPlayer = new Player(User.signedUpUsers.get(2));
-        hostPlayer.setCharacter(Card.Characters.Character1);
-        guestPlayer = new Player(User.signedUpUsers.get(1));
-        guestPlayer.setCharacter(Card.Characters.Character2);
+//        hostPlayer = new Player(User.signedUpUsers.get(2));
+//        hostPlayer.setCharacter(Card.Characters.Character1);
+//        guestPlayer = new Player(User.signedUpUsers.get(1));
+//        guestPlayer.setCharacter(Card.Characters.Character2);
         guestName_label.setText(guestPlayer.getNickname());
         hostName_label.setText(hostPlayer.getNickname());
         hostCardPanesList = new ArrayList<>();

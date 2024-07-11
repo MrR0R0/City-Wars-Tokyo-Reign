@@ -70,6 +70,7 @@ public class ShopController extends Shop implements Initializable {
         });
         back_but.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
             if (mouseEvent.getButton() == MouseButton.PRIMARY) {
+                result_label.setText("");
                 if (page == 1) {
                     try {
                         Main.loadMainMenu();
@@ -84,7 +85,6 @@ public class ShopController extends Shop implements Initializable {
             }
         });
     }
-
 
     private void showFirstPage() {
         shop_basePane.setVisible(true);
@@ -127,7 +127,8 @@ public class ShopController extends Shop implements Initializable {
             ColumnConstraints column = new ColumnConstraints();
             column.setPrefWidth(EachColumnWidth);
             upgrade_pane.getColumnConstraints().add(column);
-            upgrade_pane.setPrefWidth(upgrade_pane.getPrefWidth() + EachColumnWidth);
+
+
 
             //update pane
             upgrade_pane.add(cardPane, index, 0);
@@ -205,7 +206,7 @@ public class ShopController extends Shop implements Initializable {
 
     private void upgradeCard(CardPane cardPane) {
         Card selectedCard = cardPane.card;
-        upgrade_pane.getChildren().clear();
+
         if (selectedCard.getUpgradeCost() > loggedInUser.getWallet()) {
             // show error...
             result_label.setStyle("-fx-text-fill: red");
@@ -228,7 +229,7 @@ public class ShopController extends Shop implements Initializable {
 
     private void buyCard(CardPane cardPane) {
         updatePurchasableCards();
-        upgrade_pane.getChildren().clear();
+
         Card selectedCard = cardPane.card;
         if (selectedCard.getPrice() > loggedInUser.getWallet()) {
             result_label.setStyle("-fx-text-fill: red");
@@ -240,7 +241,6 @@ public class ShopController extends Shop implements Initializable {
         loggedInUser.getCards().put(selectedCard.getId(), selectedCard);
         loggedInUser.updateCardSeriesByCards();
         updateWalletLabel();
-
         result_label.setStyle("-fx-text-fill: #00ff00");
         result_label.setText("Purchased Card \"" + selectedCard.getName() + "\"");
 
@@ -249,6 +249,7 @@ public class ShopController extends Shop implements Initializable {
     }
 
     private void showAllCard() {
+        result_label.setText("");
         cards_pane.getChildren().clear();
         int index = 0;
         for (Map.Entry<Integer, Card> entry : Card.allCards.entrySet()) {
@@ -290,6 +291,7 @@ public class ShopController extends Shop implements Initializable {
 
     private void showUserDeck() {
         cards_pane.getChildren().clear();
+        result_label.setText("");
         int index = 0;
         for (Map.Entry<Integer, Card> entry : loggedInUser.getCards().entrySet()) {
             Card card = entry.getValue();
