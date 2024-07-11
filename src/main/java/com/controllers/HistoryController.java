@@ -11,6 +11,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.io.IOException;
 import java.net.URL;
@@ -44,6 +48,24 @@ public class HistoryController extends Menu implements Initializable {
         guestResult_col.setCellValueFactory(cellData -> cellData.getValue().guestResultProperty());
         guestLevel_col.setCellValueFactory(cellData -> cellData.getValue().guestLevelProperty());
         guestName_col.setCellValueFactory(cellData -> cellData.getValue().guestNameProperty());
+
+
+        hostName_col.setCellFactory(column -> new TextFieldTableCell<>() {
+            @Override
+            public void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!isEmpty()) {
+                    HistoryModel historyModel = getTableView().getItems().get(getIndex());
+                    if (historyModel.getWinnerId().equals(loggedInUser.getId())) {
+                        setStyle("-fx-background-color: green; -fx-font-weight: bold;");
+                    } else {
+                        setTextFill(Color.RED); // Default color if no condition matches
+                    }
+                }
+            }
+        });
+
+
 
         for(HistoryModel historyModel : history){
             history_table.getItems().add(historyModel);

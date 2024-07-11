@@ -414,7 +414,7 @@ public class Play extends Menu {
         Connect.insertHistory(guest.getUsername(), guest.getLevel(), guestCons,
                 host.getUsername(), host.getLevel(), hostCons, result,
                 LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
-                host.getId(), guest.getId());
+                host.getId(), guest.getId(), winner.getId(), loser.getId());
 
         host.applyResults(Menu.loggedInUser);
         guest.applyResults(User.signedUpUsers.get(guest.getId()));

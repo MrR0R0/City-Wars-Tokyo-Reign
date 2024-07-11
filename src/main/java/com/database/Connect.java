@@ -44,7 +44,9 @@ public class Connect {
             pstmt.setString(8, user.getRecoveryAns());
             pstmt.setInt(9, user.getWallet());
             pstmt.setInt(10, user.getXP());
-            pstmt.setString(11,user.getProfile().getUrl());
+            if(user.getProfile()!=null) {
+                pstmt.setString(11, user.getProfile().getUrl());
+            }
             pstmt.executeUpdate();
             //System.out.println("user has been added to the database.");
         } catch (SQLException e) {
@@ -76,8 +78,8 @@ public class Connect {
                 user.setXP(rs.getInt("user_XP"));
                 user.updateCardsByCardSeries();
                 userMap.put(rs.getInt("user_id"), user);
-                if (rs.getString("profile_img") != null && !rs.getString("profile_img").isEmpty() && !rs.getString("profile_img").isBlank()) {
-                    URI profileImgURI = new URI(rs.getString("profile_img"));
+                if (rs.getString("user_profile") != null && !rs.getString("user_profile").isEmpty() && !rs.getString("profile_img").isBlank()) {
+                    URI profileImgURI = new URI(rs.getString("user_profile"));
                     Image profileImage = new Image(profileImgURI.toURL().toExternalForm());
                     user.setProfile(profileImage);
                 }
@@ -217,7 +219,9 @@ public class Connect {
                         resultSet.getString("time"),
                         resultSet.getString("guest_cons"),
                         String.valueOf(resultSet.getInt("guest_level")),
-                        User.signedUpUsers.get(guestId).getUsername()
+                        User.signedUpUsers.get(guestId).getUsername(),
+                        resultSet.getInt("winner_id"),
+                        resultSet.getInt("loser_id")
                 );
                 historyArray.add(tmpHist);
             }
@@ -233,10 +237,11 @@ public class Connect {
 
     public static void insertHistory(String guestName, int guestLevel, String guestCons,
                                      String hostName, int hostLevel, String hostCons,
-                                     String result, String time, int hostId, int guestId) {
+                                     String result, String time, int hostId, int guestId,
+                                     int winner_id, int loser_id) {
         connectToDatabase();
         try {
-            String sql = "INSERT INTO history (guest_name, guest_level, guest_cons, host_name, host_level, host_cons, result, time, host_id, guest_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO history (guest_name, guest_level, guest_cons, host_name, host_level, host_cons, result, time, host_id, guest_id, winner_id, loser_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
             PreparedStatement statement = connection.prepareStatement(sql);
 
             // Set parameters
@@ -250,6 +255,8 @@ public class Connect {
             statement.setString(8, time);
             statement.setInt(9, hostId);
             statement.setInt(10, guestId);
+            statement.setInt(11, winner_id);
+            statement.setInt(12, loser_id);
 
             // Execute the insert statement
             statement.executeUpdate();
