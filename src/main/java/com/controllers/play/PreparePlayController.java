@@ -87,6 +87,11 @@ public class PreparePlayController implements Initializable {
         pause.setOnFinished(event -> {
             error_label.setTextFill(Color.GREEN);
             error_label.setText("Starting...");
+            try {
+                Main.loadPlayMenu();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
 
         showFirstPage();

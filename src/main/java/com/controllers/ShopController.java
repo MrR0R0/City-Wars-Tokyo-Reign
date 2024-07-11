@@ -227,7 +227,6 @@ public class ShopController extends Shop implements Initializable {
     }
 
     private void buyCard(CardPane cardPane) {
-        updatePurchasableCards();
         upgrade_pane.getChildren().clear();
         Card selectedCard = cardPane.card;
         if (selectedCard.getPrice() > loggedInUser.getWallet()) {
@@ -240,12 +239,12 @@ public class ShopController extends Shop implements Initializable {
         loggedInUser.getCards().put(selectedCard.getId(), selectedCard);
         loggedInUser.updateCardSeriesByCards();
         updateWalletLabel();
-
         result_label.setStyle("-fx-text-fill: #00ff00");
         result_label.setText("Purchased Card \"" + selectedCard.getName() + "\"");
 
 //      changes in scene
         showPurchasableCards();
+        showUpgradableCards();
     }
 
     private void showAllCard() {
