@@ -3,7 +3,9 @@ package com.database;
 import com.app.Card;
 import com.app.User;
 import com.controllers.HistoryModel;
+import javafx.scene.image.Image;
 
+import java.net.URI;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,7 +30,7 @@ public class Connect {
 
     public static void insertUser(User user) throws SQLException {
         String sql = "INSERT INTO user(user_level, user_username, user_cards, user_password, user_nickname, user_email, "
-                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet, user_XP) VALUES(?,?,?,?,?,?,?,?,?,?)";
+                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet, user_XP, user_profile) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
         try {
             connectToDatabase();
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -42,6 +44,7 @@ public class Connect {
             pstmt.setString(8, user.getRecoveryAns());
             pstmt.setInt(9, user.getWallet());
             pstmt.setInt(10, user.getXP());
+            pstmt.setString(11,user.getProfile().getUrl());
             pstmt.executeUpdate();
             //System.out.println("user has been added to the database.");
         } catch (SQLException e) {
@@ -73,10 +76,15 @@ public class Connect {
                 user.setXP(rs.getInt("user_XP"));
                 user.updateCardsByCardSeries();
                 userMap.put(rs.getInt("user_id"), user);
+                if (rs.getString("profile_img") != null && !rs.getString("profile_img").isEmpty() && !rs.getString("profile_img").isBlank()) {
+                    URI profileImgURI = new URI(rs.getString("profile_img"));
+                    Image profileImage = new Image(profileImgURI.toURL().toExternalForm());
+                    user.setProfile(profileImage);
+                }
             }
             //System.out.println("Users has been retrieved and added to the LinkedHashMap.");
             return userMap;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             return null;
         } finally {
