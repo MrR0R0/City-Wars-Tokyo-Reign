@@ -162,7 +162,10 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <ImageView fx:id="profile_image" fitHeight="49.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                                    <ImageView fx:id="profile_image" fitHeight="49.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                       <image>
+                                          <Image url="@../images/4675250.png" />
+                                       </image></ImageView>
                                     <Label fx:id="level_label" text="LVL" textFill="#a8ffff" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font name="Orbitron-Bold" size="16.0" />
@@ -184,7 +187,7 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <ProgressBar fx:id="XP_progress" prefHeight="7.0" prefWidth="61.0" progress="0.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                                    <ProgressBar fx:id="XP_progress" prefHeight="15.0" prefWidth="55.0" progress="0.0" styleClass="hpProgress-bar" stylesheets="@../CSS/bar.css" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                                     <ImageView fx:id="XP_image" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                                     <ImageView fx:id="HP_image" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <image>

@@ -91,6 +91,8 @@ public class Main extends javafx.application.Application{
     }
     public static void loadForgotPasswordMenu() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/ForgotPassword-view.fxml"));
+    public static void loadSetting() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Setting-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }

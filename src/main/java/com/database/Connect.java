@@ -30,7 +30,7 @@ public class Connect {
 
     public static void insertUser(User user) throws SQLException {
         String sql = "INSERT INTO user(user_level, user_username, user_cards, user_password, user_nickname, user_email, "
-                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet, user_XP, user_profile) VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+                + "user_recoveryQuestion, user_recoveryAnswer, user_wallet, user_XP, user_profile, user_HP) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
         try {
             connectToDatabase();
             PreparedStatement pstmt = connection.prepareStatement(sql);
@@ -47,6 +47,7 @@ public class Connect {
             if(user.getProfile()!=null) {
                 pstmt.setString(11, user.getProfile().getUrl());
             }
+            pstmt.setInt(12,400);
             pstmt.executeUpdate();
             //System.out.println("user has been added to the database.");
         } catch (SQLException e) {
@@ -76,6 +77,7 @@ public class Connect {
                 user.setWallet(rs.getInt("user_wallet"));
                 user.setID(rs.getInt("user_id"));
                 user.setXP(rs.getInt("user_XP"));
+                user.setHP(rs.getInt("user_HP"));
                 user.updateCardsByCardSeries();
                 userMap.put(rs.getInt("user_id"), user);
                 if (rs.getString("user_profile") != null && !rs.getString("user_profile").isEmpty() && !rs.getString("profile_img").isBlank()) {
