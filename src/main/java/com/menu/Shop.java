@@ -20,8 +20,8 @@ public class Shop extends Menu {
     final static String showUpgradeableCards = "^(?i)show upgradable cards$";
     final static String showPurchasableCards = "^(?i)show purchasable cards$";
     final static String showCardProperties = "^(?i)show properties of card number (?<cardNum>\\d+)$";
-    static protected ArrayList<Card> upgradableCards;  // filled with user's original cards
-    static protected ArrayList<Card> purchasableCards; // filled with clones
+    static protected ArrayList<Card> upgradableCards = new ArrayList<>();  // filled with user's original cards
+    static protected ArrayList<Card> purchasableCards = new ArrayList<>(); // filled with clones
 
     public static void handleInput(String input, Scanner scanner) {
         if (input.matches(backCommand)) {
