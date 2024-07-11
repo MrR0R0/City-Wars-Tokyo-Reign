@@ -3,6 +3,7 @@ package com;
 import com.app.*;
 import com.database.Connect;
 import com.menu.Menu;
+import com.menu.authentication.SignUp;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,7 +26,9 @@ public class Main extends javafx.application.Application{
         fillAllCardImages();
         fillCharacterImages();
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Login-view.fxml"));
+        Menu.loggedInUser = User.signedUpUsers.get(1);
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Play-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setTitle("War city");
         stage.setScene(scene);

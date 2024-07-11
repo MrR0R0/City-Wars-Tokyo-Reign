@@ -103,7 +103,7 @@ public class User implements Cloneable {
         return HP;
     }
 
-    public void decreaseHP(int value) {
+    public void decreaseHP(Integer value) {
         HP -= value;
     }
 

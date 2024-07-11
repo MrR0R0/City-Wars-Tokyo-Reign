@@ -106,21 +106,21 @@ public class CardPane extends GridPane {
     }
 
     public void setTimeStrikeType() {
-        imageContainer.setStyle("-fx-border-color: #f500e0; -fx-border-width: 3; -fx-border-style: solid;");
+        imageContainer.setStyle("-fx-background-color: #f500e0; -fx-border-color: #f500e0; -fx-border-width: 3; -fx-border-style: solid;");
     }
 
     public void setGlow(){
         imageContainer.setStyle("-fx-background-color: #00ffff; -fx-border-color: #00ffff; -fx-border-width: 3; -fx-border-style: solid;");
     }
     public void setNormal() {
-        imageContainer.setStyle("-fx-background-color: #2a00b0; -fx-border-color: #2a00b0; -fx-border-width: 2; -fx-border-style: solid;-fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);");
+        imageContainer.setStyle("-fx-background-color: #3c00ff; -fx-border-color: #3c00fd; -fx-border-width: 3; -fx-border-style: solid;");
     }
 
     public void setBooster() {
         imageContainer.setStyle("-fx-background-color: gold; -fx-border-color: gold; -fx-border-width: 3; -fx-border-style: solid;");
     }
-    public void setDurationStyle() {
-        this.setStyle("-fx-border-color: linear-gradient(from 0.0% 50.0% to 100.0% 50.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);\n");
+    public void setSpellType() {
+        imageContainer.setStyle("-fx-border-color: linear-gradient(from 0.0% 50.0% to 100.0% 50.0%, reflect, #0051ff 0.0%, #ff0000 100.0%);-fx-border-width: 3; -fx-border-style: solid;-fx-background-color: linear-gradient(from 0.0% 50.0% to 100.0% 50.0%, reflect, #0051ff 0.0%, #ff0000 100.0%);");
     }
 
     public void setShatter() {
