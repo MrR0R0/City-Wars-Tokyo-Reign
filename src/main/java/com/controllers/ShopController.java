@@ -117,7 +117,7 @@ public class ShopController extends Shop implements Initializable {
             upgradeButton.setText("UPGRADE");
             upgradeButton.setFont(Font.font(11));
             upgradeButton.getStyleClass().add("text");
-            upgradeButton.getStyleClass().add("box");
+            upgradeButton.getStyleClass().add("upgrade");
             upgradeButton.setPrefWidth(60);
             upgradeButton.setPrefHeight(20);
             GridPane.setValignment(upgradeButton, VPos.CENTER);
@@ -176,7 +176,7 @@ public class ShopController extends Shop implements Initializable {
             buyButton.setText("BUY");
             buyButton.setFont(Font.font(11));
             buyButton.getStyleClass().add("text");
-            buyButton.getStyleClass().add("box");
+            buyButton.getStyleClass().add("upgrade");
             buyButton.setPrefWidth(60);
             buyButton.setPrefHeight(20);
             GridPane.setValignment(buyButton, VPos.CENTER);

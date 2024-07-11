@@ -71,7 +71,7 @@
     -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgba(0, 111, 255, 0.7), rgba(73, 0, 126, 0.7));
     /*-fx-padding: 10 20;*/
     -fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);
-    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.1, 0, 0);
     -fx-alignment: center;
     -fx-border-width: 2;
     -fx-prompt-text-fill: #a8ffff;
