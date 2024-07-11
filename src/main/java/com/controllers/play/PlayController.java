@@ -50,8 +50,9 @@ public class PlayController implements Initializable {
         hostPlayer.setCharacter(Card.Characters.Character1);
         guestPlayer = new Player(User.signedUpUsers.get(1));
         guestPlayer.setCharacter(Card.Characters.Character2);
+        guestName_label.setText(guestPlayer.getNickname());
+        hostName_label.setText(hostPlayer.getNickname());
         initEachRound();
-        hostPlayer.getHand().set(0, Card.allCards.get(9));
         displayHand(hostPlayer);
         updateDurationLine(hostPlayer);
         updateDurationLine(guestPlayer);
@@ -221,7 +222,6 @@ public class PlayController implements Initializable {
                         if(card.isCopyCard()){
                             isCopyCardSelected = true;
                             copyCardIndex = selectedCardIndex;
-                            System.out.println(copyCardIndex + " " + selectedCardIndex);
                         }
                         else if(isCopyCardSelected){
                             turnPlayer.getHand().set(copyCardIndex, turnPlayer.getHand().get(selectedCardIndex).clone());
