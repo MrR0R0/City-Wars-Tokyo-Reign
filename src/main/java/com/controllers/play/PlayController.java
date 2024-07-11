@@ -2,35 +2,30 @@ package com.controllers.play;
 
 import com.app.Card;
 import com.app.User;
+import com.database.Connect;
 import com.menu.Menu;
 import com.menu.play.Cell;
 import com.menu.play.Play;
 import com.menu.play.Player;
-import javafx.application.Platform;
-import javafx.animation.KeyFrame;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Pair;
-import javafx.util.Duration;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.scene.control.Label;
-import javafx.util.Duration;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Random;
 import java.util.ResourceBundle;
 
 import static com.controllers.play.GuestLoginController.guestPlayer;
 import static com.controllers.play.GuestLoginController.hostPlayer;
+import static com.controllers.play.PreparePlayController.playMode;
 
 @SuppressWarnings("DuplicatedCode")
 public class PlayController implements Initializable {
@@ -87,7 +82,7 @@ public class PlayController implements Initializable {
         if(roundCounter == 0){
             movingTimeLine();
             if (isGameOver() != null) {
-                //result(Objects.requireNonNull(isGameOver()));
+                result(Objects.requireNonNull(isGameOver()));
                 System.out.println("Guest will now be logged out automatically");
             } else {
                 initEachRound();
@@ -371,7 +366,7 @@ public class PlayController implements Initializable {
             Cell hostCell = hostPlayer.getDurationLine().get(i);
             Cell guestCell = guestPlayer.getDurationLine().get(i);
             if (guestCell.getCard() != null) {
-                hostPlayer.increaseRoundAttack(guestCell.getCard().getGamingAttackOrDefense());
+                guestPlayer.increaseRoundAttack(guestCell.getCard().getGamingAttackOrDefense());
                 hostPlayer.decreaseHP(guestCell.getCard().getGamingAttackOrDefense());
             }
 
@@ -403,6 +398,32 @@ public class PlayController implements Initializable {
         else if (hostPlayer.getHP() <= 0)
             return guestPlayer;
         return null;
+    }
+
+    private void result(Player winner) {
+        Player loser = winner==hostPlayer ? guestPlayer : hostPlayer;
+        EndGameController.winner = winner;
+        EndGameController.loser = loser;
+        String result = winner.getNickname() + " won!";
+
+        System.out.println("Winner: " + winner.getNickname());
+        winner.applyPostMatchUpdates(playMode, true, pot);
+        System.out.println();
+        System.out.println("Loser: " + loser.getNickname());
+        loser.applyPostMatchUpdates(playMode, false, pot);
+        winner.checkForLevelUpgrade();
+        loser.checkForLevelUpgrade();
+        pot = 0;
+        String hostCons = winner == hostPlayer ? winner.getConsequence() : loser.getConsequence();
+        String guestCons = winner == guestPlayer ? winner.getConsequence() : loser.getConsequence();
+
+        Connect.insertHistory(guestPlayer.getUsername(), guestPlayer.getLevel(), guestCons,
+                hostPlayer.getUsername(), hostPlayer.getLevel(), hostCons, result,
+                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                hostPlayer.getId(), guestPlayer.getId(), winner.getId(), loser.getId());
+
+        hostPlayer.applyResults(Menu.loggedInUser);
+        guestPlayer.applyResults(User.signedUpUsers.get(guestPlayer.getId()));
     }
 
 }

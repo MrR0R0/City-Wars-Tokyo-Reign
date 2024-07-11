@@ -35,6 +35,7 @@ public class PreparePlayController implements Initializable {
     public Pagination host_pagination;
     public Pagination guest_pagination;
     private int page = 1;
+    protected static Play.Mode playMode;
     private PauseTransition pause;
 
     @Override
@@ -75,11 +76,13 @@ public class PreparePlayController implements Initializable {
     private void handleStartButton() {
         if(mode_comboBox.getValue().equals(Play.Mode.Betting)){
             if(checkBet()){
+                playMode = Play.Mode.Betting;
                 setCharacters();
                 pause.play();
             }
         }
         if(mode_comboBox.getValue().equals(Play.Mode.Normal)){
+            playMode = Play.Mode.Normal;
             setCharacters();
             pause.play();
         }

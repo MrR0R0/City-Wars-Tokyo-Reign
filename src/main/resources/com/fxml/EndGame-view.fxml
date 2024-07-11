@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1050.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.HistoryController">
+<GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1050.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.controllers.play.EndGameController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
@@ -81,7 +81,7 @@
                                   <RowConstraints minHeight="10.0" percentHeight="75.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: gold;" styleClass="text" text="Winner" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="winner_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: gold;" styleClass="text" text="Winner" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="33.0" />
                                        </font>
@@ -99,7 +99,7 @@
                                     <RowConstraints maxHeight="24.19998779296875" minHeight="0.0" percentHeight="75.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label fx:id="winnerCoin" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: yellow;" styleClass="text" text="coin" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="winnerCoin_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: yellow;" styleClass="text" text="coin" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -117,7 +117,7 @@
                                     <RowConstraints maxHeight="24.19998779296875" minHeight="0.0" percentHeight="75.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label fx:id="winnerDamage" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: orange;" styleClass="text" text="damage" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="winnerDamage_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: orange;" styleClass="text" text="damage" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -135,7 +135,7 @@
                                     <RowConstraints maxHeight="24.19998779296875" minHeight="0.0" percentHeight="75.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label fx:id="winnerXP_obtained" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: cyan;" styleClass="text" text="XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="winnerXP_obtained_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: cyan;" styleClass="text" text="XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -153,7 +153,7 @@
                                     <RowConstraints maxHeight="24.19998779296875" minHeight="0.0" percentHeight="75.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label fx:id="winnerXP_total" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: blue;" styleClass="text" text="total XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="winnerXP_total_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: blue;" styleClass="text" text="total XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -171,7 +171,7 @@
                                     <RowConstraints maxHeight="24.19998779296875" minHeight="0.0" percentHeight="75.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label fx:id="winnerXP_required" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: #ff00ff;" styleClass="text" text="required XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="winnerXP_required_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: #ff00ff;" styleClass="text" text="required XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -207,7 +207,7 @@
                                     <RowConstraints minHeight="10.0" percentHeight="75.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: red;" styleClass="text" text="LOSER" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="loser_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: red;" styleClass="text" text="LOSER" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="33.0" />
                                        </font>
@@ -225,7 +225,7 @@
                                     <RowConstraints maxHeight="24.19998779296875" minHeight="0.0" percentHeight="75.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label fx:id="loserCoin" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: yellow;" styleClass="text" text="coin" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="loserCoin_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: yellow;" styleClass="text" text="coin" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -243,7 +243,7 @@
                                     <RowConstraints maxHeight="24.19998779296875" minHeight="0.0" percentHeight="75.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label fx:id="loserDamage" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: orange;" styleClass="text" text="damage" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="loserDamage_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: orange;" styleClass="text" text="damage" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -261,7 +261,7 @@
                                     <RowConstraints maxHeight="24.19998779296875" minHeight="0.0" percentHeight="75.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label fx:id="loserXP_obtained" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: cyan;" styleClass="text" text="XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="loserXP_obtained_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: cyan;" styleClass="text" text="XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -279,7 +279,7 @@
                                     <RowConstraints maxHeight="24.19998779296875" minHeight="0.0" percentHeight="75.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label fx:id="loserXP_total" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: blue;" styleClass="text" text="total XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="loserXP_total_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: blue;" styleClass="text" text="total XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>
@@ -297,7 +297,7 @@
                                     <RowConstraints maxHeight="24.19998779296875" minHeight="0.0" percentHeight="75.0" prefHeight="0.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <Label fx:id="loserXP_requierd" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: #ff00ff;" styleClass="text" text="required XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                                    <Label fx:id="loserXP_required_label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="45.0" prefWidth="196.0" style="-fx-text-fill: #ff00ff;" styleClass="text" text="required XP" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="20.0" />
                                        </font>

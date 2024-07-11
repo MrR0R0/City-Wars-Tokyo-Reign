@@ -79,6 +79,13 @@ public class Main extends javafx.application.Application{
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }
+
+    public static void loadEndGame() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/EndGame-view.fxml"));
+        scene = new Scene(fxmlLoader.load(), 1050, 700);
+        stage.setScene(scene);
+    }
+
     private static void fillAllCardImages(){
         for(int i=1; i<=Card.allCards.size(); i++){
             Card.allCardImages.put(i, new Image("file:src\\main\\resources\\com\\images\\card\\" + i + ".png"));
