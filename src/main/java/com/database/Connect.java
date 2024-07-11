@@ -44,7 +44,8 @@ public class Connect {
             pstmt.setString(8, user.getRecoveryAns());
             pstmt.setInt(9, user.getWallet());
             pstmt.setInt(10, user.getXP());
-            pstmt.setString(11,user.getProfile().getUrl());
+            if (user.getProfile()!= null)
+                pstmt.setString(11,user.getProfile().getUrl());
             pstmt.executeUpdate();
             //System.out.println("user has been added to the database.");
         } catch (SQLException e) {
@@ -76,8 +77,8 @@ public class Connect {
                 user.setXP(rs.getInt("user_XP"));
                 user.updateCardsByCardSeries();
                 userMap.put(rs.getInt("user_id"), user);
-                if (rs.getString("profile_img") != null && !rs.getString("profile_img").isEmpty() && !rs.getString("profile_img").isBlank()) {
-                    URI profileImgURI = new URI(rs.getString("profile_img"));
+                if (rs.getString("user_profile") != null && !rs.getString("user_profile").isEmpty() && !rs.getString("profile_img").isBlank()) {
+                    URI profileImgURI = new URI(rs.getString("user_profile"));
                     Image profileImage = new Image(profileImgURI.toURL().toExternalForm());
                     user.setProfile(profileImage);
                 }
@@ -216,6 +217,7 @@ public class Connect {
                         User.signedUpUsers.get(hostId).getUsername(),
                         resultSet.getString("time"),
                         resultSet.getString("guest_cons"),
+//                        resultSet.getString("result"),
                         String.valueOf(resultSet.getInt("guest_level")),
                         User.signedUpUsers.get(guestId).getUsername()
                 );

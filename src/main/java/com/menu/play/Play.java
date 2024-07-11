@@ -16,14 +16,14 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class Play extends Menu {
-    static final Integer durationLineSize = 21;
-    static final Integer handSize = 5;
+    public static final Integer durationLineSize = 21;
+    public static final Integer handSize = 5;
 
     static private final Player host = new Player(Menu.loggedInUser);
     static private Player guest;
     static private Player turnPlayer;
     static private Player opponent;
-    static private final Integer gameRounds = 4;
+    static public final Integer gameRounds = 4;
     static private int roundCounter;
 
     static private Integer pot = 0;
