@@ -55,7 +55,11 @@ public class MainMenuController extends MainMenu implements Initializable {
             }
         });
         setting_but.setOnMouseClicked(mouseEvent -> {
-//            Main.loadSetting();
+            try {
+                Main.loadSetting();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         });
         user_gridPane.setOnMouseClicked(mouseEvent -> {
             try {
@@ -67,6 +71,13 @@ public class MainMenuController extends MainMenu implements Initializable {
         logout_but.setOnMouseClicked(mouseEvent -> {
             logout();
         });
+
+        updateWalletLabel();
+        showProfileImage();
+        updateHPLabel();
+        updateLevelLabel();
+        updateXPProgress();
+
     }
 
     private void logout(){
@@ -76,5 +87,23 @@ public class MainMenuController extends MainMenu implements Initializable {
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    private void updateWalletLabel() {
+        wallet_label.setText(loggedInUser.getWallet().toString());
+    }
+
+    private void showProfileImage(){
+        if (loggedInUser.getProfile() != null)
+            profile_image.setImage(loggedInUser.getProfile());
+    }
+    private void updateLevelLabel(){
+        level_label.setText(loggedInUser.getLevel().toString());
+    }
+    private void updateHPLabel(){
+        HP_label.setText(loggedInUser.getHP().toString());
+    }
+    private void updateXPProgress(){
+        XP_progress.setProgress((double) loggedInUser.getXP() /User.nextLevelXP(loggedInUser.getLevel()));
     }
 }

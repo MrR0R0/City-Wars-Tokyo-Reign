@@ -25,8 +25,8 @@ public class Main extends javafx.application.Application{
         fillAllCardImages();
         fillCharacterImages();
 
-        Menu.loggedInUser = User.signedUpUsers.get(2);
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/PreparePlay-view.fxml"));
+        Menu.loggedInUser = User.signedUpUsers.get(1);
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/MainMenu-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setTitle("War city");
         stage.setScene(scene);
@@ -81,9 +81,13 @@ public class Main extends javafx.application.Application{
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }
-
     public static void loadEndGame() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/EndGame-view.fxml"));
+        scene = new Scene(fxmlLoader.load(), 1050, 700);
+        stage.setScene(scene);
+    }
+    public static void loadSetting() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Setting-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }
