@@ -76,9 +76,9 @@ public class GuestLoginController extends Login implements Initializable {
             error_label.setText("Username \"" + username + "\" does not exist!");
             return false;
         }
-        if (guestPlayer.getId().equals(loggedInUser.getId())) {
+        if (User.signedUpUsers.get(User.getIdByUsername(username)).getId().equals(loggedInUser.getId())) {
             guestPlayer = null;
-            System.out.println("Invalid action: You cannot battle yourself.");
+            error_label.setText("You cannot battle yourself.");
             return false;
         }
         if(matchingPassword(id, password)){
