@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
@@ -42,7 +43,13 @@ public class LoginController extends Login implements Initializable {
                 throw new RuntimeException(e);
             }
         });
-        forgot_label.setOnMouseClicked(this::forgotPassword);
+        forgot_label.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            try {
+                Main.loadForgotPasswordMenu();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         signUp_label.setOnMouseClicked(event -> {
             try {
                 handleSignup();
@@ -57,9 +64,6 @@ public class LoginController extends Login implements Initializable {
 
     private void handleSignup() throws IOException {
         Main.loadSignup();
-    }
-
-    private void forgotPassword(MouseEvent mouseEvent) {
     }
 
     private void handleLogin() throws IOException {

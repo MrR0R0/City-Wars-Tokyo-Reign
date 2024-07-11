@@ -152,6 +152,9 @@ public class SignUpController extends SignUp implements Initializable {
             firstError_label.setText("The email does not have the correct format");
             return false;
         }
+        if(!validPasswordFormat(pass, firstError_label)){
+            return false;
+        }
         if (User.isInUsersList("username", username)) {
             firstError_label.setText("A user with the same username exists");
             return false;
@@ -160,7 +163,6 @@ public class SignUpController extends SignUp implements Initializable {
             firstError_label.setText("Password confirmation doesn't match!");
             return false;
         }
-
         return true;
     }
 
@@ -224,5 +226,27 @@ public class SignUpController extends SignUp implements Initializable {
                 return;
             }
         }
+    }
+
+    static boolean validPasswordFormat(String password, Label label){
+        if (emptyField(password, "Password")) {
+            label.setText("Password is empty");
+            return false;
+        }
+
+        //checking whether the password is weak
+        if (password.length() < 8) {
+            label.setText("Password should be at least 8 characters!");
+            return false;
+        }
+        if (!password.matches(PASSWORD_REGEX)) {
+            label.setText("The password must contain at least one uppercase letter and one lowercase letter.");
+            return false;
+        }
+        if (password.replaceAll("[a-zA-Z0-9]", "").isEmpty()) {
+            label.setText("The password must contain at least one special character");
+            return false;
+        }
+        return true;
     }
 }

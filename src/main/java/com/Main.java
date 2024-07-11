@@ -90,7 +90,11 @@ public class Main extends javafx.application.Application{
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }
-
+    public static void loadForgotPasswordMenu() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/ForgotPassword-view.fxml"));
+        scene = new Scene(fxmlLoader.load(), 1050, 700);
+        stage.setScene(scene);
+    }
 
     private static void fillAllCardImages(){
         for(int i=1; i<=Card.allCards.size(); i++){
