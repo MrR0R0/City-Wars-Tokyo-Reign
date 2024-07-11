@@ -11,7 +11,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -179,6 +178,7 @@ public class PreparePlayController implements Initializable {
         loggedInUser.reduceWallet(hostBetInt);
         guestPlayer.reduceWallet(guestBetInt);
         pot_field.setText(String.valueOf(hostBetInt + guestBetInt));
+        PlayController.pot = hostBetInt + guestBetInt;
         return true;
     }
 

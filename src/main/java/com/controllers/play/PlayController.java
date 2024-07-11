@@ -3,19 +3,16 @@ package com.controllers.play;
 import com.Main;
 import com.app.Card;
 import com.app.User;
+import com.database.Connect;
 import com.menu.Menu;
 import com.menu.play.Cell;
 import com.menu.play.Play;
 import com.menu.play.Player;
 import javafx.animation.Animation;
-import javafx.application.Platform;
 import javafx.animation.KeyFrame;
-import javafx.css.Size;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
-import javafx.geometry.Pos;
 import javafx.geometry.VPos;
-import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.*;
@@ -23,26 +20,20 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Shape;
 import javafx.util.Pair;
 import javafx.util.Duration;
-import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.scene.control.Label;
-import javafx.util.Duration;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import static com.controllers.play.GuestLoginController.guestPlayer;
 import static com.controllers.play.GuestLoginController.hostPlayer;
+import static com.controllers.play.PreparePlayController.playMode;
 
 @SuppressWarnings("DuplicatedCode")
 public class PlayController implements Initializable {
@@ -444,6 +435,23 @@ public class PlayController implements Initializable {
                     hostHand_pane.setDisable(false);
                     checkStop = true;
                     timeline.stop(); // stop the timeline if the game is over
+                    Player winner = Objects.requireNonNull(isGameOver());
+                    Player loser = winner==hostPlayer ? guestPlayer : hostPlayer;
+                    winner.applyPostMatchUpdates(playMode, true, pot);
+                    loser.applyPostMatchUpdates(playMode, false, pot);
+                    winner.checkForLevelUpgrade();
+                    loser.checkForLevelUpgrade();
+                    pot = 0;
+                    String hostCons = winner == hostPlayer ? winner.getConsequence() : loser.getConsequence();
+                    String guestCons = winner == guestPlayer ? winner.getConsequence() : loser.getConsequence();
+                    String result = winner.getNickname() + " won!";
+                    Connect.insertHistory(guestPlayer.getUsername(), guestPlayer.getLevel(), guestCons,
+                            hostPlayer.getUsername(), hostPlayer.getLevel(), hostCons, result,
+                            LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                            hostPlayer.getId(), guestPlayer.getId(), winner.getId(), loser.getId());
+
+                    hostPlayer.applyResults(Menu.loggedInUser);
+                    guestPlayer.applyResults(User.signedUpUsers.get(guestPlayer.getId()));
                     try {
                         Main.loadEndGame();
                     } catch (IOException e) {
@@ -502,7 +510,7 @@ public class PlayController implements Initializable {
         });
         GridPane.setHalignment(line, pos);
         ((GridPane)pane).add(line,  column, row);
-    };
+    }
 
     private static void addHLines(Pane pane, VPos pos,  int column,int row,Color color){
         Line line = new Line();
@@ -515,6 +523,6 @@ public class PlayController implements Initializable {
         });
         GridPane.setValignment(line, pos);
         ((GridPane)pane).add(line, column, row);
-    };
+    }
 
 }

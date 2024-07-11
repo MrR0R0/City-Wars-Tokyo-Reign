@@ -15,6 +15,7 @@ import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
+@SuppressWarnings("DuplicatedCode")
 public class Play extends Menu {
     public static final Integer durationLineSize = 21;
     public static final Integer handSize = 5;
