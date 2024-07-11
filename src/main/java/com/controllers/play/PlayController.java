@@ -1,5 +1,6 @@
 package com.controllers.play;
 
+import com.Main;
 import com.app.Card;
 import com.app.User;
 import com.menu.Menu;
@@ -25,10 +26,9 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -58,6 +58,8 @@ public class PlayController implements Initializable {
     private boolean isCopyCardSelected = false;
     private int copyCardIndex;
     Timeline timeline = new Timeline();
+    boolean checkStop = false;
+    private List<CardPane> hostCardPanesList, guestCardPanesList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -67,6 +69,8 @@ public class PlayController implements Initializable {
         guestPlayer.setCharacter(Card.Characters.Character2);
         guestName_label.setText(guestPlayer.getNickname());
         hostName_label.setText(hostPlayer.getNickname());
+        hostCardPanesList = new ArrayList<>();
+        guestCardPanesList = new ArrayList<>();
         updateHPBar();
         initEachRound();
         displayHand(hostPlayer);
@@ -96,11 +100,12 @@ public class PlayController implements Initializable {
                 if (newStatus == Animation.Status.STOPPED) {
                     if (isGameOver() != null) {
                         System.out.println("Guest will now be logged out automatically");
-                    } else {
+                    } else if(checkStop){
                         initEachRound();
                         displayHand(hostPlayer);
                         updateDurationLine(hostPlayer);
                         updateDurationLine(guestPlayer);
+                        checkStop = false;
                     }
                 }
             });
@@ -271,10 +276,13 @@ public class PlayController implements Initializable {
 
     private void updateDurationLine(Player player) {
         GridPane tmp = hostDurationLine_pane;
+        List<CardPane> tmpList = hostCardPanesList;
         if (player == guestPlayer) {
             tmp = guestDurationLine_pane;
+            tmpList = guestCardPanesList;
         }
         tmp.getChildren().clear();
+        tmpList.clear();
         for (int i = 0; i < Play.durationLineSize; i++) {
             CardPane cardPane = new CardPane();
             cardPane.setPrefWidth(handColumnWidth);
@@ -302,6 +310,7 @@ public class PlayController implements Initializable {
                 cardPane.setShatter();
             }
             tmp.add(cardPane, i, 0);
+            tmpList.add(cardPane);
         }
     }
 
@@ -349,7 +358,7 @@ public class PlayController implements Initializable {
             myCell.shatter();
             oppCell.resetShatter();
             if (turnPlayer.checkCompleteShatter(myCell)) {
-                opponent.rewardCompleteShatter(myCell);
+                opponent.rewardCompleteShatter(error_label, myCell);
             }
             error_label.setText("your card is shattered");
         }
@@ -358,7 +367,7 @@ public class PlayController implements Initializable {
             oppCell.shatter();
             myCell.resetShatter();
             if (opponent.checkCompleteShatter(oppCell)) {
-                turnPlayer.rewardCompleteShatter(myCell);
+                turnPlayer.rewardCompleteShatter(error_label, myCell);
             }
             error_label.setText("opponent's card is shattered");
         }
@@ -377,14 +386,14 @@ public class PlayController implements Initializable {
 
     private void movingTimeLine() {
         timeline.stop();
+        checkStop = false;
         timeline.getKeyFrames().clear();
         int durationLineSize = Play.durationLineSize;
         int[] index = {0};
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), event -> {
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.5), event -> {
             if (index[0] < durationLineSize) {
                 Cell hostCell = hostPlayer.getDurationLine().get(index[0]);
                 Cell guestCell = guestPlayer.getDurationLine().get(index[0]);
-
 
                 if (guestCell.getCard() != null) {
                     hostPlayer.increaseRoundAttack(guestCell.getCard().getGamingAttackOrDefense());
@@ -402,9 +411,28 @@ public class PlayController implements Initializable {
                     hostRoundAttack_label.setText(String.valueOf(hostPlayer.getRoundAttack()));
                     guestRoundAttack_label.setText(String.valueOf(guestPlayer.getRoundAttack()));
                     updateHPBar();
+                    guestHand_pane.setDisable(false);
+                    hostHand_pane.setDisable(false);
+                    checkStop = true;
                     timeline.stop(); // stop the timeline if the game is over
+                    try {
+                        Main.loadEndGame();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     return;
                 }
+
+                if(index[0] > 0){
+                    hostCardPanesList.get(index[0]-1).setNormal();
+                    guestCardPanesList.get(index[0]-1).setNormal();
+                }
+                hostCardPanesList.get(index[0]).setGlow();
+                guestCardPanesList.get(index[0]).setGlow();
+                hostRoundAttack_label.setText(String.valueOf(hostPlayer.getRoundAttack()));
+                guestRoundAttack_label.setText(String.valueOf(guestPlayer.getRoundAttack()));
+                updateHPBar();
+
                 index[0]++;
             } else {
                 hostRoundAttack_label.setText(String.valueOf(hostPlayer.getRoundAttack()));
@@ -412,10 +440,15 @@ public class PlayController implements Initializable {
                 updateHPBar();
                 hostPlayer.updateTotalAttack();
                 guestPlayer.updateTotalAttack();
+                guestHand_pane.setDisable(false);
+                hostHand_pane.setDisable(false);
+                checkStop = true;
                 timeline.stop(); // stop the timeline if all indices are processed
             }
         });
 
+        guestHand_pane.setDisable(true);
+        hostHand_pane.setDisable(true);
         timeline.getKeyFrames().add(keyFrame);
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
@@ -428,5 +461,4 @@ public class PlayController implements Initializable {
             return guestPlayer;
         return null;
     }
-
 }

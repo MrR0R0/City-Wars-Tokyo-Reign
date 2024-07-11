@@ -2,6 +2,7 @@ package com.menu.play;
 
 import com.app.Card;
 import com.app.User;
+import javafx.scene.control.Label;
 
 import java.util.*;
 
@@ -240,6 +241,11 @@ public class Player extends User {
     public void rewardCompleteShatter(Cell cell) {
         obtainedCoins += cell.getCard().getAcc() / 2;
         System.out.println("Rewarded with coins for shattering!");
+    }
+
+    public void rewardCompleteShatter(Label text, Cell cell) {
+        obtainedCoins += cell.getCard().getAcc() / 2;
+        text.setText("Rewarded with coins for shattering: " + cell.getCard().getAcc() / 2);
     }
 
     public static String formatCards(List<Card> cards, String attributeType) {
