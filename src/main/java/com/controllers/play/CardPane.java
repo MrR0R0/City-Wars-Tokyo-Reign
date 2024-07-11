@@ -1,10 +1,7 @@
 package com.controllers.play;
 
 import com.app.Card;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.geometry.VPos;
+import javafx.geometry.*;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -31,6 +28,7 @@ public class CardPane extends GridPane {
     public StackPane imageContainer = new StackPane();
     public StackPane cardPropertiesContainer = new StackPane();
 
+    public CardPane(){}
 
     public void setCardImage(double fitHeight, double fitWidth, double v1, double v2, double v3, double v4) {
         cardView.setVisible(true);
@@ -130,7 +128,10 @@ public class CardPane extends GridPane {
         GridPane.setValignment(imageContainer, VPos.CENTER);
         cardView.setOpacity(0.6);
         imageContainer.getChildren().add(shatterView);
+    }
 
+    public void setHollow(){
+        setStyle("-fx-background-color: black;");
     }
 
     public void showProperties(Node node,double spacing) {
@@ -235,4 +236,5 @@ public class CardPane extends GridPane {
             }
         });
     }
+
 }
