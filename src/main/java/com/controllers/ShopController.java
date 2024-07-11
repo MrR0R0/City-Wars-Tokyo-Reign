@@ -127,7 +127,8 @@ public class ShopController extends Shop implements Initializable {
             ColumnConstraints column = new ColumnConstraints();
             column.setPrefWidth(EachColumnWidth);
             upgrade_pane.getColumnConstraints().add(column);
-            upgrade_pane.setPrefWidth(upgrade_pane.getPrefWidth() + EachColumnWidth);
+
+
 
             //update pane
             upgrade_pane.add(cardPane, index, 0);
@@ -205,7 +206,7 @@ public class ShopController extends Shop implements Initializable {
 
     private void upgradeCard(CardPane cardPane) {
         Card selectedCard = cardPane.card;
-        upgrade_pane.getChildren().clear();
+
         if (selectedCard.getUpgradeCost() > loggedInUser.getWallet()) {
             // show error...
             result_label.setStyle("-fx-text-fill: red");
@@ -227,7 +228,8 @@ public class ShopController extends Shop implements Initializable {
     }
 
     private void buyCard(CardPane cardPane) {
-        upgrade_pane.getChildren().clear();
+        updatePurchasableCards();
+
         Card selectedCard = cardPane.card;
         if (selectedCard.getPrice() > loggedInUser.getWallet()) {
             result_label.setStyle("-fx-text-fill: red");

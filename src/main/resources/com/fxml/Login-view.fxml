@@ -3,6 +3,7 @@
 <?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -103,6 +104,9 @@
                                        <font>
                                           <Font name="Orbitron-Bold" size="13.0" />
                                        </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                     </TextField>
                                     <Label fx:id="error_label" alignment="CENTER" prefHeight="18.0" prefWidth="310.0" style="-fx-text-fill: red;" styleClass="text" text="ERROR" textAlignment="CENTER" textFill="RED" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP" />
                                  </children>
@@ -128,6 +132,9 @@
                                           <String fx:value="text" />
                                           <String fx:value="password-field" />
                                        </styleClass>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                     </PasswordField>
                                  </children>
                               </GridPane>
@@ -149,11 +156,17 @@
                                        <GridPane.margin>
                                           <Insets left="10.0" />
                                        </GridPane.margin>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                     </Label>
                                     <Label fx:id="forgot_label" prefHeight="19.0" prefWidth="110.0" styleClass="text" text="Forgot password?" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                        <font>
                                           <Font size="13.0" />
                                        </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                     </Label>
                                  </children>
                               </GridPane>

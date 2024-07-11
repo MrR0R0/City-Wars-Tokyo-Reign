@@ -1,13 +1,16 @@
 package com.controllers;
 
+import com.Main;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -21,6 +24,7 @@ public class SettingController implements Initializable {
     public Slider sound_slider;
     public ImageView soundOn_image;
     public ImageView soundOff_image;
+    public Button back_but;
 
     public boolean isSliderChanging;
     public MediaPlayer mediaPlayer;
@@ -58,6 +62,14 @@ public class SettingController implements Initializable {
                 musicOff_image.setVisible(false);
             }
         });
+        back_but.setOnMouseClicked(mouseEvent -> {
+            try {
+                Main.loadMainMenu();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+        });
+
 
     }
 

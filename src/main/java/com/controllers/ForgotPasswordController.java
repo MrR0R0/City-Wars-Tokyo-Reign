@@ -1,9 +1,7 @@
 package com.controllers;
 
 import com.Main;
-import com.app.Error;
 import com.app.User;
-import com.menu.authentication.SignUp;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;

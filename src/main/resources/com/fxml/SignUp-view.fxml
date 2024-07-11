@@ -3,6 +3,7 @@
 <?import java.lang.String?>
 <?import java.net.URL?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
@@ -44,7 +45,7 @@
                 <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <GridPane fx:id="firstGrid" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <GridPane fx:id="firstGrid" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
@@ -89,6 +90,9 @@
                                                     <font>
                                                         <Font name="Orbitron-Bold" size="18.0" />
                                                     </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                                 </TextField>
                                             </children>
                                         </GridPane>
@@ -108,6 +112,9 @@
                                                     <font>
                                                         <Font name="Orbitron-Bold" size="18.0" />
                                                     </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                                 </TextField>
                                             </children>
                                         </GridPane>
@@ -130,17 +137,26 @@
                                        <styleClass>
                                           <String fx:value="text" />
                                           <String fx:value="password-field" />
-                                       </styleClass></PasswordField>
+                                       </styleClass>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor></PasswordField>
                                     <TextField fx:id="showPassword_field" prefHeight="34.0" prefWidth="253.0" styleClass="text" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                                 <ImageView fx:id="pinkDice_image" fitHeight="35.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                                                     <image>
                                                         <Image url="@../images/Remove-bg.ai_1720428861454.png" />
                                                     </image>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                                 </ImageView>
                                                 <ImageView fx:id="blueDice_image" fitHeight="35.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true" visible="false" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                                                     <image>
                                                         <Image url="@../images/design-1720427905886.png" />
                                                     </image>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                                 </ImageView>
                                             </children>
                                         </GridPane>
@@ -164,6 +180,9 @@
                                           <String fx:value="text" />
                                           <String fx:value="password-field" />
                                        </styleClass>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                     </PasswordField>
                                  </children>
                                         </GridPane>
@@ -184,7 +203,7 @@
                                     <Button fx:id="firstNext_but" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="NEXT" GridPane.columnIndex="3" GridPane.rowIndex="1">
                                        <styleClass>
                                           <String fx:value="text" />
-                                          <String fx:value="menuButton" />
+                                          <String fx:value="nextButton" />
                                        </styleClass>
                                        <font>
                                           <Font name="Orbitron-Medium" size="12.0" />
@@ -208,7 +227,7 @@
                         </GridPane>
                     </children>
                 </GridPane>
-            <GridPane fx:id="secondGrid" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <GridPane fx:id="secondGrid" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
@@ -253,6 +272,9 @@
                                        <font>
                                           <Font name="Orbitron-Bold" size="18.0" />
                                        </font>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
                                     </TextField>
                                  </children>
                               </GridPane>
@@ -268,7 +290,10 @@
                                     <RowConstraints minHeight="10.0" percentHeight="27.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <TextField fx:id="answer_field" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="ANSWER" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="answer_field" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" promptText="ANSWER" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor></TextField>
                                  </children>
                               </GridPane>
                               <GridPane GridPane.rowIndex="3">
@@ -283,7 +308,10 @@
                                     <RowConstraints minHeight="10.0" percentHeight="27.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <TextField fx:id="captcha_field" promptText="Captcha" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="captcha_field" promptText="Captcha" styleClass="text" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor></TextField>
                                  </children>
                               </GridPane>
                               <GridPane GridPane.rowIndex="1">
@@ -298,7 +326,10 @@
                                     <RowConstraints minHeight="10.0" percentHeight="27.5" prefHeight="30.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
-                                    <ComboBox fx:id="question_comboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="SECURITY QUESTION" stylesheets="@../CSS/comboBox.css" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <ComboBox fx:id="question_comboBox" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="SECURITY QUESTION" stylesheets="@../CSS/comboBox.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor></ComboBox>
                                  </children>
                               </GridPane>
                               <GridPane fx:id="captcha_pane" GridPane.rowIndex="4">

@@ -44,6 +44,11 @@ public class GuestLoginController extends Login implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         hostPlayer = new Player(loggedInUser.clone());
         login_but.setOnAction(event -> {
+            if (User.getIdByUsername(username_field.getText())!=null)
+                guestPlayer = new Player(User.signedUpUsers.get(User.getIdByUsername(username_field.getText())));
+            else {
+                error_label.setText("Username \"" + username + "\" does not exist!");
+            }
             try {
                 handleLogin();
             } catch (IOException e) {

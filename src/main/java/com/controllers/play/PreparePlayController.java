@@ -66,8 +66,38 @@ public class PreparePlayController implements Initializable {
         });
 
 
+        hostBet_field.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (hostBet_field.getText().matches("^\\d*$") && guestBet_field.getText().matches("^\\d*$")) {
+                    int hostBet = hostBet_field.getText().isEmpty() ? 0 : Integer.parseInt(hostBet_field.getText());
+                    int guestBet = guestBet_field.getText().isEmpty() ? 0 : Integer.parseInt(guestBet_field.getText());
+                    pot_field.setText(String.valueOf(hostBet + guestBet));
+                    error_label.setText(""); // Clear any previous error message
+                } else {
+                    error_label.setText("Please enter a valid number");
+                }
+            } catch (NumberFormatException e) {
+                error_label.setText("Please enter a valid number");
+            }
+        });
+        guestBet_field.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                if (hostBet_field.getText().matches("^\\d*$") && guestBet_field.getText().matches("^\\d*$")) {
+                    int hostBet = hostBet_field.getText().isEmpty() ? 0 : Integer.parseInt(hostBet_field.getText());
+                    int guestBet = guestBet_field.getText().isEmpty() ? 0 : Integer.parseInt(guestBet_field.getText());
+                    pot_field.setText(String.valueOf(hostBet + guestBet));
+                    error_label.setText(""); // Clear any previous error message
+                } else {
+                    error_label.setText("Please enter a valid number");
+                }
+            } catch (NumberFormatException e) {
+                error_label.setText("Please enter a valid number");
+            }
+        });
+
+
         host_pagination.setPageFactory(pageIndex -> {
-            ImageView imageView = new ImageView(Card.charactersImage.get(Card.Characters.valueOf("Character" +(pageIndex+1))));
+            ImageView imageView = new ImageView(Card.charactersImage.get(Card.Characters.valueOf("Character" + (pageIndex + 1))));
             imageView.setFitWidth(100);
             imageView.setFitHeight(100);
             return imageView;
