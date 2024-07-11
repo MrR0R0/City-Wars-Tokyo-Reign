@@ -75,6 +75,7 @@ public class PlayController implements Initializable {
     }
 
     private void placeCard() {
+        error_label.setText("");
         if (selectedCellOwner == selectedCardOwner && selectedCardOwner == turnPlayer) {
             if (checkPlacement()) {
                 changeTurn();
