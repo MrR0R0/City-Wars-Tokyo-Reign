@@ -34,8 +34,8 @@ public class CardPane extends GridPane {
         cardView.setVisible(true);
         cardView.setFitHeight(fitHeight);
         cardView.setFitWidth(fitWidth);
-        imageContainer.setPrefHeight(cardView.getFitHeight());
-        imageContainer.setPrefWidth(cardView.getFitWidth());
+        imageContainer.setMaxWidth(cardView.getFitHeight());
+        imageContainer.setMaxHeight(cardView.getFitWidth());
         this.setAlignment(Pos.CENTER);
         cardView.setPreserveRatio(false);
         GridPane.setHalignment(cardView, HPos.CENTER);
@@ -110,14 +110,17 @@ public class CardPane extends GridPane {
     }
 
     public void setGlow(){
-        imageContainer.setStyle("-fx-border-color: #9a0d47; -fx-border-width: 3; -fx-border-style: solid;");
+        imageContainer.setStyle("-fx-background-color: #00ffff; -fx-border-color: #00ffff; -fx-border-width: 3; -fx-border-style: solid;");
     }
     public void setNormal() {
-        imageContainer.setStyle("-fx-border-color: #000000; -fx-border-width: 1;");
+        imageContainer.setStyle("-fx-background-color: #2a00b0; -fx-border-color: #2a00b0; -fx-border-width: 2; -fx-border-style: solid;-fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);");
     }
 
     public void setBooster() {
-        imageContainer.setStyle("-fx-border-color: gold; -fx-border-width: 3; -fx-border-style: solid;");
+        imageContainer.setStyle("-fx-background-color: gold; -fx-border-color: gold; -fx-border-width: 3; -fx-border-style: solid;");
+    }
+    public void setDurationStyle() {
+        this.setStyle("-fx-border-color: linear-gradient(from 0.0% 50.0% to 100.0% 50.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);\n");
     }
 
     public void setShatter() {
@@ -175,6 +178,7 @@ public class CardPane extends GridPane {
         cardPropertiesContainer.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
                 ((GridPane) node).getChildren().remove(cardPropertiesContainer);
+                setCardName(40,0,0,0,11);
             }
         });
     }
@@ -208,6 +212,8 @@ public class CardPane extends GridPane {
         cardPropertiesContainer.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
                 ((GridPane) node).getChildren().remove(cardPropertiesContainer);
+                setCardName(40,0,0,0,11);
+
             }
         });
     }
@@ -240,6 +246,8 @@ public class CardPane extends GridPane {
         cardPropertiesContainer.setOnMouseClicked(mouseEvent -> {
             if (mouseEvent.getButton().equals(MouseButton.SECONDARY)){
                 ((GridPane) node).getChildren().remove(cardPropertiesContainer);
+                setCardName(40,0,0,0,11);
+
             }
         });
     }

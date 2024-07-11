@@ -7,9 +7,11 @@ import javafx.animation.PauseTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -35,6 +37,7 @@ public class PreparePlayController implements Initializable {
     public Pagination host_pagination;
     public Pagination guest_pagination;
     private int page = 1;
+    protected static Play.Mode playMode;
     private PauseTransition pause;
 
     @Override
@@ -62,24 +65,43 @@ public class PreparePlayController implements Initializable {
                 }
             }
         });
+
+
+        host_pagination.setPageFactory(pageIndex -> {
+            ImageView imageView = new ImageView(Card.charactersImage.get(Card.Characters.valueOf("Character" +(pageIndex+1))));
+            imageView.setFitWidth(100);
+            imageView.setFitHeight(100);
+            return imageView;
+        });
+        guest_pagination.setPageFactory(pageIndex -> {
+            ImageView imageView = new ImageView(Card.charactersImage.get(Card.Characters.valueOf("Character" +(pageIndex+1))));
+            imageView.setFitWidth(100);
+            imageView.setFitHeight(100);
+            return imageView;
+        });
+
         host_pagination.setCurrentPageIndex(0);
         guest_pagination.setCurrentPageIndex(0);
+
         pause = new PauseTransition(Duration.seconds(3));
         pause.setOnFinished(event -> {
             error_label.setTextFill(Color.GREEN);
             error_label.setText("Starting...");
         });
+
         showFirstPage();
     }
 
     private void handleStartButton() {
         if(mode_comboBox.getValue().equals(Play.Mode.Betting)){
             if(checkBet()){
+                playMode = Play.Mode.Betting;
                 setCharacters();
                 pause.play();
             }
         }
         if(mode_comboBox.getValue().equals(Play.Mode.Normal)){
+            playMode = Play.Mode.Normal;
             setCharacters();
             pause.play();
         }
@@ -151,7 +173,6 @@ public class PreparePlayController implements Initializable {
         }
         loggedInUser.reduceWallet(hostBetInt);
         guestPlayer.reduceWallet(guestBetInt);
-        PlayController.pot = hostBetInt + guestBetInt;
         pot_field.setText(String.valueOf(hostBetInt + guestBetInt));
         return true;
     }

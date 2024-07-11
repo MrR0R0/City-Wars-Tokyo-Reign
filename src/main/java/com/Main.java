@@ -23,8 +23,10 @@ public class Main extends javafx.application.Application{
         Card.allCards = Connect.getCards();
         User.signedUpUsers = Connect.getUsers();
         fillAllCardImages();
+        fillCharacterImages();
+
         Menu.loggedInUser = User.signedUpUsers.get(2);
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Play-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/PreparePlay-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setTitle("War city");
         stage.setScene(scene);
@@ -79,9 +81,21 @@ public class Main extends javafx.application.Application{
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }
+
+    public static void loadEndGame() throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/EndGame-view.fxml"));
+        scene = new Scene(fxmlLoader.load(), 1050, 700);
+        stage.setScene(scene);
+    }
+
     private static void fillAllCardImages(){
         for(int i=1; i<=Card.allCards.size(); i++){
             Card.allCardImages.put(i, new Image("file:src\\main\\resources\\com\\images\\card\\" + i + ".png"));
+        }
+    }
+    private static void fillCharacterImages(){
+        for(int i=1; i<= 4; i++){
+            Card.charactersImage.put(Card.Characters.valueOf("Character" + i),new Image("file:src\\main\\resources\\com\\images\\character\\" + i + ".png"));
         }
     }
 

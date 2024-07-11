@@ -87,3 +87,11 @@
     -fx-prompt-font-weight: bold;
 }
 
+.gridPane{
+    -fx-background-color: transparent;
+    -fx-border-color: #00cad0;
+    -fx-border-insets: -10;
+    -fx-border-width: 10;
+    -fx-border-style: solid;
+}
+

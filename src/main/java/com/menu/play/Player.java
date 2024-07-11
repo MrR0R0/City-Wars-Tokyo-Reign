@@ -2,6 +2,7 @@ package com.menu.play;
 
 import com.app.Card;
 import com.app.User;
+import javafx.scene.control.Label;
 
 import java.util.*;
 
@@ -12,7 +13,7 @@ public class Player extends User {
     private ArrayList<Cell> durationLine;
     private ArrayList<Card> hand;
     private final LinkedHashMap<Integer, Card> deck;
-    private Integer roundAttack, totalAttack, obtainedCoins = 0;
+    private Integer roundAttack, totalAttack, obtainedCoins = 0, obtainedXP;
     private final Integer durationLineSize, handSize;
     private String consequence;
     private int maxHP;
@@ -172,7 +173,7 @@ public class Player extends User {
             case Normal -> obtainedCoins += (int) (max(0.1 * getHP(), 0) + totalAttack * 0.1);
             case Betting -> obtainedCoins += isWinner ? pot : 0;
         }
-        int obtainedXP = (int) (max(0.2 * getHP(), 0) + totalAttack * 0.2);
+        obtainedXP = (int) (max(0.2 * getHP(), 0) + totalAttack * 0.2);
         increaseXP(obtainedXP);
         increaseMoney(obtainedCoins);
         consequence = "XP: +" + obtainedXP + " Coins: +" + obtainedCoins;
@@ -242,6 +243,11 @@ public class Player extends User {
         System.out.println("Rewarded with coins for shattering!");
     }
 
+    public void rewardCompleteShatter(Label text, Cell cell) {
+        obtainedCoins += cell.getCard().getAcc() / 2;
+        text.setText("Rewarded with coins for shattering: " + cell.getCard().getAcc() / 2);
+    }
+
     public static String formatCards(List<Card> cards, String attributeType) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < cards.size(); i++) {
@@ -297,5 +303,17 @@ public class Player extends User {
 
     public int getMaxHP() {
         return maxHP;
+    }
+
+    public Integer getObtainedCoins() {
+        return obtainedCoins;
+    }
+
+    public Integer getObtainedXP() {
+        return obtainedXP;
+    }
+
+    public Integer getTotalAttack() {
+        return totalAttack;
     }
 }

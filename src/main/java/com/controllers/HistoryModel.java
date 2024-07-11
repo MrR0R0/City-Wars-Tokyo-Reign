@@ -7,9 +7,10 @@ public class HistoryModel {
     private final StringProperty hostResult, hostLevel, hostName;
     private final StringProperty date;
     private final StringProperty guestResult, guestLevel, guestName;
+    private final Integer winnerId, loserId;
 
     public HistoryModel(String hostResult, String hostLevel, String hostName, String date,
-                     String guestResult, String guestLevel, String guestName) {
+                     String guestResult, String guestLevel, String guestName, Integer winnerId, Integer loserId) {
         this.hostResult = new SimpleStringProperty(hostResult);
         this.hostLevel = new SimpleStringProperty(hostLevel);
         this.hostName = new SimpleStringProperty(hostName);
@@ -17,6 +18,8 @@ public class HistoryModel {
         this.guestResult = new SimpleStringProperty(guestResult);
         this.guestLevel = new SimpleStringProperty(guestLevel);
         this.guestName = new SimpleStringProperty(guestName);
+        this.winnerId = winnerId;
+        this.loserId = loserId;
     }
 
     // Properties
@@ -48,4 +51,11 @@ public class HistoryModel {
         return guestName;
     }
 
+    public Integer getLoserId() {
+        return loserId;
+    }
+
+    public Integer getWinnerId() {
+        return winnerId;
+    }
 }

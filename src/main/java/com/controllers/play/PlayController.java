@@ -1,5 +1,6 @@
 package com.controllers.play;
 
+import com.Main;
 import com.app.Card;
 import com.app.User;
 import com.menu.Menu;
@@ -9,14 +10,20 @@ import com.menu.play.Player;
 import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.animation.KeyFrame;
+import javafx.css.Size;
 import javafx.fxml.Initializable;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.shape.Shape;
 import javafx.util.Pair;
 import javafx.util.Duration;
 import javafx.animation.KeyFrame;
@@ -25,10 +32,11 @@ import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
+import java.awt.*;
+import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
-import java.util.Random;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -49,7 +57,10 @@ public class PlayController implements Initializable {
     public ProgressBar hostHP_Bar;
     public Label guestRoundAttack_label;
     public Label hostRoundAttack_label;
+    public GridPane guestField_pane;
+    public GridPane hostField_pane;
 
+    private final Color lineColor = Color.rgb(192, 0, 211,0.7);
     static private Player turnPlayer, opponent, selectedCellOwner, selectedCardOwner;
     static private int roundCounter, selectedCardIndex, selectedCellIndex;
     static public int pot;
@@ -58,6 +69,8 @@ public class PlayController implements Initializable {
     private boolean isCopyCardSelected = false;
     private int copyCardIndex;
     Timeline timeline = new Timeline();
+    boolean checkStop = false;
+    private List<CardPane> hostCardPanesList, guestCardPanesList;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -67,14 +80,21 @@ public class PlayController implements Initializable {
         guestPlayer.setCharacter(Card.Characters.Character2);
         guestName_label.setText(guestPlayer.getNickname());
         hostName_label.setText(hostPlayer.getNickname());
+        hostCardPanesList = new ArrayList<>();
+        guestCardPanesList = new ArrayList<>();
         updateHPBar();
         initEachRound();
         displayHand(hostPlayer);
         updateDurationLine(hostPlayer);
         updateDurationLine(guestPlayer);
+        addHLines(guestField_pane,VPos.TOP,0,0,lineColor);
+        addHLines(guestField_pane,VPos.BOTTOM,0,0,lineColor);
+        addHLines(hostField_pane,VPos.TOP,0,0,lineColor);
+        addHLines(hostField_pane,VPos.BOTTOM,0,0,lineColor);
     }
 
     private void placeCard() {
+        error_label.setText("");
         if (selectedCellOwner == selectedCardOwner && selectedCardOwner == turnPlayer) {
             if (checkPlacement()) {
                 changeTurn();
@@ -95,11 +115,12 @@ public class PlayController implements Initializable {
                 if (newStatus == Animation.Status.STOPPED) {
                     if (isGameOver() != null) {
                         System.out.println("Guest will now be logged out automatically");
-                    } else {
+                    } else if(checkStop){
                         initEachRound();
                         displayHand(hostPlayer);
                         updateDurationLine(hostPlayer);
                         updateDurationLine(guestPlayer);
+                        checkStop = false;
                     }
                 }
             });
@@ -233,21 +254,20 @@ public class PlayController implements Initializable {
             cardPane.cardView.setImage(Card.allCardImages.get(card.getId()));
             cardPane.setCardImage(120, 90, 0, 0, 50, 0);
             cardPane.setCardName(40, 0, 0, 0, 11);
-            cardPane.setCardPrice(95, 0, 0, 0, 11, card.getPrice());
             cardPane.setCardLevel(0, 0, 150, 75, 16);
-            cardPane.setPrefWidth(handColumnWidth);
+            cardPane.setNormal();
+            cardPane.setMaxWidth(handColumnWidth);
             cardPane.setPrefHeight(100);
             cardPane.setVisible(true);
             GridPane.setHalignment(cardPane, HPos.CENTER);
             GridPane.setValignment(cardPane, VPos.CENTER);
-
             //update pane
             handPane.add(cardPane, index, row);
             //handler
             int finalIndex = index;
             cardPane.imageContainer.setOnMouseClicked(mouseEvent -> {
                 if (mouseEvent.getButton() == MouseButton.SECONDARY) {
-                    cardPane.showPurchaseInfo(cardPane, 5);
+                    cardPane.showProperties(cardPane, 5);
                 } else {
                     selectedCardOwner = player;
                     selectedCardIndex = finalIndex;
@@ -270,10 +290,13 @@ public class PlayController implements Initializable {
 
     private void updateDurationLine(Player player) {
         GridPane tmp = hostDurationLine_pane;
+        List<CardPane> tmpList = hostCardPanesList;
         if (player == guestPlayer) {
             tmp = guestDurationLine_pane;
+            tmpList = guestCardPanesList;
         }
         tmp.getChildren().clear();
+        tmpList.clear();
         for (int i = 0; i < Play.durationLineSize; i++) {
             CardPane cardPane = new CardPane();
             cardPane.setPrefWidth(handColumnWidth);
@@ -291,7 +314,8 @@ public class PlayController implements Initializable {
             if (tmpCell.isHollow()) {
                 cardPane.setHollow();
             } else if (tmpCell.isEmpty()) {
-                cardPane.setStyle("-fx-border-color: black;");
+                cardPane.getStyleClass().add("table-view");
+                cardPane.setStyle("-fx-effect: 0");
             } else if (!tmpCell.isEmpty()) {
                 cardPane.card = tmpCell.getCard();
                 cardPane.cardView.setImage(Card.allCardImages.get(tmpCell.getCard().getId()));
@@ -301,6 +325,21 @@ public class PlayController implements Initializable {
                 cardPane.setShatter();
             }
             tmp.add(cardPane, i, 0);
+
+
+
+            if (tmp == hostDurationLine_pane) {
+                addVLines(tmp,HPos.LEFT,i,0,Color.rgb(29,0,38,0.5));
+                addHLines(tmp,VPos.TOP,i,0,Color.rgb(29,0,38,0.5));
+                addHLines(tmp,VPos.BOTTOM,i,0,Color.rgb(29,0,38,0.5));
+            }
+            if (tmp == guestDurationLine_pane) {
+                addVLines(tmp,HPos.LEFT,i,0,Color.rgb(29,0,38,0.5));
+                addHLines(tmp,VPos.TOP,i,0,Color.rgb(29,0,38,0.5));
+                addHLines(tmp,VPos.BOTTOM,i,0,Color.rgb(29,0,38,0.5));
+            }
+
+            tmpList.add(cardPane);
         }
     }
 
@@ -348,7 +387,7 @@ public class PlayController implements Initializable {
             myCell.shatter();
             oppCell.resetShatter();
             if (turnPlayer.checkCompleteShatter(myCell)) {
-                opponent.rewardCompleteShatter(myCell);
+                opponent.rewardCompleteShatter(error_label, myCell);
             }
             error_label.setText("your card is shattered");
         }
@@ -357,7 +396,7 @@ public class PlayController implements Initializable {
             oppCell.shatter();
             myCell.resetShatter();
             if (opponent.checkCompleteShatter(oppCell)) {
-                turnPlayer.rewardCompleteShatter(myCell);
+                turnPlayer.rewardCompleteShatter(error_label, myCell);
             }
             error_label.setText("opponent's card is shattered");
         }
@@ -376,14 +415,14 @@ public class PlayController implements Initializable {
 
     private void movingTimeLine() {
         timeline.stop();
+        checkStop = false;
         timeline.getKeyFrames().clear();
         int durationLineSize = Play.durationLineSize;
         int[] index = {0};
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1), event -> {
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.5), event -> {
             if (index[0] < durationLineSize) {
                 Cell hostCell = hostPlayer.getDurationLine().get(index[0]);
                 Cell guestCell = guestPlayer.getDurationLine().get(index[0]);
-
 
                 if (guestCell.getCard() != null) {
                     hostPlayer.increaseRoundAttack(guestCell.getCard().getGamingAttackOrDefense());
@@ -401,9 +440,28 @@ public class PlayController implements Initializable {
                     hostRoundAttack_label.setText(String.valueOf(hostPlayer.getRoundAttack()));
                     guestRoundAttack_label.setText(String.valueOf(guestPlayer.getRoundAttack()));
                     updateHPBar();
+                    guestHand_pane.setDisable(false);
+                    hostHand_pane.setDisable(false);
+                    checkStop = true;
                     timeline.stop(); // stop the timeline if the game is over
+                    try {
+                        Main.loadEndGame();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     return;
                 }
+
+                if(index[0] > 0){
+                    hostCardPanesList.get(index[0]-1).setNormal();
+                    guestCardPanesList.get(index[0]-1).setNormal();
+                }
+                hostCardPanesList.get(index[0]).setGlow();
+                guestCardPanesList.get(index[0]).setGlow();
+                hostRoundAttack_label.setText(String.valueOf(hostPlayer.getRoundAttack()));
+                guestRoundAttack_label.setText(String.valueOf(guestPlayer.getRoundAttack()));
+                updateHPBar();
+
                 index[0]++;
             } else {
                 hostRoundAttack_label.setText(String.valueOf(hostPlayer.getRoundAttack()));
@@ -411,10 +469,15 @@ public class PlayController implements Initializable {
                 updateHPBar();
                 hostPlayer.updateTotalAttack();
                 guestPlayer.updateTotalAttack();
+                guestHand_pane.setDisable(false);
+                hostHand_pane.setDisable(false);
+                checkStop = true;
                 timeline.stop(); // stop the timeline if all indices are processed
             }
         });
 
+        guestHand_pane.setDisable(true);
+        hostHand_pane.setDisable(true);
         timeline.getKeyFrames().add(keyFrame);
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
@@ -427,5 +490,31 @@ public class PlayController implements Initializable {
             return guestPlayer;
         return null;
     }
+
+    private static void addVLines(Pane pane, HPos pos, int column,int row,Color color){
+        Line line = new Line();
+        line.setStartY(3);
+        line.setEndY(pane.getHeight()-3);
+        line.setStroke(color);
+        line.setStrokeWidth(3);
+        pane.heightProperty().addListener((obs, oldVal, newVal) -> {
+            line.setEndY(newVal.doubleValue());
+        });
+        GridPane.setHalignment(line, pos);
+        ((GridPane)pane).add(line,  column, row);
+    };
+
+    private static void addHLines(Pane pane, VPos pos,  int column,int row,Color color){
+        Line line = new Line();
+        line.setStartX(0);
+        line.setEndX(pane.getWidth());
+        line.setStroke(color);
+        line.setStrokeWidth(3);
+        pane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            line.setEndX(newVal.doubleValue());
+        });
+        GridPane.setValignment(line, pos);
+        ((GridPane)pane).add(line, column, row);
+    };
 
 }
