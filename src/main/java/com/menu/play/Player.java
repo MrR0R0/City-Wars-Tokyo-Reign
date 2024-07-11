@@ -15,6 +15,7 @@ public class Player extends User {
     private Integer roundAttack, totalAttack, obtainedCoins = 0;
     private final Integer durationLineSize, handSize;
     private String consequence;
+    private int maxHP;
 
     public Player(User user) {
         super(user.getUsername(), "", user.getNickname(), "", "", "", "", user.getWallet(), user.getLevel(), user.getId(), user.getXP());
@@ -24,10 +25,8 @@ public class Player extends User {
         setXP(user.getXP());
         roundAttack = 0;
         totalAttack = 0;
-
-        //setHP(4 * (90 + 10 * getLevel()));
-        setHP(50);
-
+        maxHP = 4 * (90 + 10 * user.getLevel());
+        setHP(maxHP);
         deck = user.getCards();
     }
 
@@ -294,5 +293,9 @@ public class Player extends User {
             return durationLine.get(validIndex).getCardInitialIndex();
         }
         return -1;
+    }
+
+    public int getMaxHP() {
+        return maxHP;
     }
 }

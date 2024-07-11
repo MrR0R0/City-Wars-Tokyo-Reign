@@ -2,24 +2,22 @@ package com.controllers.play;
 
 import com.app.Card;
 import com.app.User;
+import com.menu.Menu;
 import com.menu.play.Cell;
 import com.menu.play.Play;
 import com.menu.play.Player;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.geometry.VPos;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
 import javafx.util.Pair;
 
 import java.net.URL;
+import java.util.Objects;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -34,13 +32,17 @@ public class PlayController implements Initializable {
     public Label hostName_label;
     public GridPane hostHand_pane;
     public GridPane guestHand_pane;
+    public Label error_label;
+    public ProgressBar guestHP_Bar;
+    public ProgressBar hostHP_Bar;
+    public Label guestRoundAttack_label;
+    public Label hostRoundAttack_label;
 
     static private Player turnPlayer, opponent, selectedCellOwner, selectedCardOwner;
     static private int roundCounter, selectedCardIndex, selectedCellIndex;
     static public int pot;
     static private final Random random = new Random();
     static final private int gameRounds = 4, handColumnWidth = 100;
-    private Pane draggedCard;
     private boolean isCopyCardSelected = false;
     private int copyCardIndex;
 
@@ -52,17 +54,18 @@ public class PlayController implements Initializable {
         guestPlayer.setCharacter(Card.Characters.Character2);
         guestName_label.setText(guestPlayer.getNickname());
         hostName_label.setText(hostPlayer.getNickname());
+        updateHPBar();
         initEachRound();
         displayHand(hostPlayer);
         updateDurationLine(hostPlayer);
         updateDurationLine(guestPlayer);
     }
 
-
     private void placeCard(){
         if(selectedCellOwner == selectedCardOwner && selectedCardOwner == turnPlayer){
             if(checkPlacement()){
                 changeTurn();
+                roundCounter--;
             }
             displayHand(guestPlayer);
             displayHand(hostPlayer);
@@ -73,11 +76,23 @@ public class PlayController implements Initializable {
             selectedCardIndex = -1;
             selectedCellIndex = -1;
         }
+        if(roundCounter == 0){
+            movingTimeLine();
+            if (isGameOver() != null) {
+                //result(Objects.requireNonNull(isGameOver()));
+                System.out.println("Guest will now be logged out automatically");
+            } else {
+                initEachRound();
+                displayHand(hostPlayer);
+                updateDurationLine(hostPlayer);
+                updateDurationLine(guestPlayer);
+            }
+        }
     }
     private boolean checkPlacement(){
         Card selectedCard = turnPlayer.getHand().get(selectedCardIndex);
         if(selectedCard.getDuration() + selectedCellIndex > Play.durationLineSize){
-            System.out.println("Out of bound!");
+            error_label.setText("Out of bound!");
             return false;
         }
         if (selectedCard.isHoleChanger()) {
@@ -90,7 +105,7 @@ public class PlayController implements Initializable {
                 turnPlayer.getDurationLine().get(selectedCellIndex).makeSolid();
                 turnPlayer.replaceCardInHand(selectedCardIndex);
             } else {
-                System.out.println("The cell is not hollow!");
+                error_label.setText("The cell is not hollow!");
             }
             return false;
         }
@@ -102,7 +117,7 @@ public class PlayController implements Initializable {
         if (selectedCard.isPowerBooster()) {
             int initialIndex = turnPlayer.getInitialIndexRandomCard();
             if (initialIndex == -1) {
-                System.out.println("No cards on the track! You have wasted power booster card!");
+                error_label.setText("No cards on the track! You have wasted power booster card!");
             } else {
                 for (int i = initialIndex; i < initialIndex + turnPlayer.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
                     turnPlayer.getDurationLine().get(i).getCard().boostAttackDefense(selectedCard.getPowerBoostMultiplier());
@@ -123,7 +138,7 @@ public class PlayController implements Initializable {
         if(selectedCard.isCardMitigator()){
             int initialIndex = opponent.getInitialIndexRandomCard();
             if (initialIndex == -1) {
-                System.out.println("No cards on the track! You have wasted mitigator card!");
+                error_label.setText("No cards on the track! You have wasted mitigator card!");
             } else {
                 for (int i = initialIndex; i < initialIndex + opponent.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
                     opponent.getDurationLine().get(i).getCard().boostAttackDefense(selectedCard.getMitigatorMultiplier());
@@ -132,7 +147,7 @@ public class PlayController implements Initializable {
 
             initialIndex = opponent.getInitialIndexRandomCard();
             if (initialIndex == -1) {
-                System.out.println("No cards on the track! You have wasted mitigator card!");
+                error_label.setText("No cards on the track! You have wasted mitigator card!");
             } else {
                 for (int i = initialIndex; i < initialIndex + opponent.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
                     opponent.getDurationLine().get(i).getCard().boostACC(selectedCard.getMitigatorMultiplier());
@@ -145,15 +160,15 @@ public class PlayController implements Initializable {
 
         for (int i = selectedCellIndex; i < selectedCellIndex + selectedCard.getDuration(); i++) {
             if (i >= Play.durationLineSize) {
-                System.out.println("you can't place this card because your card is outside of track's boundaries");
+                error_label.setText("you can't place this card because your card is outside of track's boundaries");
                 return false;
             }
             if (turnPlayer.getDurationLine().get(i).isHollow()) {
-                System.out.println("you can't place this card because the cell is hollow");
+                error_label.setText("you can't place this card because the cell is hollow");
                 return false;
             }
             if (!turnPlayer.getDurationLine().get(i).isEmpty()) {
-                System.out.println("you can't place this card because the cell is not empty");
+                error_label.setText("you can't place this card because the cell is not empty");
                 return false;
             }
         }
@@ -241,7 +256,7 @@ public class PlayController implements Initializable {
             tmp = guestDurationLine_pane;
         }
         tmp.getChildren().clear();
-        for(int i=0; i< Play.durationLineSize; i++){
+        for(int i=0; i < Play.durationLineSize; i++){
             CardPane cardPane = new CardPane();
             cardPane.setPrefWidth(handColumnWidth);
             cardPane.setPrefHeight(100);
@@ -287,9 +302,9 @@ public class PlayController implements Initializable {
         turnPlayer = randomPlayer == 0 ? hostPlayer : guestPlayer;
         opponent = randomPlayer == 0 ? guestPlayer : hostPlayer;
         if (randomPlayer == 0) {
-            System.out.println("Host starts");
+            error_label.setText("Host starts");
         } else {
-            System.out.println("guest starts");
+            error_label.setText("guest starts");
         }
         roundCounter = gameRounds;
 
@@ -301,7 +316,7 @@ public class PlayController implements Initializable {
         opponent = tmp;
     }
 
-    public static void applyCardsDynamic(Cell myCell, Cell oppCell) {
+    public void applyCardsDynamic(Cell myCell, Cell oppCell) {
         if(myCell.isEmpty() || oppCell.isEmpty()){
             return;
         }
@@ -319,7 +334,7 @@ public class PlayController implements Initializable {
             if (turnPlayer.checkCompleteShatter(myCell)) {
                 opponent.rewardCompleteShatter(myCell);
             }
-            System.out.println("your card is shattered");
+            error_label.setText("your card is shattered");
         }
         //when opp card shatters
         else if (myShieldAgainstBreakable || myHigherAccAgainstBreakable) {
@@ -328,13 +343,56 @@ public class PlayController implements Initializable {
             if (opponent.checkCompleteShatter(oppCell)) {
                 turnPlayer.rewardCompleteShatter(myCell);
             }
-            System.out.println("opponent's card is shattered");
+            error_label.setText("opponent's card is shattered");
         }
         //when both cards shatter
         else if (twoBreakableEqualAcc) {
             myCell.shatter();
             oppCell.shatter();
-            System.out.println("both cards are shattered");
+            error_label.setText("both cards are shattered");
         }
     }
+
+    public void updateHPBar(){
+        guestHP_Bar.setProgress((double) guestPlayer.getHP() / guestPlayer.getMaxHP());
+        hostHP_Bar.setProgress((double) hostPlayer.getHP() / hostPlayer.getMaxHP());
+    }
+
+    private void movingTimeLine() {
+        for (int i = 0; i < Play.durationLineSize; i++) {
+            Cell hostCell = hostPlayer.getDurationLine().get(i);
+            Cell guestCell = guestPlayer.getDurationLine().get(i);
+            if (guestCell.getCard() != null) {
+                hostPlayer.increaseRoundAttack(guestCell.getCard().getGamingAttackOrDefense());
+                hostPlayer.decreaseHP(guestCell.getCard().getGamingAttackOrDefense());
+            }
+
+            if (hostCell.getCard() != null) {
+                hostPlayer.increaseRoundAttack(hostCell.getCard().getGamingAttackOrDefense());
+                guestPlayer.decreaseHP(hostCell.getCard().getGamingAttackOrDefense());
+            }
+            if (isGameOver() != null) {
+                hostPlayer.updateTotalAttack();
+                guestPlayer.updateTotalAttack();
+                hostRoundAttack_label.setText(String.valueOf(hostPlayer.getRoundAttack()));
+                guestRoundAttack_label.setText(String.valueOf(guestPlayer.getRoundAttack()));
+                updateHPBar();
+                return;
+            }
+        }
+        hostRoundAttack_label.setText(String.valueOf(hostPlayer.getRoundAttack()));
+        guestRoundAttack_label.setText(String.valueOf(guestPlayer.getRoundAttack()));
+        updateHPBar();
+        hostPlayer.updateTotalAttack();
+        guestPlayer.updateTotalAttack();
+    }
+
+    private static Player isGameOver() {
+        if (guestPlayer.getHP() <= 0)
+            return hostPlayer;
+        else if (hostPlayer.getHP() <= 0)
+            return guestPlayer;
+        return null;
+    }
+
 }
