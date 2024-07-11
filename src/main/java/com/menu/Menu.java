@@ -1,6 +1,13 @@
 package com.menu;
 
 import com.app.User;
+import javafx.geometry.Pos;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
+
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,5 +39,28 @@ public abstract class Menu extends com.app.Error {
         } else {
             return null;
         }
+    }
+
+    public static void clipImage(ImageView imageView, double radius, String shape) {
+        if (shape.equals("circle")) {
+            double xCenter = imageView.getFitWidth() / 2;
+            double yCenter = imageView.getFitHeight() / 2;
+            Circle clip = new Circle(xCenter, yCenter, radius);
+            imageView.setClip(clip);
+        } else if (shape.equals("rectangle")) {
+            Rectangle clip = new Rectangle(imageView.getFitWidth(), imageView.getFitHeight());
+            clip.setArcWidth(radius);
+            clip.setArcHeight(radius);
+            imageView.setClip(clip);
+        }
+    }
+
+    public static StackPane stackImage(ImageView imageView) {
+        StackPane stackPane = new StackPane();
+        stackPane.setPrefHeight(imageView.getFitHeight());
+        stackPane.setPrefWidth(imageView.getFitWidth());
+        stackPane.getChildren().add(imageView);
+        stackPane.setAlignment(Pos.CENTER);
+        return stackPane;
     }
 }

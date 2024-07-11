@@ -8,7 +8,12 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -23,6 +28,7 @@ public class ProfileController extends ProfileMenu implements Initializable {
     public Label error_label;
     public Button save_but;
     public Button back_but;
+    public ImageView profile_image;
 
     private String username, password, email, nickname;
 
@@ -42,6 +48,9 @@ public class ProfileController extends ProfileMenu implements Initializable {
             } catch (IOException e) {
                 System.out.println(e);
             }
+        });
+        profile_image.setOnMouseClicked(event -> {
+            chooseProfile();
         });
     }
 
@@ -106,5 +115,19 @@ public class ProfileController extends ProfileMenu implements Initializable {
         }
 
         return true;
+    }
+
+    private void chooseProfile() {
+        try {
+            FileChooser fileChooser = new FileChooser();
+            Stage stage = Main.getStage();
+            File selectedFile = fileChooser.showOpenDialog(stage);
+            loggedInUser.setProfile(new Image(selectedFile.toURI().toURL().toExternalForm()));
+            profile_image.setImage(loggedInUser.getProfile());
+            clipImage(profile_image, profile_image.getFitWidth() / 2, "circle");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

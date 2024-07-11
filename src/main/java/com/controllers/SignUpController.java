@@ -7,10 +7,12 @@ import com.menu.authentication.SignUp;
 import com.sun.source.tree.ArrayAccessTree;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
+import javafx.geometry.*;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,7 +28,6 @@ public class SignUpController extends SignUp implements Initializable {
     public TextField nickname_field;
     public TextField answer_field;
     public TextField captcha_field;
-    public ImageView captcha_image;
     public Label firstError_label;
     public Label secondError_label;
     public Button firstNext_but;
@@ -37,13 +38,16 @@ public class SignUpController extends SignUp implements Initializable {
     public ImageView blueDice_image;
     public GridPane firstGrid;
     public GridPane secondGrid;
+    public GridPane captcha_pane;
 
     private boolean blueDicBoolean = true;
     public String captchaText;
+    public ImageView captcha_image = new ImageView();
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        showPage(1);
+        showPage(2);
 
         // First page setup
         pinkDice_image.setVisible(!blueDicBoolean);
@@ -201,6 +205,16 @@ public class SignUpController extends SignUp implements Initializable {
     private void setCaptchaImage() {
         captchaText = Captcha.generatePassword(5);
         captcha_image.setImage(Captcha.stringToImage(captchaText));
+        captcha_image.setFitHeight(Captcha.stringToImage(captchaText).getHeight()-30);
+        captcha_image.setFitWidth(Captcha.stringToImage(captchaText).getWidth());
+        captcha_image.setVisible(true);
+        StackPane stackPane = stackImage(captcha_image);
+        stackPane.setStyle("-fx-border-color: #0800ff; -fx-border-width: 2; -fx-border-style: solid;");
+        stackPane.setMaxHeight(Captcha.stringToImage(captchaText).getHeight()-30);
+        stackPane.setMaxWidth(Captcha.stringToImage(captchaText).getWidth());
+        GridPane.setHalignment(stackPane, HPos.CENTER);
+        GridPane.setValignment(stackPane, VPos.CENTER);
+        captcha_pane.add(stackPane,1,0);
     }
 
     private void recoveryQToIndex() {

@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Captcha {
-    static final int height = 30, width = 90;
+    static final int height = 10, width = 15;
     static private final int maxCaptchaAttempts = 3;
 
     public static boolean checkCaptcha(Scanner scanner) {
@@ -130,14 +130,14 @@ public class Captcha {
     }
 
     public static WritableImage stringToImage(String asciiArt){
-        int finalHeight = 350, finalWidth = 550;
-        int fontSize = 70, imageHeight = height * 10, imageWidth = width * 10, margin = 5;
+        int finalHeight = 90, finalWidth = 190;
+        int fontSize = 50, imageHeight = height * 10, imageWidth = width * 10, margin = 5;
         BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
-        g2d.setColor(Color.BLACK);
+        g2d.setColor(new Color(110, 5, 196,50));
         g2d.fillRect(0, 0, imageWidth, imageHeight);
         g2d.setFont(new Font("Monospaced", Font.BOLD, fontSize));
-        g2d.setColor(Color.WHITE);
+        g2d.setColor(Color.cyan);
 
         String[] lines = asciiArt.split("\n");
 
@@ -155,7 +155,7 @@ public class Captcha {
 
         for (int i = 0; i < image.getHeight(); i++) {
             for (int j = 0; j < image.getWidth(); j++) {
-                if (image.getRGB(j, i) != Color.BLACK.getRGB()) {
+                if (image.getRGB(j, i) != new Color(110, 5, 196,50).getRGB()) {
                     if (i < top) top = i;
                     if (j < left) left = j;
                     if (i > bottom) bottom = i;
@@ -170,7 +170,7 @@ public class Captcha {
         // Create a new BufferedImage for the cropped region
         BufferedImage croppedImage = new BufferedImage(croppedWidth, croppedHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2dCropped = croppedImage.createGraphics();
-        g2dCropped.setColor(Color.BLACK);
+        g2dCropped.setColor(new Color(110, 5, 196,50));
         g2dCropped.fillRect(0, 0, croppedWidth, croppedHeight);
         g2dCropped.drawImage(image, margin, margin, croppedWidth - margin, croppedHeight - margin, left, top, right + 1, bottom + 1, null);
         g2dCropped.dispose();
@@ -178,7 +178,7 @@ public class Captcha {
 
         BufferedImage finalImage = new BufferedImage(finalWidth, finalHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2dFinal = finalImage.createGraphics();
-        g2dFinal.setColor(Color.BLACK);
+        g2dFinal.setColor(new Color(110, 5, 196,50));
         g2dFinal.fillRect(0, 0, finalWidth, finalHeight);
 
         int x = (finalWidth - croppedWidth) / 2;

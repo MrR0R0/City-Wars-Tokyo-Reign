@@ -34,7 +34,11 @@ public class MainMenuController extends MainMenu implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         play_but.setOnMouseClicked(mouseEvent -> {
-            //Main.loadPlay();
+            try {
+                Main.loadGuestLogin();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
         history_but.setOnMouseClicked(mouseEvent -> {
             try {

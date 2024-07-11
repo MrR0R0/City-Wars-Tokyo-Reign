@@ -56,7 +56,13 @@
                   <RowConstraints minHeight="10.0" percentHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <ImageView fx:id="profile_image" blendMode="LIGHTEN" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" styleClass="regularLabel" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <ImageView fx:id="profile_image" blendMode="LIGHTEN" fitHeight="146.0" fitWidth="142.0" pickOnBounds="true" preserveRatio="true" styleClass="regularLabel" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <image>
+                        <Image url="@../images/4675250.png" />
+                     </image>
+                     <GridPane.margin>
+                        <Insets top="10.0" />
+                     </GridPane.margin></ImageView>
                   <GridPane GridPane.rowIndex="1">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -67,16 +73,12 @@
                         <RowConstraints minHeight="10.0" percentHeight="15.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <TextField fx:id="email_field" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="226.0" promptText="EMAIL" style="-fx-background-color: #212421; -fx-background-radius: 10; -fx-text-filled: #000000;" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <TextField fx:id="email_field" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="226.0" promptText="EMAIL" styleClass="text" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <GridPane.margin>
                               <Insets left="90.0" />
                            </GridPane.margin>
-                           <styleClass>
-                              <String fx:value="text" />
-                              <String fx:value="regularLabel" />
-                           </styleClass>
                         </TextField>
-                        <TextField fx:id="username_field" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="170.0" promptText="USERNAME" style="-fx-background-color: #212421; -fx-background-radius: 10;" styleClass="text" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <TextField fx:id="username_field" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="170.0" promptText="USERNAME" styleClass="text" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <GridPane.margin>
                               <Insets right="50.0" />
                            </GridPane.margin>
@@ -149,14 +151,10 @@
                         <RowConstraints minHeight="10.0" percentHeight="50.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <TextField fx:id="nickname_field" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="226.0" promptText="NICKNAME" style="-fx-background-color: #212421; -fx-background-radius: 10; -fx-text-filled: #000000;" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <TextField fx:id="nickname_field" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="33.0" prefWidth="226.0" promptText="NICKNAME" styleClass="text" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <GridPane.margin>
                               <Insets />
                            </GridPane.margin>
-                           <styleClass>
-                              <String fx:value="text" />
-                              <String fx:value="regularLabel" />
-                           </styleClass>
                         </TextField>
                      </children>
                   </GridPane>

@@ -35,15 +35,14 @@ public class LoginController extends Login implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        login_but.setOnAction(this::handleLogin);
-        forgot_label.setOnMouseClicked(this::forgotPassword);
-        signUp_label.setOnMouseClicked(event -> {
+        login_but.setOnAction(event -> {
             try {
-                handleSignup();
+                handleLogin();
             } catch (IOException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e);
             }
         });
+        forgot_label.setOnMouseClicked(this::forgotPassword);
         signUp_label.setOnMouseClicked(event -> {
             try {
                 handleSignup();
@@ -63,14 +62,10 @@ public class LoginController extends Login implements Initializable {
     private void forgotPassword(MouseEvent mouseEvent) {
     }
 
-    private void handleLogin(ActionEvent actionEvent) {
+    private void handleLogin() throws IOException {
         if(checkLogIn()){
-           loggedInUser = User.signedUpUsers.get(User.getIdByUsername(username));
-            try {
-                Main.loadMainMenu();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-            }
+            loggedInUser = User.signedUpUsers.get(User.getIdByUsername(username));
+            Main.loadMainMenu();
         }
     }
 
