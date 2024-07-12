@@ -20,6 +20,7 @@ public class MainMenu extends Menu {
     final static private String switchToShop = "^select menu shop$";
     final static private String showCards = "^show cards$";
     final static private String showHistory = "^show history$";
+    final static private String showProfile = "^select menu profile$";
     final static private String logoutCommand = "^log out$";
     final static private String sortCommand = "^sort by (?<Field>\\d+) (?<Type>\\d+)$";
 
@@ -40,6 +41,10 @@ public class MainMenu extends Menu {
             Menu.loggedInUser.showCards();
         } else if (input.matches(showHistory)) {
             showHistory(scanner);
+        }
+        else if(input.matches(showProfile)){
+            System.out.println("You are now in \"Profile\" menu");
+            Menu.currentMenu = MenuType.Profile;
         }
     }
 

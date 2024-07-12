@@ -340,6 +340,7 @@ public class Play extends Menu {
         if (middleCard != null) {
             if (random.nextInt(4) == 1 && selectedCard.getType().equals(middleCard.getType())) {
                 selectedCard.boostAttackDefense(1.2);
+                System.out.println("Middle card boost!");
             }
         }
 

@@ -125,7 +125,8 @@ public class Login extends Menu {
                 command = scanner.nextLine().trim();
                 while(true){
                     if(ProgramController.checkQuit(command)){
-                        System.out.println("You will be directed to the main menu");
+                        System.out.println("You will be directed to the authentication menu");
+                        Menu.currentMenu = MenuType.Authentication;
                         return;
                     }
                     if(SignUp.isValidPasswordFormat(command)){
