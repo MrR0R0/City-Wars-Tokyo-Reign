@@ -23,7 +23,7 @@
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <ImageView blendMode="DARKEN" cache="true" cacheHint="QUALITY" fitHeight="900.0" fitWidth="1575.0" nodeOrientation="INHERIT" pickOnBounds="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <ImageView fx:id="background_image" blendMode="DARKEN" cache="true" cacheHint="QUALITY" fitHeight="900.0" fitWidth="1575.0" nodeOrientation="INHERIT" pickOnBounds="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <image>
             <Image url="@../images/main_background.png" />
          </image>

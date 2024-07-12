@@ -7,6 +7,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
@@ -30,9 +31,16 @@ public class MainMenuController extends MainMenu implements Initializable {
     public Label wallet_label;
     public Button logout_but;
     public GridPane user_gridPane;
+    public ImageView background_image;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        if (!SettingController.secondBack.isEmpty()){
+            background_image.setImage(new Image("file:src\\main\\resources\\com\\images\\Designer.png"));
+        }
+        else {
+            background_image.setImage(new Image("file:src\\main\\resources\\com\\images\\main_background.png"));
+        }
         play_but.setOnMouseClicked(mouseEvent -> {
             try {
                 Main.loadGuestLogin();
