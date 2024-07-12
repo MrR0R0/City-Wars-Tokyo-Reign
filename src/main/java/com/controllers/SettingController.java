@@ -1,6 +1,7 @@
 package com.controllers;
 
 import com.Main;
+import com.menu.Menu;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.Initializable;
@@ -14,7 +15,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class SettingController implements Initializable {
+public class SettingController extends Menu implements Initializable {
 
     public ProgressBar music_progress;
     public ProgressBar sound_progress;
@@ -29,7 +30,6 @@ public class SettingController implements Initializable {
     public Spinner music_spinner;
 
     public boolean isSliderChanging;
-    public MediaPlayer mediaPlayer;
     public static String secondBack = "";
 
 
@@ -45,24 +45,28 @@ public class SettingController implements Initializable {
             if (soundOn_image.isVisible()) {
                 soundOn_image.setVisible(false);
                 soundOff_image.setVisible(true);
+
             }
         });
         soundOff_image.setOnMouseClicked(mouseEvent -> {
             if (soundOff_image.isVisible()) {
                 soundOn_image.setVisible(true);
                 soundOff_image.setVisible(false);
+
             }
         });
         musicOn_image.setOnMouseClicked(mouseEvent -> {
             if (musicOn_image.isVisible()) {
                 musicOn_image.setVisible(false);
                 musicOff_image.setVisible(true);
+                mediaPlayer.stop();
             }
         });
         musicOff_image.setOnMouseClicked(mouseEvent -> {
             if (musicOff_image.isVisible()) {
                 musicOn_image.setVisible(true);
                 musicOff_image.setVisible(false);
+                mediaPlayer.play();
             }
         });
         back_but.setOnMouseClicked(mouseEvent -> {
@@ -103,12 +107,14 @@ public class SettingController implements Initializable {
             isSliderChanging = isChanging;
             if (!isChanging) {
                 updateSlider(timeSlider, progressBar);
+                mediaPlayer.setVolume(music_slider.getValue()*100);
             }
         });
 
         timeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (!isSliderChanging) {
                 updateSlider(timeSlider, progressBar);
+                mediaPlayer.setVolume(music_slider.getValue()*100);
             }
         });
     }

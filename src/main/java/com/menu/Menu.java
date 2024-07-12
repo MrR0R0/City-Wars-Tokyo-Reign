@@ -4,6 +4,7 @@ import com.app.User;
 import javafx.geometry.Pos;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 
@@ -17,6 +18,7 @@ public abstract class Menu extends com.app.Error {
     public static User loggedInUser = new User();
     public static MenuType currentMenu = MenuType.Authentication;
     public final static String backCommand = "^(?i)back$";
+    public static MediaPlayer mediaPlayer;
 
     public static boolean isLoggedIn(){
         return !(loggedInUser.getUsername() == null);

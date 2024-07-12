@@ -71,13 +71,15 @@ public class PlayController implements Initializable {
     boolean checkStop = false;
     private List<CardPane> hostCardPanesList, guestCardPanesList;
     private double timeStrikeValue = 0;
+    private boolean isBlindfoldOn = false;
+    private Player blindfoldedPlayer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        hostPlayer = new Player(User.signedUpUsers.get(2));
-        hostPlayer.setCharacter(Card.Characters.Character1);
-        guestPlayer = new Player(User.signedUpUsers.get(1));
-        guestPlayer.setCharacter(Card.Characters.Character2);
+//        hostPlayer = new Player(User.signedUpUsers.get(2));
+//        hostPlayer.setCharacter(Card.Characters.Character1);
+//        guestPlayer = new Player(User.signedUpUsers.get(1));
+//        guestPlayer.setCharacter(Card.Characters.Character2);
 
         hostImage.setImage(Card.charactersImage.get(hostPlayer.getCharacter()));
         guestImage.setImage(Card.charactersImage.get(guestPlayer.getCharacter()));
@@ -101,6 +103,13 @@ public class PlayController implements Initializable {
         error_label.setText("");
         if (selectedCellOwner == selectedCardOwner && selectedCardOwner == turnPlayer) {
             if (checkPlacement()) {
+                if(isBlindfoldOn){
+                    if(blindfoldedPlayer == turnPlayer){
+                        removeBlindfold(blindfoldedPlayer);
+                        blindfoldedPlayer = null;
+                        isBlindfoldOn = false;
+                    }
+                }
                 changeTurn();
                 roundCounter--;
             }
@@ -176,6 +185,13 @@ public class PlayController implements Initializable {
             int index = random.nextInt(opponent.getHand().size());
             turnPlayer.getHand().set(selectedCardIndex, opponent.getHand().get(index));
             opponent.getHand().remove(index);
+            return false;
+        }
+        if (selectedCard.isBlindfold()){
+            isBlindfoldOn = true;
+            blindfoldedPlayer = opponent;
+            applyBlindfold(opponent);
+            turnPlayer.replaceCardInHand(selectedCardIndex);
             return false;
         }
 
@@ -652,4 +668,19 @@ public class PlayController implements Initializable {
         ((GridPane)pane).add(line, column, row);
     }
 
+    private void applyBlindfold(Player player){
+        GridPane tmp = hostHand_pane;
+        Collections.shuffle(player.getHand());
+        if(player == guestPlayer){
+            tmp = guestHand_pane;
+        }
+        tmp.setOpacity(0.1);
+    }
+    private void removeBlindfold(Player player){
+        GridPane tmp = hostHand_pane;
+        if(player == guestPlayer){
+            tmp = guestHand_pane;
+        }
+        tmp.setOpacity(1);
+    }
 }

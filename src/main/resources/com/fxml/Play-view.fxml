@@ -30,7 +30,7 @@
             <Image url="@../images/Designer_(55)-transformed.png" />
          </image>
         </ImageView>
-        <GridPane alignment="CENTER" gridLinesVisible="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+        <GridPane alignment="CENTER" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
             <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             </columnConstraints>
@@ -60,7 +60,7 @@
                   <RowConstraints percentHeight="100.0" />
                </rowConstraints>
             </GridPane>
-            <GridPane gridLinesVisible="true">
+            <GridPane>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
@@ -70,7 +70,7 @@
                 <RowConstraints minHeight="10.0" percentHeight="40.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <GridPane fx:id="guestField_pane" gridLinesVisible="true" GridPane.rowIndex="2">
+                  <GridPane fx:id="guestField_pane" GridPane.rowIndex="2">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="3.9" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -137,7 +137,7 @@
                            </GridPane.margin></Label>
                      </children>
                   </GridPane>
-                  <GridPane gridLinesVisible="true">
+                  <GridPane>
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
                       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -146,7 +146,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <GridPane fx:id="guestHand_pane" gridLinesVisible="true" GridPane.columnIndex="1">
+                        <GridPane fx:id="guestHand_pane" GridPane.columnIndex="1">
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -159,7 +159,7 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                         </GridPane>
-                        <GridPane gridLinesVisible="true">
+                        <GridPane>
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -186,7 +186,7 @@
                   </GridPane>
                </children>
             </GridPane>
-            <GridPane gridLinesVisible="true" maxWidth="1.7976931348623157E308" GridPane.rowIndex="2">
+            <GridPane maxWidth="1.7976931348623157E308" GridPane.rowIndex="2">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
@@ -196,7 +196,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <GridPane fx:id="hostField_pane" gridLinesVisible="true" maxWidth="1.7976931348623157E308">
+                  <GridPane fx:id="hostField_pane" maxWidth="1.7976931348623157E308">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="3.9" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -205,7 +205,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <GridPane gridLinesVisible="true" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
+                        <GridPane maxWidth="1.7976931348623157E308" GridPane.columnIndex="1">
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                            </columnConstraints>
@@ -274,7 +274,7 @@
                            </GridPane.margin></Label>
                      </children>
                   </GridPane>
-                  <GridPane gridLinesVisible="true" GridPane.rowIndex="2">
+                  <GridPane GridPane.rowIndex="2">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="20.0" prefWidth="100.0" />
@@ -283,7 +283,7 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <GridPane fx:id="hostHand_pane" gridLinesVisible="true">
+                        <GridPane fx:id="hostHand_pane">
                           <columnConstraints>
                             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -296,7 +296,7 @@
                             <RowConstraints minHeight="10.0" percentHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                         </GridPane>
-                        <GridPane gridLinesVisible="true" GridPane.columnIndex="1">
+                        <GridPane GridPane.columnIndex="1">
                            <columnConstraints>
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="10.0" prefWidth="100.0" />
                               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -329,7 +329,7 @@
             </GridPane>
             <Label fx:id="error_label" alignment="CENTER" prefHeight="34.0" prefWidth="498.0" style="-fx-text-fill: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, #00f7ff 0.0%, #f600ff 100.0%);" styleClass="text" text="Label" textAlignment="CENTER" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <font>
-                  <Font name="Orbitron-Bold" size="25.0" />
+                  <Font name="Orbitron-Bold" size="20.0" />
                </font>
                <textFill>
                   <LinearGradient endX="1.0" endY="1.0">

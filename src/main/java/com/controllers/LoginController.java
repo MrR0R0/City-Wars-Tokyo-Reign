@@ -10,6 +10,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.io.IOException;
 import java.net.URL;
@@ -34,8 +36,12 @@ public class LoginController extends Login implements Initializable {
     private int wrongPasswordCounter;
     private String username;
 
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        mediaPlayer = new MediaPlayer(new Media(getClass().getResource("/com/images/main.mp3").toExternalForm()));
+        mediaPlayer.play();
+
         login_but.setOnAction(event -> {
             try {
                 handleLogin();

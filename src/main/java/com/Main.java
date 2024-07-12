@@ -20,14 +20,16 @@ public class Main extends javafx.application.Application{
     @Override
     public void start(Stage primaryStage) throws IOException, SQLException {
         stage = primaryStage;
+        primaryStage.getIcons().add(0,new Image("file:src\\main\\resources\\com\\images\\icon.png"));
+        primaryStage.setIconified(true);
         Card.allCards = Connect.getCards();
         User.signedUpUsers = Connect.getUsers();
         fillAllCardImages();
         fillCharacterImages();
 
-        Menu.loggedInUser = User.signedUpUsers.get(1);
+//        Menu.loggedInUser = User.signedUpUsers.get(1);
 
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/MainMenu-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Login-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setTitle("War city");
         stage.setScene(scene);

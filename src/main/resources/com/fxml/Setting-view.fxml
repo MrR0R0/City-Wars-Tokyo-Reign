@@ -203,7 +203,7 @@
                         </Spinner>
                      </children>
                   </GridPane>
-                  <ImageView fitHeight="110.0" fitWidth="160.0" opacity="0.76" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+                  <ImageView fitHeight="110.0" fitWidth="160.0" opacity="0.6" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                      <image>
                         <Image url="@../images/_20b5a8c4-fc9e-4a42-a220-0217a7ef6b55.jpg" />
                      </image>
