@@ -55,13 +55,16 @@ public class GuestLoginController extends Login implements Initializable {
                 throw new RuntimeException(e);
             }
         });
-        forgot_label.setOnMouseClicked(this::forgotPassword);
+        forgot_label.addEventHandler(MouseEvent.MOUSE_CLICKED, mouseEvent -> {
+            try {
+                Main.loadForgotPasswordMenu();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         countdown_label.setText("");
         error_label.setText("");
         wrongPasswordCounter = 0;
-    }
-
-    private void forgotPassword(MouseEvent mouseEvent) {
     }
 
     private void handleLogin() throws IOException {
