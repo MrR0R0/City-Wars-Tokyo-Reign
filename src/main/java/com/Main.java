@@ -24,8 +24,10 @@ public class Main extends javafx.application.Application{
         User.signedUpUsers = Connect.getUsers();
         fillAllCardImages();
         fillCharacterImages();
-        Menu.loggedInUser = User.signedUpUsers.get(2);
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/Play-view.fxml"));
+
+        Menu.loggedInUser = User.signedUpUsers.get(1);
+
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("fxml/MainMenu-view.fxml"));
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setTitle("War city");
         stage.setScene(scene);

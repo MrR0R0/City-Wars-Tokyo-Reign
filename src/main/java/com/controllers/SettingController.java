@@ -2,10 +2,10 @@ package com.controllers;
 
 import com.Main;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Slider;
+import javafx.scene.control.*;
+import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
@@ -25,9 +25,12 @@ public class SettingController implements Initializable {
     public ImageView soundOn_image;
     public ImageView soundOff_image;
     public Button back_but;
+    public ImageView secondBack_image;
+    public Spinner music_spinner;
 
     public boolean isSliderChanging;
     public MediaPlayer mediaPlayer;
+    public static String secondBack = "";
 
 
     @Override
@@ -69,8 +72,18 @@ public class SettingController implements Initializable {
                 System.out.println(e.getMessage());
             }
         });
+        secondBack_image.setOnMouseClicked(mouseEvent -> {
+            if (secondBack.isEmpty()) {
+                secondBack = secondBack_image.getImage().getUrl();
+            }
+            else {
+                secondBack = "";
+            }
+        });
 
-
+        music_spinner.setValueFactory(new SpinnerValueFactory.ListSpinnerValueFactory<>(
+                FXCollections.observableArrayList("Option 1", "Option 2")
+        ));
     }
 
 

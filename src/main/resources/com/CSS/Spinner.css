@@ -1,0 +1,19 @@
+
+.spinner .increment-arrow-button, .spinner .decrement-arrow-button {
+    -fx-background-color: rgb(27, 0, 82);
+}
+
+.spinner .increment-arrow-button:hover, .spinner .decrement-arrow-button:hover {
+    -fx-background-color: #FF00FFFF;
+
+}
+
+
+.spinner .text-field {
+    -fx-background-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgb(39, 0, 117), rgb(77, 0, 75));
+    -fx-border-color: linear-gradient(from 0.0% 0.0% to 100.0% 100.0%, repeat, rgb(39, 0, 117), rgb(77, 0, 75));
+    -fx-text-fill: #a8ffff;
+    -fx-font-family: Orbitron;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0, 0, 0);
+}
