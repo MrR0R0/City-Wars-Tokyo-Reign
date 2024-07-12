@@ -15,6 +15,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
@@ -54,6 +55,8 @@ public class PlayController implements Initializable {
     public ProgressBar timeStrike_progress;
     public Label round_label;
     public Label turn_label;
+    public ImageView hostImage;
+    public ImageView guestImage;
 
     private final Color lineColor = Color.rgb(192, 0, 211,0.7);
     static private Player turnPlayer, opponent, selectedCellOwner, selectedCardOwner;

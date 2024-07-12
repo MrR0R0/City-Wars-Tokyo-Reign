@@ -121,6 +121,9 @@ public class CardPane extends GridPane {
     public void setSpellType() {
         imageContainer.setStyle("-fx-border-color: linear-gradient(from 0.0% 50.0% to 100.0% 50.0%, reflect, #0051ff 0.0%, #ff0000 100.0%);-fx-border-width: 3; -fx-border-style: solid;-fx-background-color: linear-gradient(from 0.0% 50.0% to 100.0% 50.0%, reflect, #0051ff 0.0%, #ff0000 100.0%);");
     }
+    public void setMitigated() {
+        imageContainer.setStyle("-fx-background-color: #7a002b; -fx-border-color: #600433; -fx-border-width: 3; -fx-border-style: solid;");
+    }
     public void setShatter() {
         shatterView.setImage(shatteredImage);
         shatterView.setVisible(true);
