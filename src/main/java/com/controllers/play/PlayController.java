@@ -71,6 +71,8 @@ public class PlayController implements Initializable {
     boolean checkStop = false;
     private List<CardPane> hostCardPanesList, guestCardPanesList;
     private double timeStrikeValue = 0;
+    private boolean isBlindfoldOn = false;
+    private Player blindfoldedPlayer;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -101,6 +103,13 @@ public class PlayController implements Initializable {
         error_label.setText("");
         if (selectedCellOwner == selectedCardOwner && selectedCardOwner == turnPlayer) {
             if (checkPlacement()) {
+                if(isBlindfoldOn){
+                    if(blindfoldedPlayer == turnPlayer){
+                        removeBlindfold(blindfoldedPlayer);
+                        blindfoldedPlayer = null;
+                        isBlindfoldOn = false;
+                    }
+                }
                 changeTurn();
                 roundCounter--;
             }
@@ -176,6 +185,13 @@ public class PlayController implements Initializable {
             int index = random.nextInt(opponent.getHand().size());
             turnPlayer.getHand().set(selectedCardIndex, opponent.getHand().get(index));
             opponent.getHand().remove(index);
+            return false;
+        }
+        if (selectedCard.isBlindfold()){
+            isBlindfoldOn = true;
+            blindfoldedPlayer = opponent;
+            applyBlindfold(opponent);
+            turnPlayer.replaceCardInHand(selectedCardIndex);
             return false;
         }
 
@@ -376,6 +392,8 @@ public class PlayController implements Initializable {
     private void initEachRound() {
         hostPlayer.initNewRound();
         guestPlayer.initNewRound();
+        removeBlindfold(hostPlayer);
+        removeBlindfold(guestPlayer);
         hostDurationLine_pane.getChildren().clear();
         guestDurationLine_pane.getChildren().clear();
         hostHand_pane.getChildren().clear();
@@ -626,4 +644,19 @@ public class PlayController implements Initializable {
         ((GridPane)pane).add(line, column, row);
     }
 
+    private void applyBlindfold(Player player){
+        GridPane tmp = hostHand_pane;
+        Collections.shuffle(player.getHand());
+        if(player == guestPlayer){
+            tmp = guestHand_pane;
+        }
+        tmp.setOpacity(0);
+    }
+    private void removeBlindfold(Player player){
+        GridPane tmp = hostHand_pane;
+        if(player == guestPlayer){
+            tmp = guestHand_pane;
+        }
+        tmp.setOpacity(1);
+    }
 }
