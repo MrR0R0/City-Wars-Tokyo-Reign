@@ -119,6 +119,9 @@ public class CardPane extends GridPane {
     public void setBooster() {
         imageContainer.setStyle("-fx-background-color: gold; -fx-border-color: gold; -fx-border-width: 3; -fx-border-style: solid;");
     }
+    public void setMitigated() {
+        imageContainer.setStyle("-fx-background-color: #7a002b; -fx-border-color: #600433; -fx-border-width: 3; -fx-border-style: solid;");
+    }
     public void setDurationStyle() {
         this.setStyle("-fx-border-color: linear-gradient(from 0.0% 50.0% to 100.0% 50.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);\n");
     }

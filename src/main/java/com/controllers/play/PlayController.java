@@ -67,6 +67,10 @@ public class PlayController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        hostPlayer = new Player(User.signedUpUsers.get(2));
+        hostPlayer.setCharacter(Card.Characters.Character1);
+        guestPlayer = new Player(User.signedUpUsers.get(1));
+        guestPlayer.setCharacter(Card.Characters.Character2);
         guestName_label.setText(guestPlayer.getNickname());
         hostName_label.setText(hostPlayer.getNickname());
         hostCardPanesList = new ArrayList<>();
@@ -84,6 +88,7 @@ public class PlayController implements Initializable {
     }
 
     private void placeCard() {
+        error_label.setText("");
         if (selectedCellOwner == selectedCardOwner && selectedCardOwner == turnPlayer) {
             if (checkPlacement()) {
                 changeTurn();
@@ -99,7 +104,6 @@ public class PlayController implements Initializable {
             selectedCardIndex = -1;
             selectedCellIndex = -1;
         }
-        error_label.setText("");
         round_label.setText("Rounds: " + roundCounter);
         turn_label.setText(turnPlayer.getNickname() + "'s turn");
         if (roundCounter == 0) {
@@ -152,12 +156,6 @@ public class PlayController implements Initializable {
                 error_label.setText("No cards on the track! You have wasted power booster card!");
             } else {
                 for (int i = initialIndex; i < initialIndex + turnPlayer.getDurationLine().get(initialIndex).getCard().getDuration(); i++) {
-                    if(turnPlayer == hostPlayer){
-                        hostCardPanesList.get(i).setBooster();
-                    }
-                    else{
-                        guestCardPanesList.get(i).setBooster();
-                    }
                     turnPlayer.getDurationLine().get(i).getCard().boostAttackDefense(selectedCard.getPowerBoostMultiplier());
                 }
             }
@@ -318,6 +316,12 @@ public class PlayController implements Initializable {
                 cardPane.card = tmpCell.getCard();
                 cardPane.cardView.setImage(Card.allCardImages.get(tmpCell.getCard().getId()));
                 cardPane.setCardImage(80, 50, 0, 0, 0, 0);
+                if (player.getDurationLine().get(i).getCard().isBoosted()){
+                    cardPane.setBooster();
+                }
+                if (player.getDurationLine().get(i).getCard().isMitigated()){
+                    cardPane.setMitigated();
+                }
             }
             if (player.getDurationLine().get(i).isShattered()) {
                 cardPane.setShatter();

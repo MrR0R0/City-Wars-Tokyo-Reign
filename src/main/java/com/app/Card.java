@@ -9,6 +9,8 @@ import java.util.Objects;
 public class Card implements Cloneable {
     public static final String CARD_REGEX = "^(?<id>\\S+)_(?<level>\\S+)";
     public static final int healByLevel = 15;
+    private boolean isBoosted;
+    private boolean isMitigated;
 
 
     public enum Characters {Character1, Character2, Character3, Character4, Unity}
@@ -23,6 +25,8 @@ public class Card implements Cloneable {
     public static LinkedHashMap<Characters,Image> charactersImage = new LinkedHashMap<>();
 
     public Card() {
+        isBoosted = false;
+        isMitigated = false;
     }
 
     public Card(String name, CardType type, Integer level, Integer price, Integer damage, Integer duration,
@@ -40,6 +44,8 @@ public class Card implements Cloneable {
         this.id = id;
         this.attackOrDefense = attackOrDefense;
         this.upgradeLevel = upgradeLevel;
+        isBoosted = false;
+        isMitigated = false;
     }
 
     public void showProperties(int pad) {
@@ -338,6 +344,12 @@ public class Card implements Cloneable {
     }
 
     public void boostAttackDefense(Double multiplier) {
+        if(multiplier >= 1){
+            isBoosted = true;
+        }
+        else{
+            isMitigated = true;
+        }
         attackOrDefense = (int) (attackOrDefense * multiplier);
     }
 
@@ -391,6 +403,14 @@ public class Card implements Cloneable {
         if(id == 18)
             return false;
         return true;
+    }
+
+    public boolean isBoosted() {
+        return isBoosted;
+    }
+
+    public boolean isMitigated() {
+        return isMitigated;
     }
 
     public static <T> Card findCardInlist(String property, T value, LinkedHashMap<Integer, Card> linkedHashMap) {
