@@ -15,6 +15,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -52,6 +53,8 @@ public class PlayController implements Initializable {
     public GridPane hostField_pane;
     public Label round_label;
     public Label turn_label;
+    public ImageView guestImage;
+    public ImageView hostImage;
 
     private final Color lineColor = Color.rgb(192, 0, 211,0.7);
     static private Player turnPlayer, opponent, selectedCellOwner, selectedCardOwner;
@@ -71,6 +74,9 @@ public class PlayController implements Initializable {
         hostPlayer.setCharacter(Card.Characters.Character1);
         guestPlayer = new Player(User.signedUpUsers.get(1));
         guestPlayer.setCharacter(Card.Characters.Character2);
+        
+        hostImage.setImage(Card.charactersImage.get(hostPlayer.getCharacter()));
+        guestImage.setImage(Card.charactersImage.get(guestPlayer.getCharacter()));
         guestName_label.setText(guestPlayer.getNickname());
         hostName_label.setText(hostPlayer.getNickname());
         hostCardPanesList = new ArrayList<>();

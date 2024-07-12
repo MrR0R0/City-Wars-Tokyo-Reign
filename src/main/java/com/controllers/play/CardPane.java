@@ -115,7 +115,6 @@ public class CardPane extends GridPane {
     public void setNormal() {
         imageContainer.setStyle("-fx-background-color: #2a00b0; -fx-border-color: #2a00b0; -fx-border-width: 2; -fx-border-style: solid;-fx-effect: dropshadow(gaussian, rgb(0, 0, 0), 10, 0.2, 0, 0);");
     }
-
     public void setBooster() {
         imageContainer.setStyle("-fx-background-color: gold; -fx-border-color: gold; -fx-border-width: 3; -fx-border-style: solid;");
     }
@@ -125,7 +124,6 @@ public class CardPane extends GridPane {
     public void setDurationStyle() {
         this.setStyle("-fx-border-color: linear-gradient(from 0.0% 50.0% to 100.0% 50.0%, reflect, #00eaff 0.0%, #e000ff 100.0%);\n");
     }
-
     public void setShatter() {
         shatterView.setImage(shatteredImage);
         shatterView.setVisible(true);
