@@ -10,6 +10,7 @@ import menu.authentication.Login;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Scanner;
@@ -25,6 +26,7 @@ public class Play extends Menu {
     static private Player opponent;
     static private final Integer gameRounds = 4;
     static private int roundCounter;
+    private static Player blindfoldedPlayer;
 
     static private Integer pot = 0;
 
@@ -151,6 +153,7 @@ public class Play extends Menu {
         } else {
             System.out.println("guest starts");
         }
+
         //init first round
         initEachRound();
         roundCounter = gameRounds;
@@ -161,10 +164,18 @@ public class Play extends Menu {
             else if (input.toLowerCase().matches(showPlaygroundCommand)) {
                 printPlayGround();
             } else if (input.toLowerCase().matches(showHandCommand)) {
-                turnPlayer.showHand();
+                if(blindfoldedPlayer != turnPlayer) {
+                    turnPlayer.showHand();
+                }
+                else{
+                    System.out.println("You can't see your hand due to blindfold");
+                }
             } else if (input.matches(placeCardCommand)) {
                 System.out.println(turnPlayer.getNickname() + "'s turn");
                 if (placeCard(input)) {
+                    if(blindfoldedPlayer == turnPlayer){
+                        blindfoldedPlayer = null;
+                    }
                     changeTurn();
                     roundCounter--;
                 }
@@ -295,6 +306,13 @@ public class Play extends Menu {
                     applyCardsDynamic(turnPlayer.getDurationLine().get(i), opponent.getDurationLine().get(i));
                 }
             }
+            turnPlayer.replaceCardInHand(selectedCardIndex);
+            return false;
+        }
+
+        if(selectedCard.isBlindfold()){
+            blindfoldedPlayer = opponent;
+            Collections.shuffle(opponent.getHand());
             turnPlayer.replaceCardInHand(selectedCardIndex);
             return false;
         }

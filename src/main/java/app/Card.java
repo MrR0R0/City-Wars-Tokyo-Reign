@@ -251,6 +251,10 @@ public class Card implements Cloneable {
         return id == 8;
     }
 
+    public boolean isBlindfold(){
+        return id == 32;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -383,6 +387,8 @@ public class Card implements Cloneable {
         if(id == 9)
             return false;
         if(id == 18)
+            return false;
+        if(id == 32)
             return false;
         return true;
     }
