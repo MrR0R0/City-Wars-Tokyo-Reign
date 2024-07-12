@@ -3,7 +3,6 @@ package com;
 import com.app.*;
 import com.database.Connect;
 import com.menu.Menu;
-import com.menu.authentication.SignUp;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -103,7 +102,6 @@ public class Main extends javafx.application.Application{
         scene = new Scene(fxmlLoader.load(), 1050, 700);
         stage.setScene(scene);
     }
-
     private static void fillAllCardImages(){
         for(int i=1; i<=Card.allCards.size(); i++){
             Card.allCardImages.put(i, new Image("file:src\\main\\resources\\com\\images\\card\\" + i + ".png"));
@@ -114,7 +112,6 @@ public class Main extends javafx.application.Application{
             Card.charactersImage.put(Card.Characters.valueOf("Character" + i),new Image("file:src\\main\\resources\\com\\images\\character\\" + i + ".png"));
         }
     }
-
     public static Stage getStage() {
         return stage;
     }
