@@ -214,6 +214,7 @@ public class PlayController implements Initializable {
         if (middleCard != null) {
             if (random.nextInt(4) == 1 && selectedCard.getType().equals(middleCard.getType())) {
                 selectedCard.boostAttackDefense(1.2);
+                error_label.setText("Boosted for matching types!");
             }
         }
 
