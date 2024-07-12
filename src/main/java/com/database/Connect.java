@@ -80,7 +80,7 @@ public class Connect {
                 user.setHP(rs.getInt("user_HP"));
                 user.updateCardsByCardSeries();
                 userMap.put(rs.getInt("user_id"), user);
-                if (rs.getString("user_profile") != null && !rs.getString("user_profile").isEmpty()) {
+                if (rs.getString("user_profile") != null && !rs.getString("user_profile").isEmpty() && !rs.getString("user_profile").isBlank()) {
                     URI profileImgURI = new URI(rs.getString("user_profile"));
                     Image profileImage = new Image(profileImgURI.toURL().toExternalForm());
                     user.setProfile(profileImage);

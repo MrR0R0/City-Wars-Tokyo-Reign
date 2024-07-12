@@ -51,10 +51,9 @@ public class PlayController implements Initializable {
     public Label hostRoundAttack_label;
     public GridPane guestField_pane;
     public GridPane hostField_pane;
+    public ProgressBar timeStrike_progress;
     public Label round_label;
     public Label turn_label;
-    public ImageView guestImage;
-    public ImageView hostImage;
 
     private final Color lineColor = Color.rgb(192, 0, 211,0.7);
     static private Player turnPlayer, opponent, selectedCellOwner, selectedCardOwner;
@@ -64,9 +63,11 @@ public class PlayController implements Initializable {
     static final private int gameRounds = 4, handColumnWidth = 100;
     private boolean isCopyCardSelected = false;
     private int copyCardIndex;
-    Timeline timeline = new Timeline();
+    Timeline mainTimeline = new Timeline();
+    Timeline timeStrikeTimeline = new Timeline();
     boolean checkStop = false;
     private List<CardPane> hostCardPanesList, guestCardPanesList;
+    private double timeStrikeValue = 0;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -114,7 +115,7 @@ public class PlayController implements Initializable {
         turn_label.setText(turnPlayer.getNickname() + "'s turn");
         if (roundCounter == 0) {
             movingTimeLine();
-            timeline.statusProperty().addListener((obs, oldStatus, newStatus) -> {
+            mainTimeline.statusProperty().addListener((obs, oldStatus, newStatus) -> {
                 if (newStatus == Animation.Status.STOPPED) {
                     if (isGameOver() != null) {
                         System.out.println("Guest will now be logged out automatically");
@@ -259,7 +260,15 @@ public class PlayController implements Initializable {
             cardPane.setCardImage(120, 90, 0, 0, 50, 0);
             cardPane.setCardName(40, 0, 0, 0, 11);
             cardPane.setCardLevel(0, 0, 150, 75, 16);
-            cardPane.setNormal();
+            if (card.getType().equals(Card.CardType.timeStrike)){
+                cardPane.setTimeStrikeType();
+            }
+            else if (card.getType().equals(Card.CardType.spell)) {
+                cardPane.setSpellType();
+            }
+            else {
+                cardPane.setNormal();
+            }
             cardPane.setMaxWidth(handColumnWidth);
             cardPane.setPrefHeight(100);
             cardPane.setVisible(true);
@@ -321,6 +330,15 @@ public class PlayController implements Initializable {
                 cardPane.setStyle("-fx-effect: 0");
             } else if (!tmpCell.isEmpty()) {
                 cardPane.card = tmpCell.getCard();
+                if (cardPane.card.getType().equals(Card.CardType.timeStrike)){
+                    cardPane.setTimeStrikeType();
+                }
+                else if (cardPane.card.getType().equals(Card.CardType.spell)) {
+                    cardPane.setSpellType();
+                }
+                else {
+                    cardPane.setNormal();
+                }
                 cardPane.cardView.setImage(Card.allCardImages.get(tmpCell.getCard().getId()));
                 cardPane.setCardImage(80, 50, 0, 0, 0, 0);
                 if (player.getDurationLine().get(i).getCard().isBoosted()){
@@ -424,24 +442,83 @@ public class PlayController implements Initializable {
         error_label.setText("");
         round_label.setText("");
         turn_label.setText("");
-        timeline.stop();
+        mainTimeline.stop();
         checkStop = false;
-        timeline.getKeyFrames().clear();
+        mainTimeline.getKeyFrames().clear();
         int durationLineSize = Play.durationLineSize;
         int[] index = {0};
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.5), event -> {
+        KeyFrame mainKeyFrame = new KeyFrame(Duration.seconds(0.75), event -> {
             if (index[0] < durationLineSize) {
                 Cell hostCell = hostPlayer.getDurationLine().get(index[0]);
                 Cell guestCell = guestPlayer.getDurationLine().get(index[0]);
 
                 if (guestCell.getCard() != null) {
-                    guestPlayer.increaseRoundAttack(guestCell.getCard().getGamingAttackOrDefense());
-                    hostPlayer.decreaseHP(guestCell.getCard().getGamingAttackOrDefense());
+                    //time strike
+                    if (guestCell.getCard().getType().equals(Card.CardType.timeStrike)){
+                        timeStrike_progress.setVisible(true);
+                        timeStrikeValue = 0;
+                        mainTimeline.pause();
+                        timeStrikeTimeline = new Timeline(new KeyFrame(Duration.millis(10), actionEvent -> {
+                            timeStrikeValue += 0.01;
+                            if (timeStrikeValue >= 0.95) {
+                                timeStrikeValue = 0;
+                                timeStrike_progress.setVisible(false);
+                                timeStrikeTimeline.stop();
+                            }
+                            timeStrike_progress.setProgress(timeStrikeValue);
+                        }));
+                        timeStrikeTimeline.setCycleCount(Timeline.INDEFINITE);
+                        timeStrikeTimeline.play();
+
+                        timeStrike_progress.setOnMouseClicked(mouseEvent -> {
+                            timeStrike_progress.setVisible(false);
+                            timeStrikeTimeline.stop();
+                            if (timeStrikeValue >= 0.3 && timeStrikeValue <= 0.7){
+                                guestPlayer.increaseRoundAttack(Double.valueOf(guestCell.getCard().getGamingAttackOrDefense()*1.4).intValue());
+                                hostPlayer.decreaseHP(Double.valueOf(guestCell.getCard().getGamingAttackOrDefense()*1.4).intValue());                            }
+                            mainTimeline.play();
+                        });
+                    }
+
+                    else {
+                        guestPlayer.increaseRoundAttack(guestCell.getCard().getGamingAttackOrDefense());
+                        hostPlayer.decreaseHP(guestCell.getCard().getGamingAttackOrDefense());
+                    }
                 }
 
                 if (hostCell.getCard() != null) {
-                    hostPlayer.increaseRoundAttack(hostCell.getCard().getGamingAttackOrDefense());
-                    guestPlayer.decreaseHP(hostCell.getCard().getGamingAttackOrDefense());
+                    //time strike
+                    if (hostCell.getCard().getType().equals(Card.CardType.timeStrike)){
+                        timeStrike_progress.setVisible(true);
+                        timeStrikeValue = 0;
+                        mainTimeline.pause();
+                        timeStrikeTimeline = new Timeline(new KeyFrame(Duration.millis(10), actionEvent -> {
+                            timeStrikeValue += 0.01;
+                            if (timeStrikeValue >= 0.95) {
+                                timeStrikeValue = 0;
+                                timeStrike_progress.setVisible(false);
+                                timeStrikeTimeline.stop();
+                            }
+                            timeStrike_progress.setProgress(timeStrikeValue);
+                        }));
+                        timeStrikeTimeline.setCycleCount(Timeline.INDEFINITE);
+                        timeStrikeTimeline.play();
+
+                        timeStrike_progress.setOnMouseClicked(mouseEvent -> {
+                            timeStrike_progress.setVisible(false);
+                            timeStrikeTimeline.stop();
+                            timeStrikeTimeline.stop();
+                            if (timeStrikeValue >= 0.4 && timeStrikeValue <= 0.6){
+                                hostPlayer.increaseRoundAttack(Double.valueOf(hostCell.getCard().getGamingAttackOrDefense()*1.4).intValue());
+                                guestPlayer.decreaseHP(Double.valueOf(hostCell.getCard().getGamingAttackOrDefense()*1.4).intValue());
+                            }
+                            mainTimeline.play();
+                        });
+                    }
+                    else {
+                        hostPlayer.increaseRoundAttack(hostCell.getCard().getGamingAttackOrDefense());
+                        guestPlayer.decreaseHP(hostCell.getCard().getGamingAttackOrDefense());
+                    }
                 }
 
                 if (isGameOver() != null) {
@@ -453,7 +530,7 @@ public class PlayController implements Initializable {
                     guestHand_pane.setDisable(false);
                     hostHand_pane.setDisable(false);
                     checkStop = true;
-                    timeline.stop(); // stop the timeline if the game is over
+                    mainTimeline.stop(); // stop the timeline if the game is over
                     Player winner = Objects.requireNonNull(isGameOver());
                     Player loser = winner==hostPlayer ? guestPlayer : hostPlayer;
                     winner.applyPostMatchUpdates(playMode, true, pot);
@@ -501,15 +578,15 @@ public class PlayController implements Initializable {
                 guestHand_pane.setDisable(false);
                 hostHand_pane.setDisable(false);
                 checkStop = true;
-                timeline.stop(); // stop the timeline if all indices are processed
+                mainTimeline.stop(); // stop the timeline if all indices are processed
             }
         });
 
         guestHand_pane.setDisable(true);
         hostHand_pane.setDisable(true);
-        timeline.getKeyFrames().add(keyFrame);
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        mainTimeline.getKeyFrames().add(mainKeyFrame);
+        mainTimeline.setCycleCount(Timeline.INDEFINITE);
+        mainTimeline.play();
     }
 
     private static Player isGameOver() {

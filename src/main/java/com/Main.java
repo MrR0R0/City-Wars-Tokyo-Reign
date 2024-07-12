@@ -3,6 +3,7 @@ package com;
 import com.app.*;
 import com.database.Connect;
 import com.menu.Menu;
+import com.menu.authentication.SignUp;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

@@ -118,7 +118,7 @@ public class Player extends User {
         }
     }
 
-    public void increaseRoundAttack(int number) {
+    public void increaseRoundAttack(Integer number) {
         roundAttack += number;
     }
 
