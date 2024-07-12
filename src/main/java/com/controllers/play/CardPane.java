@@ -115,14 +115,17 @@ public class CardPane extends GridPane {
     public void setNormal() {
         imageContainer.setStyle("-fx-background-color: #3c00ff; -fx-border-color: #3c00fd; -fx-border-width: 3; -fx-border-style: solid;");
     }
+    public void setShield() {
+        imageContainer.setStyle("-fx-background-color: #00bb3c; -fx-border-color: #00b903; -fx-border-width: 3; -fx-border-style: solid;");
+    }
     public void setBooster() {
-        imageContainer.setStyle("-fx-background-color: gold; -fx-border-color: gold; -fx-border-width: 3; -fx-border-style: solid;");
+        imageContainer.setStyle(imageContainer.getStyle() + "-fx-border-color: gold; -fx-border-width: 2 0 2 0; -fx-background-insets: -1;");
+    }
+    public void setMitigated() {
+        imageContainer.setStyle(imageContainer.getStyle() +"-fx-border-color: #ff0081; -fx-border-width: 2 0 2 0; -fx-background-insets: -1;");
     }
     public void setSpellType() {
         imageContainer.setStyle("-fx-border-color: linear-gradient(from 0.0% 50.0% to 100.0% 50.0%, reflect, #0051ff 0.0%, #ff0000 100.0%);-fx-border-width: 3; -fx-border-style: solid;-fx-background-color: linear-gradient(from 0.0% 50.0% to 100.0% 50.0%, reflect, #0051ff 0.0%, #ff0000 100.0%);");
-    }
-    public void setMitigated() {
-        imageContainer.setStyle("-fx-background-color: #7a002b; -fx-border-color: #600433; -fx-border-width: 3; -fx-border-style: solid;");
     }
     public void setShatter() {
         shatterView.setImage(shatteredImage);

@@ -80,7 +80,6 @@ public class PlayController implements Initializable {
         hostPlayer.setCharacter(Card.Characters.Character1);
         guestPlayer = new Player(User.signedUpUsers.get(1));
         guestPlayer.setCharacter(Card.Characters.Character2);
-        
         hostImage.setImage(Card.charactersImage.get(hostPlayer.getCharacter()));
         guestImage.setImage(Card.charactersImage.get(guestPlayer.getCharacter()));
         guestName_label.setText(guestPlayer.getNickname());
@@ -281,12 +280,27 @@ public class PlayController implements Initializable {
             cardPane.setCardLevel(0, 0, 150, 75, 16);
             if (card.getType().equals(Card.CardType.timeStrike)){
                 cardPane.setTimeStrikeType();
+                if (card.isBoosted()){
+                    cardPane.setBooster();
+                }
+                else if (card.isMitigated()){
+                    cardPane.setMitigated();
+                }
             }
-            else if (card.getType().equals(Card.CardType.spell)) {
+            else if (cardPane.card.getType().equals(Card.CardType.spell)) {
                 cardPane.setSpellType();
+            }
+            else if (cardPane.card.getType().equals(Card.CardType.shield)){
+                cardPane.setShield();
             }
             else {
                 cardPane.setNormal();
+                if (card.isBoosted()){
+                    cardPane.setBooster();
+                }
+                else if (card.isMitigated()){
+                    cardPane.setMitigated();
+                }
             }
             cardPane.setMaxWidth(handColumnWidth);
             cardPane.setPrefHeight(100);
@@ -351,12 +365,27 @@ public class PlayController implements Initializable {
                 cardPane.card = tmpCell.getCard();
                 if (cardPane.card.getType().equals(Card.CardType.timeStrike)){
                     cardPane.setTimeStrikeType();
+                    if (player.getDurationLine().get(i).getCard().isBoosted()){
+                        cardPane.setBooster();
+                    }
+                    else if (player.getDurationLine().get(i).getCard().isMitigated()){
+                        cardPane.setMitigated();
+                    }
                 }
                 else if (cardPane.card.getType().equals(Card.CardType.spell)) {
                     cardPane.setSpellType();
                 }
+                else if (cardPane.card.getType().equals(Card.CardType.shield)){
+                    cardPane.setShield();
+                }
                 else {
                     cardPane.setNormal();
+                    if (player.getDurationLine().get(i).getCard().isBoosted()){
+                        cardPane.setBooster();
+                    }
+                    else if (player.getDurationLine().get(i).getCard().isMitigated()){
+                        cardPane.setMitigated();
+                    }
                 }
                 cardPane.cardView.setImage(Card.allCardImages.get(tmpCell.getCard().getId()));
                 cardPane.setCardImage(80, 50, 0, 0, 0, 0);
@@ -473,7 +502,7 @@ public class PlayController implements Initializable {
                 Cell hostCell = hostPlayer.getDurationLine().get(index[0]);
                 Cell guestCell = guestPlayer.getDurationLine().get(index[0]);
 
-                if (guestCell.getCard() != null) {
+                if (guestCell.getCard() != null && !guestCell.isShattered()) {
                     //time strike
                     if (guestCell.getCard().getType().equals(Card.CardType.timeStrike)){
                         timeStrike_progress.setVisible(true);
@@ -485,6 +514,7 @@ public class PlayController implements Initializable {
                                 timeStrikeValue = 0;
                                 timeStrike_progress.setVisible(false);
                                 timeStrikeTimeline.stop();
+                                mainTimeline.play();
                             }
                             timeStrike_progress.setProgress(timeStrikeValue);
                         }));
@@ -507,7 +537,7 @@ public class PlayController implements Initializable {
                     }
                 }
 
-                if (hostCell.getCard() != null) {
+                if (hostCell.getCard() != null && !hostCell.isShattered()) {
                     //time strike
                     if (hostCell.getCard().getType().equals(Card.CardType.timeStrike)){
                         timeStrike_progress.setVisible(true);
@@ -519,6 +549,7 @@ public class PlayController implements Initializable {
                                 timeStrikeValue = 0;
                                 timeStrike_progress.setVisible(false);
                                 timeStrikeTimeline.stop();
+                                mainTimeline.play();
                             }
                             timeStrike_progress.setProgress(timeStrikeValue);
                         }));
