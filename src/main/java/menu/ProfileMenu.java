@@ -1,6 +1,7 @@
 package menu;
 
 import app.Error;
+import app.Help;
 import app.User;
 import menu.authentication.Captcha;
 import menu.authentication.SignUp;
@@ -9,11 +10,11 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class ProfileMenu extends Menu {
-    final static private String showInfoCommand = "^(?i)Show information\\s*$";
-    final static private String changeUsernameCommand = "^(?i)Profile change -u (?<Username>\\S+)$";
-    final static private String changeNicknameCommand = "^(?i)Profile change -n (?<Nickname>\\S+)$";
-    final static private String changePasswordCommand = "^(?i)Profile change password -o (?<oldPassword>\\S+) -n (?<newPassword>\\S+)$";
-    final static private String changeEmailCommand = "^(?i)Profile change -e (?<Email>\\S+)$";
+    final static private String showInfoCommand = "^(?i)Show information$";
+    final static private String changeUsernameCommand = "^(?i)change -u (?<Username>\\S+)$";
+    final static private String changeNicknameCommand = "^(?i)change -n (?<Nickname>\\S+)$";
+    final static private String changePasswordCommand = "^(?i)change password -o (?<oldPassword>\\S+) -n (?<newPassword>\\S+)$";
+    final static private String changeEmailCommand = "^(?i)change -e (?<Email>\\S+)$";
 
     static public void handleInput(String input, Scanner scanner) {
         Matcher matcher;
@@ -25,7 +26,11 @@ public class ProfileMenu extends Menu {
             showCurrentMenu();
         }
 
-        if (input.matches(showInfoCommand)) {
+        else if (input.toLowerCase().matches("help")){
+            Help.profile();
+        }
+
+        else if (input.matches(showInfoCommand)) {
             if (Error.loginFirst())
                 return;
             matcher = getCommandMatcher(input, showInfoCommand);
@@ -33,7 +38,7 @@ public class ProfileMenu extends Menu {
                 loggedInUser.showProperties();
         }
 
-        if (input.matches(changeUsernameCommand)) {
+        else if (input.matches(changeUsernameCommand)) {
             if (Error.loginFirst())
                 return;
             matcher = getCommandMatcher(input, changeUsernameCommand);
@@ -42,7 +47,7 @@ public class ProfileMenu extends Menu {
             }
         }
 
-        if (input.matches(changeNicknameCommand)) {
+        else if (input.matches(changeNicknameCommand)) {
             if (Error.loginFirst())
                 return;
             matcher = getCommandMatcher(input, changeNicknameCommand);
@@ -51,7 +56,7 @@ public class ProfileMenu extends Menu {
             }
         }
 
-        if (input.matches(changePasswordCommand)) {
+        else if (input.matches(changePasswordCommand)) {
             if (Error.loginFirst())
                 return;
             matcher = getCommandMatcher(input, changePasswordCommand);
@@ -60,7 +65,7 @@ public class ProfileMenu extends Menu {
             }
         }
 
-        if (input.matches(changeEmailCommand)) {
+        else if (input.matches(changeEmailCommand)) {
             if (Error.loginFirst())
                 return;
             matcher = getCommandMatcher(input, changeEmailCommand);

@@ -17,9 +17,9 @@ public class SignUp extends Menu {
     static public final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z]).+$";
 
     public static void handleInput(String input, Scanner scanner) {
-        String createUserCommand = "^(?i)user create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
+        String createUserCommand = "^(?i)create -u (?<Username>\\S+) -p (?<Pass>\\S+) (?<PassConfirm>\\S+)" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
-        String createUserRandomCommand = "^user create -u (?<Username>\\S+) -p random" +
+        String createUserRandomCommand = "^create -u (?<Username>\\S+) -p random" +
                                     " -email (?<Email>\\S+) -n (?<Nickname>\\S+)$";
 
         if (input.matches(createUserCommand)) {

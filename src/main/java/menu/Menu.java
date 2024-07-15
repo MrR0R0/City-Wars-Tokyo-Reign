@@ -23,7 +23,7 @@ public abstract class Menu extends app.Error {
         currentMenu = MenuType.Authentication;
     }
     public static void showCurrentMenu(){
-        System.out.println("you are in " + currentMenu.name() + " menu");
+        System.out.println("You are in " + currentMenu.name() + " menu");
     }
     public static <T extends Enum<T>> T getEnumValueByIndex(Class<T> enumClass, int index) {
         T[] enumConstants = enumClass.getEnumConstants();

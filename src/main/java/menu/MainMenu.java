@@ -1,5 +1,6 @@
 package menu;
 
+import app.Help;
 import app.ProgramController;
 import database.Connect;
 import database.History;
@@ -16,11 +17,11 @@ public class MainMenu extends Menu {
     final static private int LINES_ON_PAGE = 10, NAME_PAD = 19, NUM_PAD = 3, CONS_PAD = 5;
     static private ArrayList<History> history;
 
-    final static private String switchToPlay = "^select menu play$";
-    final static private String switchToShop = "^select menu shop$";
+    final static private String switchToPlay = "^go to play$";
+    final static private String switchToShop = "^go to shop$";
     final static private String showCards = "^show cards$";
     final static private String showHistory = "^show history$";
-    final static private String showProfile = "^select menu profile$";
+    final static private String showProfile = "^go to profile$";
     final static private String logoutCommand = "^log out$";
     final static private String sortCommand = "^sort by (?<Field>\\d+) (?<Type>\\d+)$";
 
@@ -46,26 +47,26 @@ public class MainMenu extends Menu {
             System.out.println("You are now in \"Profile\" menu");
             Menu.currentMenu = MenuType.Profile;
         }
+        else if(input.toLowerCase().matches("help")){
+            Help.main();
+        }
     }
 
     static private void showHistory(Scanner scanner) throws SQLException {
         history = Connect.getUserHistory(String.valueOf(Menu.loggedInUser.getId()));
         int numberOfPages = Math.ceilDiv(history.size(), LINES_ON_PAGE);
         int currentPage = 1;
-        System.out.println("History:");
-        System.out.println("You can also sort your match history by (1-date 2-opp's name 3-opp's level 4-result) (1-asc 2-des)");
-        System.out.println("Using the following command: sort by #field_name #asc_des");
-        System.out.println("for instance \"sort by 1 1\" will sort by date in ascending order");
         showPage(currentPage, numberOfPages);
         while (true) {
-            System.out.println("For viewing other pages enter the page's number;");
-            System.out.println("You can also sort here");
-            System.out.println("otherwise, enter 'quit'");
             String command = scanner.nextLine().trim().replaceAll(" +", " ");
-            if (ProgramController.checkQuit(command)) {
-                System.out.println("You will be directed to Main menu");
+            if (command.toLowerCase().matches("back")) {
+                System.out.println("Directed to Main menu...");
                 return;
-            } else if (command.matches(sortCommand)) {
+            }
+            else if(command.toLowerCase().matches("help")){
+                Help.history();
+            }
+            else if (command.matches(sortCommand)) {
                 Matcher matcher = getCommandMatcher(command, sortCommand);
                 if(matcher.find())
                 {

@@ -1,6 +1,7 @@
 package menu.play;
 
 import app.Card;
+import app.Help;
 import app.User;
 import database.Connect;
 import javafx.util.Pair;
@@ -37,21 +38,19 @@ public class Play extends Menu {
     static private Mode playMode = null;
     final static private String playModeCommand = "^select (?<Mode>\\w+) as the play mode$";
     final static private String selectCharacter = "^(?<Character>\\w+)$";
-    final static String selectCardCommand = "^select card number (?<number>\\d+) player (?<player>\\S+)$";
-    final static String placeCardCommand = "place card number (?<cardNum>\\d+) in block (?<cellNum>\\d+)";
-    final static String showPlaygroundCommand = "show playground";
+    final static String placeCardCommand = "place card (?<cardNum>\\d+) in block (?<cellNum>\\d+)";
+    final static String showDurationLineCommand = "^show duration line$";
     final static String showHandCommand = "show hand";
 
 
     static public void handleInput(String input, Scanner scanner) throws IOException {
-        // should we have an exit command?
-        if (input.matches(playModeCommand)) {
+        if (input.toLowerCase().matches("help")) {
+            Help.play();
+        }
+        else if (input.matches(playModeCommand)) {
             Matcher matcher = getCommandMatcher(input, playModeCommand);
             matcher.find();
             choosePlayMode(matcher);
-        }
-        else if (playMode == null) {
-            System.out.println("you should choose the play mode first");
         }
         else if (input.matches(Login.loginCommand)) {
             Matcher matcher = getCommandMatcher(input, Login.loginCommand);
@@ -66,33 +65,24 @@ public class Play extends Menu {
                 }
                 System.out.println("user logged in successfully");
                 System.out.println("Welcome " + username + "!");
+                System.out.println("Guest: choose one of the following: Character1, Character2, Character3, Character4");
             }
-        }
-        else if (input.matches(Login.forgotPassword)) {
-            Matcher matcher = getCommandMatcher(input, Login.forgotPassword);
-            if (matcher.find())
-                Login.resetPassword(matcher, scanner);
-        }
-        else if (guest == null) {
-            System.out.println("Second player should log in first. Please log in by typing 'user login -u <Username> -p <Password>'.");
         }
         else if (input.matches(selectCharacter)) {
             Matcher matcher = getCommandMatcher(input, selectCharacter);
             if (matcher.find()) {
-                selectCharacter(matcher);
+                selectCharacter(matcher, scanner);
             }
         }
-        else if (guest.getCharacter() != null && host.getCharacter() != null) {
-            switch (playMode){
+        else if (checkRequirements()) {
+            switch (playMode) {
                 case Normal -> playing(scanner);
                 case Betting -> {
                     betting(scanner);
-                    if(pot!=0)
+                    if (pot != 0)
                         playing(scanner);
                 }
             }
-        } else {
-            System.out.println("you should choose your Characters first");
         }
     }
 
@@ -114,11 +104,11 @@ public class Play extends Menu {
     }
 
     static public void choosePlayMode(Matcher matcher) {
-        if (matcher.group("Mode").equals("Normal")) {
+        if (matcher.group("Mode").equalsIgnoreCase("normal")) {
             playMode = Mode.Normal;
             System.out.println("Normal mode is selected");
             System.out.println("Second player should now log in!");
-        } else if (matcher.group("Mode").equals("Betting")) {
+        } else if (matcher.group("Mode").equalsIgnoreCase("betting")) {
             playMode = Mode.Betting;
             System.out.println("Betting mode is selected");
             System.out.println("Second player should now log in!");
@@ -127,19 +117,23 @@ public class Play extends Menu {
         }
     }
 
-    // each player choose their character
-    static public void selectCharacter(Matcher matcher) {
+    // each player chooses their character
+    static public void selectCharacter(Matcher matcher, Scanner scanner) throws IOException {
         try {
             Card.Characters selectedCharacter = Card.Characters.valueOf(matcher.group("Character"));
             if (guest.getCharacter() == null) {
                 guest.setCharacter(selectedCharacter);
                 System.out.println("Guest selected character: " + selectedCharacter);
+                System.out.println("Host: choose one of the following: Character1, Character2, Character3, Character4");
             } else {
                 host.setCharacter(selectedCharacter);
                 System.out.println("Host selected character: " + selectedCharacter);
+                handleInput("", scanner);
             }
         } catch (IllegalArgumentException e) {
-            System.out.println("Invalid character selected. Please choose one of the following: " + String.join(", ", Card.Characters.Character1.name(), Card.Characters.Character2.name(), Card.Characters.Character3.name(), Card.Characters.Character4.name()));
+            System.out.println("Invalid character selected. Please choose one of the following: " +
+                            String.join(", ", Card.Characters.Character1.name(), Card.Characters.Character2.name(),
+                            Card.Characters.Character3.name(), Card.Characters.Character4.name()));
         }
     }
 
@@ -159,27 +153,24 @@ public class Play extends Menu {
         roundCounter = gameRounds;
         while (roundCounter > 0) {
             String input = scanner.nextLine();
-            if (input.matches(selectCardCommand))
-                selectCard(input);
-            else if (input.toLowerCase().matches(showPlaygroundCommand)) {
-                printPlayGround();
+            if (input.toLowerCase().matches(showDurationLineCommand)) {
+                showDurationLine();
             } else if (input.toLowerCase().matches(showHandCommand)) {
-                if(blindfoldedPlayer != turnPlayer) {
+                if (blindfoldedPlayer != turnPlayer) {
                     turnPlayer.showHand();
-                }
-                else{
+                } else {
                     System.out.println("You can't see your hand due to blindfold");
                 }
             } else if (input.matches(placeCardCommand)) {
                 System.out.println(turnPlayer.getNickname() + "'s turn");
                 if (placeCard(input)) {
-                    if(blindfoldedPlayer == turnPlayer){
+                    if (blindfoldedPlayer == turnPlayer) {
                         blindfoldedPlayer = null;
                     }
                     changeTurn();
                     roundCounter--;
                 }
-                printPlayGround();
+                showDurationLine();
             }
         }
         movingTimeLine();
@@ -198,19 +189,6 @@ public class Play extends Menu {
         // remove everything
         host.initNewRound();
         guest.initNewRound();
-    }
-
-    private static void selectCard(String input) {
-        Matcher matcher = getCommandMatcher(input, selectCardCommand);
-        if (matcher.find()) {
-            int selectedNumber = Integer.parseInt(matcher.group("number")) - 1;
-            if (matcher.group("player").equals("host")) {
-                host.getHand().get(selectedNumber).showInGameProperties(20);
-            }
-            if (matcher.group("player").equals("guest")) {
-                guest.getHand().get(selectedNumber).showInGameProperties(20);
-            }
-        }
     }
 
     private static boolean placeCard(String input) {
@@ -278,7 +256,7 @@ public class Play extends Menu {
             return false;
         }
 
-        if(selectedCard.isCardRemover()){
+        if (selectedCard.isCardRemover()) {
             int index = random.nextInt(opponent.getHand().size());
             turnPlayer.getHand().set(selectedCardIndex, opponent.getHand().get(index));
             opponent.getHand().remove(index);
@@ -287,7 +265,7 @@ public class Play extends Menu {
 
         // random enemy card "attack or defence" nerf
         // random enemy card "ACC" nerf
-        if(selectedCard.isCardMitigator()){
+        if (selectedCard.isCardMitigator()) {
             int initialIndex = opponent.getInitialIndexRandomCard();
             if (initialIndex == -1) {
                 System.out.println("No cards on the track! You have wasted mitigator card!");
@@ -310,7 +288,7 @@ public class Play extends Menu {
             return false;
         }
 
-        if(selectedCard.isBlindfold()){
+        if (selectedCard.isBlindfold()) {
             blindfoldedPlayer = opponent;
             Collections.shuffle(opponent.getHand());
             turnPlayer.replaceCardInHand(selectedCardIndex);
@@ -416,7 +394,7 @@ public class Play extends Menu {
     }
 
     private static void result(Player winner) {
-        Player loser = winner==host ? guest : host;
+        Player loser = winner == host ? guest : host;
         String result = winner.getNickname() + " won!";
 
         System.out.println("Winner: " + winner.getNickname());
@@ -439,7 +417,7 @@ public class Play extends Menu {
         guest.applyResults(User.signedUpUsers.get(guest.getId()));
     }
 
-    private static void printPlayGround() {
+    private static void showDurationLine() {
         System.out.println("_".repeat(4 * 21));
         System.out.println("Guest HP : " + guest.getHP() + " | Host HP : " + host.getHP());
         System.out.println(".".repeat(4 * 21));
@@ -456,7 +434,7 @@ public class Play extends Menu {
     }
 
     public static void applyCardsDynamic(Cell myCell, Cell oppCell) {
-        if(myCell.isEmpty() || oppCell.isEmpty()){
+        if (myCell.isEmpty() || oppCell.isEmpty()) {
             return;
         }
         boolean myShieldAgainstBreakable = myCell.getCard().isShield() && oppCell.getCard().isBreakable();
@@ -490,5 +468,21 @@ public class Play extends Menu {
             oppCell.shatter();
             System.out.println("both cards are shattered");
         }
+    }
+
+    private static boolean checkRequirements(){
+        if (playMode == null) {
+            System.out.println("you should choose the play mode first");
+            return false;
+        }
+        if (guest == null) {
+            System.out.println("Second player should log in first. Please log in by typing 'user login -u <Username> -p <Password>'.");
+            return false;
+        }
+        if (guest.getCharacter() == null || host.getCharacter() == null){
+            System.out.println("You should choose your Characters first");
+            return false;
+        }
+        return true;
     }
 }

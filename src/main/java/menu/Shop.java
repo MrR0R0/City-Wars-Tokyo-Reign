@@ -2,6 +2,7 @@ package menu;
 
 import app.Card;
 import app.Error;
+import app.Help;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -13,12 +14,12 @@ import java.util.stream.IntStream;
 public class Shop extends Menu {
     final static private int CARDS_ON_PAGE = 10, NAME_PAD = 27, DETAILS_PAD = 35, COST_PAD = 5, PROP_PAD = 23;
     final static private int purchasableAmount = 6, purchasableShieldOrSpell = 1, purchasableCommon = 3, purchasableTimeStrike = 2;
-    final static String upgradeCardCommand = "(?i)upgrade card number (?<cardNum>\\d+)";
+    final static String upgradeCardCommand = "(?i)upgrade card (?<cardNum>\\d+)";
     final static String showWalletCommand = "(?i)show wallet";
-    final static String buyCommand = "^(?i)buy card number (?<cardNum>\\d+)$";
+    final static String buyCommand = "^(?i)buy card (?<cardNum>\\d+)$";
     final static String showUpgradeableCards = "^(?i)show upgradable cards$";
     final static String showPurchasableCards = "^(?i)show purchasable cards$";
-    final static String showCardProperties = "^(?i)show properties of card number (?<cardNum>\\d+)$";
+    final static String showCardProperties = "^(?i)show properties of card (?<cardNum>\\d+)$";
     static private ArrayList<Card> upgradableCards;  // filled with user's original cards
     static private ArrayList<Card> purchasableCards; // filled with clones
 
@@ -38,12 +39,15 @@ public class Shop extends Menu {
             upgradeCard(matcher);
         }
         else if (input.matches(showPurchasableCards)){
-            showPurchasable();
+            showPurchasable(scanner);
         }
         else if (input.matches(buyCommand)){
             Matcher matcher = getCommandMatcher(input, buyCommand);
             matcher.find();
             buyCard(matcher);
+        }
+        else if (input.toLowerCase().matches("help")){
+            Help.shop();
         }
     }
 
@@ -53,17 +57,16 @@ public class Shop extends Menu {
         int numberOfPages = Math.ceilDiv(upgradableCards.size(), CARDS_ON_PAGE);
         int currentPage = 1;
 
-        System.out.println("Please choose a card to upgrade or back to shop");
-        System.out.println("You can also select other pages");
         showPage(currentPage, numberOfPages);
 
         while (true) {
-            System.out.println("For viewing other pages enter the page's number;");
-            System.out.println("to return to the shop menu, enter 'back'");
             String command = scanner.nextLine().trim().replaceAll(" +", " ");
             if (command.toLowerCase().matches("back")) {
-                System.out.println("You will be directed to Shop menu");
+                System.out.println("Directing to Shop menu...");
                 return;
+            }
+            else if(command.toLowerCase().matches("help")){
+                Help.upgradeCards();
             }
             else if(command.matches(showCardProperties)){
                 Matcher matcher = getCommandMatcher(command, showCardProperties);
@@ -84,13 +87,29 @@ public class Shop extends Menu {
         }
     }
 
-    private static void showPurchasable(){
+    private static void showPurchasable(Scanner scanner){
         int index = 1;
         updatePurchasableCards();
         showTopBar();
         for(Card card: purchasableCards){
             card.showPurchaseProperties(index, NAME_PAD, COST_PAD, DETAILS_PAD);
             index++;
+        }
+        while (true) {
+            String command = scanner.nextLine().trim().replaceAll(" +", " ");
+            if (command.toLowerCase().matches("back")) {
+                System.out.println("Directing to Shop menu...");
+                return;
+            }
+            else if(command.toLowerCase().matches("help")){
+                Help.buyCards();
+            }
+            else if(command.matches(showCardProperties)){
+                Matcher matcher = getCommandMatcher(command, showCardProperties);
+                matcher.find();
+                String input = matcher.group("cardNum");
+                showCardProperties(input, purchasableCards);
+            }
         }
     }
 

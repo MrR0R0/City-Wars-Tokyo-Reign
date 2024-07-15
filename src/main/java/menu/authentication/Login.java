@@ -1,6 +1,7 @@
 package menu.authentication;
 
 import app.Error;
+import app.Help;
 import app.ProgramController;
 import app.User;
 import menu.Menu;
@@ -17,8 +18,8 @@ public class Login extends Menu {
     private static final int maxTry = 3;
     private static final String adminPass = "sonic";
 
-    final static public String loginCommand = "^user login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";
-    final static public String forgotPassword = "^forgot my password -u (?<Username>\\S+)$";
+    final static public String loginCommand = "^login -u (?<Username>\\S+) -p (?<Pass>\\S+)$";
+    final static public String forgotPassword = "^forgot password -u (?<Username>\\S+)$";
     final static public String adminLogin = "^login admin (?<Pass>\\S+)$";
 
     public static void handleInput(String input, Scanner scanner) throws IOException{
@@ -36,14 +37,14 @@ public class Login extends Menu {
                 return;
             }
         }
-        if(input.matches(forgotPassword)){
+        else if(input.matches(forgotPassword)){
             if(Error.alreadyLoggedIn())
                 return;
             Matcher matcher = getCommandMatcher(input, forgotPassword);
             matcher.find();
             resetPassword(matcher, scanner);
         }
-        if(input.matches(adminLogin)){
+        else if(input.matches(adminLogin)){
             Matcher matcher = getCommandMatcher(input, adminLogin);
             matcher.find();
             String pass = matcher.group("Pass");
@@ -54,6 +55,9 @@ public class Login extends Menu {
             else{
                 System.out.println("You are not admin :)");
             }
+        }
+        else if(input.toLowerCase().matches("help")){
+            Help.authentication();
         }
     }
     public static boolean checkLogIn(Matcher matcher, Scanner scanner) throws IOException {
@@ -105,10 +109,9 @@ public class Login extends Menu {
                 }
             }
         }
-        System.out.println("You will be directed to authentication page!");
+        System.out.println("You will have to start again!");
         return false;
     }
-
     public static void resetPassword(Matcher matcher, Scanner scanner) {
         String username = matcher.group("Username");
         if(Error.userRegistered(username)){
@@ -143,7 +146,6 @@ public class Login extends Menu {
             }
         }
     }
-
     public static boolean matchingPassword(Integer id, String pass){
         return User.signedUpUsers.get(id).getPassword().equals(pass);
     }

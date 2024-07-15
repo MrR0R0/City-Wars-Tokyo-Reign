@@ -23,7 +23,7 @@ public class History {
 
         System.out.println(
                 String.format("%-"+numPad+"s", index) + "|" +
-                self + "|" + opponent + "|" + result + "|" + time + "|" +
+                self + "|" + opponent + "|" + padAndTruncate(result, 20) + "|" + time + "|" +
                 String.format("%-"+consPad+"s", "Yours: " + userCons) +
                 String.format("%-"+consPad+"s", "Opponent's: " + oppCons)
         );
@@ -43,5 +43,16 @@ public class History {
 
     public String getResult() {
         return result;
+    }
+
+    public static String padAndTruncate(String str, int length) {
+        if (str.length() > length) {
+            if (length < 3) {
+                throw new IllegalArgumentException("Length must be at least 3 to accommodate '...'");
+            }
+            return str.substring(0, length - 3) + "...";
+        } else {
+            return String.format("%-" + length + "s", str);
+        }
     }
 }
